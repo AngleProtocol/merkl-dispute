@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  merkl-dispute:
+    image: merkl-dispute
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    env_file:
+      - .env
+    environment:
+      - CHAINID=137
+    ports:
+      - '6002:5002'
+    volumes:
+      - ./src:/app/src
+      - ~/docker/volumes/yalc:/app/yalc
