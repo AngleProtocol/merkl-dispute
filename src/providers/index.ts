@@ -21,7 +21,7 @@ for (const c of supportedChains) {
 }
 if (!providers_keys.includes(`PROVIDER_1`)) providers_keys.push('PROVIDER_1');
 const envVariables = requireEnvVars(
-  process.env.ENV === 'prod' ? ['GCP_PROJECT_ID', 'GCP_KEEPER_PK_SECRET_NAME', ...providers_keys] : providers_keys
+  process.env.ENV === 'prod' ? ['DISPUTE_BOT_PRIVATE_KEY', ...providers_keys] : providers_keys
 );
 
 const NETWORKS: { [chainId: number]: string } = [];
