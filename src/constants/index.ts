@@ -1,5 +1,7 @@
 import { ChainId } from '@angleprotocol/sdk';
 
+export const TVL_THRESHOLD = 10;
+export const BATCH_NUMBER = 1_000;
 /**
  * Contract addresses
  */

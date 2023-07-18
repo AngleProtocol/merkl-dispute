@@ -3,16 +3,15 @@ import { providers } from 'ethers';
 
 import { supportedChains } from '../constants';
 
-export const requireEnvVars = <T extends string>(vars: T[]): Record<typeof vars[number], string> => {
+export const requireEnvVars = <T extends string>(vars: T[]): Record<(typeof vars)[number], string> => {
   const missingEnvVars = vars.filter((v) => !process.env[v]);
   if (missingEnvVars.length) {
     throw new Error(`Missing env vars: ${missingEnvVars.join(', ')}`);
   }
-
   return vars.reduce((acc, envVar) => {
     acc[envVar] = process.env[envVar] as string;
     return acc;
-  }, {} as Record<typeof vars[number], string>);
+  }, {} as Record<(typeof vars)[number], string>);
 };
 
 const providers_keys: string[] = [];

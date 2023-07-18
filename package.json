@@ -6,11 +6,12 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc -p .",
+    "show-position": "yarn ts-node src/helpers/positions.ts",
     "deploy": "gcloud app deploy",
     "gcp-build": "yarn build",
     "merge": "git checkout staging && git pull origin staging && yarn && git checkout main && git pull origin main && git merge --ff-only staging && git push --force-with-lease origin main",
-    "start:local": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
-    "start": "node ./build/index.js"
+    "start": "node ./build/index.js",
+    "start:local": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts"
   },
   "dependencies": {
     "@angleprotocol/sdk": "^3.0.70",
