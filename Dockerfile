@@ -19,15 +19,11 @@ COPY tsconfig.json ./
 # Copy the code
 COPY ./src ./src
 
-COPY ./prisma ./prisma
-
-RUN yarn prisma generate
-
 # Build the app
 RUN yarn build
 
 # Expose the port that the app listens on
-EXPOSE 3000
+EXPOSE 8080
 
 # Launch the app for local development (hot reloading)
 CMD ["yarn", "start"]

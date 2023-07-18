@@ -7,7 +7,6 @@ import moment from 'moment';
 import { NULL_ADDRESS } from '../constants'; //OK
 import { httpProvider } from '../providers'; //OK
 import { getChainId, getEnv } from '../utils'; // OK
-import { accessKeeperPrivateKeySecretVersion } from '../utils/gc-secrets'; // OK
 import { computeAccumulatedRewardSinceInception, log } from '../utils/merkl'; // OK
 
 export type MerklIndexType = { [merklRoot: string]: number };
@@ -197,7 +196,7 @@ router.get('', async (_, res) => {
   log('merkl dispute bot', `⚔️  should trigger dispute? ${shouldTriggerDispute}`);
   if (!!shouldTriggerDispute) {
     log('merkl dispute bot', `⚔️  triggering dispute because ${reason}`);
-    const keeper = new Wallet(await accessKeeperPrivateKeySecretVersion(true), httpProvider(chainId));
+    const keeper = new Wallet(process.env.DISPUTE_BOT_PRIVATE_KEY, httpProvider(chainId));
     log('merkl dispute bot', `🤖 bot address to dispute is ${keeper.address}`);
     /** _3-b might approve the contract */
     let tx = await Erc20__factory.connect(disputeToken, keeper).approve(distributorContract.address, disputeAmount);
