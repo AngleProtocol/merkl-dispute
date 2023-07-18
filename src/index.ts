@@ -1,29 +1,26 @@
 import 'dotenv/config';
 
-import express from 'express';
+import express, { Application, Request, Response } from 'express';
 
-import routes from './routes';
+import disputeBot from './routes/dispute-bot';
 
-const app = express();
+const app: Application = express();
 
-// ================================ MIDDLEWARES ================================
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-if (process.env.ENV !== 'local' && !!process.env.HEADER_KEY && !!process.env.HEADER_VALUE) {
-  app.get('/', (req, res, next) => {
-    if (req.get(process.env.HEADER_KEY as string) === process.env.HEADER_VALUE) {
-      next();
-    } else {
-      res.status(403).send('Request refused');
-    }
-  });
-}
+const PORT = process.env.PORT || 8080;
 
 // =================================== ROUTES ==================================
 
-const PORT = process.env.PORT || 8080;
+app.get("/", (_req, res: Response) => {
+  console.log(`Listening on port ${PORT}`);
+  res.send(`Server is running on port: ${PORT}`);
+});
+
+app.use('/dispute', disputeBot);
+
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');
 });
-
-routes(app);

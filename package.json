@@ -12,6 +12,10 @@
     "merge": "git checkout staging && git pull origin staging && yarn && git checkout main && git pull origin main && git merge --ff-only staging && git push --force-with-lease origin main",
     "start": "node ./build/index.js",
     "start:local": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts"
+    "start:local": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "publish-image": "chmod +x ./scripts/publish.sh && ./scripts/publish.sh",
+    "deploy": "chmod +x ./scripts/deploy.sh && ./scripts/deploy.sh",
+    "start": "node ./build/index.js"
   },
   "dependencies": {
     "@angleprotocol/sdk": "^3.0.70",
@@ -20,7 +24,8 @@
     "dotenv": "^16.0.1",
     "ethers": "^5.7.2",
     "express": "^4.18.1",
-    "moment": "^2.29.4"
+    "moment": "^2.29.4",
+    "discord.js": "^14.7.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
