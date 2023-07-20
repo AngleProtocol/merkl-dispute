@@ -10,3 +10,6 @@ src/script/debug.ts
 secrets*
 config
 staging-app-polygon.yaml
+report.txt
+src/script/end.json
+src/script/start.json
