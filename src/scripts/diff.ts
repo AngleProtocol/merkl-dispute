@@ -1,4 +1,12 @@
-import { AggregatedRewardsType, ChainId, DistributionCreator__factory, formatNumber, Int256, registry } from '@angleprotocol/sdk';
+import {
+  AggregatedRewardsType,
+  ChainId,
+  DistributionCreator__factory,
+  Distributor__factory,
+  formatNumber,
+  Int256,
+  registry,
+} from '@angleprotocol/sdk';
 import axios from 'axios';
 import dotenv from 'dotenv';
 import { BigNumber } from 'ethers';
@@ -35,6 +43,7 @@ import { httpProvider } from '../providers';
 import { MerklIndexType } from '../routes/dispute-bot';
 
 const githubURL = `https://raw.githubusercontent.com/AngleProtocol/merkl-rewards/main/`;
+const provider = httpProvider(chainId);
 
 (async () => {
   if (startTimestamp > endTimestamp) {
@@ -94,21 +103,43 @@ const githubURL = `https://raw.githubusercontent.com/AngleProtocol/merkl-rewards
 
   const activeDistributions = await DistributionCreator__factory.connect(
     registry(chainId).Merkl.DistributionCreator,
-    httpProvider(chainId)
+    provider
   ).getActiveDistributions();
 
-  const details: { holder: string; diff: number; symbol: string; poolName: string; distribution: string; percent?: number }[] = [];
+  let details: {
+    holder: string;
+    diff: number;
+    symbol: string;
+    poolName: string;
+    distribution: string;
+    percent?: number;
+    decimals?: number;
+    tokenAddress?: string;
+    issueSpotted?: boolean;
+  }[] = [];
   const changePerDistrib = {};
   const poolName = {};
+  const unclaimed: { [address: string]: { [symbol: string]: Int256 } } = {};
 
   for (const holder of holders) {
+    unclaimed[holder] = {};
     for (const k of Object.keys(endTree.rewards)) {
+      const symbol = endTree?.rewards?.[k].tokenSymbol;
+      const decimals = endTree?.rewards?.[k].tokenDecimals;
+      if (!unclaimed[holder]) unclaimed[holder] = {};
+      if (!unclaimed[holder][symbol]) {
+        unclaimed[holder][symbol] = Int256.from(endTree?.rewards?.[k]?.holders?.[holder]?.amount ?? 0, decimals);
+      } else {
+        unclaimed[holder][symbol] = unclaimed[holder][symbol].add(
+          Int256.from(endTree?.rewards?.[k]?.holders?.[holder]?.amount ?? 0, decimals)
+        );
+      }
       if (startTree?.rewards?.[k]?.holders?.[holder]?.amount !== endTree?.rewards?.[k]?.holders?.[holder]?.amount) {
         const diff = Int256.from(
           BigNumber.from(endTree?.rewards?.[k]?.holders?.[holder]?.amount ?? 0).sub(
             startTree?.rewards?.[k]?.holders?.[holder]?.amount ?? 0
           ),
-          endTree?.rewards?.[k]?.tokenDecimals
+          decimals
         ).toNumber();
         const symbol = endTree?.rewards?.[k].tokenSymbol;
         const pool = endTree?.rewards?.[k]?.pool;
@@ -118,8 +149,7 @@ const githubURL = `https://raw.githubusercontent.com/AngleProtocol/merkl-rewards
         }
 
         const solidityDist = activeDistributions.find((d) => d.base.rewardId === k);
-        const ratePerEpoch =
-          Int256.from(solidityDist?.base.amount ?? 0, endTree?.rewards?.[k]?.tokenDecimals).toNumber() / solidityDist?.base.numEpoch;
+        const ratePerEpoch = Int256.from(solidityDist?.base.amount ?? 0, decimals).toNumber() / solidityDist?.base.numEpoch;
         changePerDistrib[k] = {
           diff: (changePerDistrib[k]?.diff ?? 0) + diff,
           symbol,
@@ -129,7 +159,15 @@ const githubURL = `https://raw.githubusercontent.com/AngleProtocol/merkl-rewards
           ratePerEpoch,
           epoch: (changePerDistrib[k]?.epoch ?? 0) + diff / ratePerEpoch,
         };
-        details.push({ holder, diff, symbol, poolName: poolName[pool], distribution: k });
+        details.push({
+          holder,
+          decimals,
+          diff,
+          symbol,
+          poolName: poolName[pool],
+          distribution: k,
+          tokenAddress: endTree?.rewards?.[k].token,
+        });
       }
     }
   }
@@ -139,20 +177,42 @@ const githubURL = `https://raw.githubusercontent.com/AngleProtocol/merkl-rewards
   }
 
   // Sort details by distribution and format numbers
-  console.table(
+  details = await Promise.all(
     details
       .sort((a, b) =>
         a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : a.percent > b.percent ? -1 : b.percent > a.percent ? 1 : 0
       )
-      .map((d) => {
+      .map(async (d) => {
+        const alreadyClaimed = round(
+          Int256.from(
+            (await Distributor__factory.connect(registry(chainId).Merkl.Distributor, provider).claimed(d.holder, d.tokenAddress)).amount,
+            d.decimals
+          ).toNumber(),
+          2
+        );
+        const totalCumulated = round(unclaimed[d.holder][d.symbol].toNumber(), 2);
         return {
           ...d,
           diff: round(d.diff, 2),
           percent: round(d.percent, 2),
           distribution: d.distribution.slice(0, 5),
+          totalCumulated,
+          alreadyClaimed,
+          issueSpotted: totalCumulated < alreadyClaimed,
         };
       })
   );
+  console.table(details, [
+    'holder',
+    'diff',
+    'symbol',
+    'poolName',
+    'distribution',
+    'percent',
+    'totalCumulated',
+    'alreadyClaimed',
+    'issueSpotted',
+  ]);
 
   console.table(
     Object.keys(changePerDistrib)

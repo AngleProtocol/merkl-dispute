@@ -21,7 +21,7 @@ import { request } from 'graphql-request';
 
 const chainId: ChainId = ChainId.MAINNET;
 const amm: AMMType = AMMType.UniswapV3;
-const pool = '0x109830a1aaad605bbf02a9dfa7b0b92ec2fb7daa'.toLowerCase();
+const pool = '0xb42Eede6Ad429B38DA26817aeB163f216E34B7f8'.toLowerCase();
 
 const startTimestamp = 1689501600; // Cutoff to fetch positions
 const endTimestamp = 1689775200; // To filter swaps
