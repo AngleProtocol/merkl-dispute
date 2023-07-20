@@ -124,6 +124,7 @@ const githubURL = `https://raw.githubusercontent.com/AngleProtocol/merkl-rewards
           diff: (changePerDistrib[k]?.diff ?? 0) + diff,
           symbol,
           poolName: poolName[pool],
+          pool,
           recipients: (changePerDistrib[k]?.recipients ?? 0) + 1,
           ratePerEpoch,
           epoch: (changePerDistrib[k]?.epoch ?? 0) + diff / ratePerEpoch,

@@ -209,7 +209,7 @@ export async function fetchSwaps(
   const provider = httpProvider(chainId);
   const poolContract = UniswapV3Pool__factory.connect(pool, provider);
   let sqrtPriceX96: string;
-  let tick: number;
+  const tick = 1239;
   let token0: string;
   let token1: string;
   let token0symbol: string;
@@ -223,7 +223,7 @@ export async function fetchSwaps(
   await Promise.all([
     poolContract.slot0().then((res) => {
       sqrtPriceX96 = res.sqrtPriceX96.toString();
-      tick = res.tick;
+      // tick = res.tick;
     }),
     poolContract.token0().then((res) => {
       token0 = res;
