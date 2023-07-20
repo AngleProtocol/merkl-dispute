@@ -21,7 +21,7 @@ import { request } from 'graphql-request';
 
 const chainId: ChainId = ChainId.MAINNET;
 const amm: AMMType = AMMType.UniswapV3;
-const pool = '0xb42Eede6Ad429B38DA26817aeB163f216E34B7f8'.toLowerCase();
+const pool = '0x109830a1AAaD605BbF02a9dFA7B0B92EC2FB7dAa'.toLowerCase();
 
 const startTimestamp = 1689501600; // Cutoff to fetch positions
 const endTimestamp = 1689775200; // To filter swaps
@@ -271,7 +271,7 @@ export async function fetchSwaps(
   );
 
   const positions: {
-    live: boolean;
+    live: string;
     liquidity: string;
     id: number | 'DIRECT';
     owner: string;
@@ -302,7 +302,7 @@ export async function fetchSwaps(
     }
 
     positions.push({
-      live,
+      live: live ? 'LIVE' : `CLOSED ${moment.unix(Number(p.endTimestamp)).format('MM-DD HH:mm:ss')}`,
       inRange,
       liquidity: p.liquidity,
       id: (p as any)?.id ? parseInt((p as any)?.id) : 'DIRECT',
@@ -329,7 +329,7 @@ export async function fetchSwaps(
           amount0: round(p.amount0, 2),
           amount1: round(p.amount1, 2),
           tvl: round(p.tvl, 2),
-          liquidity: round(Number(p.liquidity), 2).toString(),
+          liquidity: round(Number(p.liquidity), 2).toExponential(2),
           propFee: p.live && p.inRange ? round(Int256.from(p.liquidity, 0).mul(10000).div(totalLiquidity).toNumber() / 100, 2) : 0,
           propAmount0: p.live && p.inRange ? round((p.amount0 / totalAmount0) * 100, 2) : 0,
           propAmount1: p.live && p.inRange ? round((p.amount1 / totalAmount1) * 100, 2) : 0,
