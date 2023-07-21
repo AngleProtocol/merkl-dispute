@@ -3,8 +3,8 @@ import {
   ChainId,
   DistributionCreator__factory,
   Distributor__factory,
-  formatNumber,
   Int256,
+  Multicall__factory,
   registry,
 } from '@angleprotocol/sdk';
 import axios from 'axios';
@@ -12,74 +12,88 @@ import dotenv from 'dotenv';
 import { BigNumber } from 'ethers';
 import moment from 'moment';
 
-/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                  PARAMETERS                                                    
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-
-const chainId = ChainId.MAINNET;
-
-/**
- *  If MODE == LOCAL you need to fill `./jsons/start.json` and `./jsons/end.json`
- *
- *  If MODE == DISTANT you need to fill `startTimestamp` and `endTimestamp` and jsons will be fetch from github
- *  main branch
- */
-const MODE: 'LOCAL' | 'DISTANT' = 'LOCAL';
-
-const startTimestamp = 469354 * 3600; // moment('2023-07-18', 'YYYY-MM-DD').unix();
-const endTimestamp = 469366 * 3600; // moment().unix();
-
-/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                               END OF PARAMETERS                                                
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-
 import endJson from './jsons/end.json';
 import startJson from './jsons/start.json';
 
 dotenv.config();
 
+import { GITHUB_URL } from '../constants';
 import { fetchPoolName, round } from '../helpers';
 import { httpProvider } from '../providers';
-import { MerklIndexType } from '../routes/dispute-bot';
+import { MerklIndexType } from '../routes';
 
-const githubURL = `https://raw.githubusercontent.com/AngleProtocol/merkl-rewards/main/`;
-const provider = httpProvider(chainId);
-
-(async () => {
-  if (startTimestamp > endTimestamp) {
-    throw 'Start timestamp is after end timestamp';
-  }
-  const call = await axios.get<MerklIndexType>(githubURL + `${chainId + `/index.json`}`, {
-    timeout: 5000,
-  });
-  const merklIndex = call.data;
+export const reportDiff = async (
+  chainId: ChainId,
+  params:
+    | {
+        MODE: 'LOCAL';
+      }
+    | {
+        MODE: 'TIMESTAMP';
+        startTimestamp: number;
+        endTimestamp: number;
+      }
+    | {
+        MODE: 'ROOTS';
+        startRoot: string;
+        endRoot: string;
+      }
+) => {
+  const provider = httpProvider(chainId);
+  const multicall = Multicall__factory.connect('0xcA11bde05977b3631167028862bE2a173976CA11', provider);
+  const distributorInterface = Distributor__factory.createInterface();
 
   let startTree: AggregatedRewardsType;
   let endTree: AggregatedRewardsType;
-  if (MODE !== 'LOCAL') {
+  if (params.MODE === 'TIMESTAMP') {
+    if (params.startTimestamp > params.endTimestamp) {
+      throw 'Start timestamp is after end timestamp';
+    }
+
+    const call = await axios.get<MerklIndexType>(GITHUB_URL + `${chainId + `/index.json`}`, {
+      timeout: 5000,
+    });
+    const merklIndex = call.data;
     /**
      * Rounds down timestamp to the last reward computation
      */
-    let startEpoch = Math.floor(startTimestamp / 3600);
+    let startEpoch = Math.floor(params.startTimestamp / 3600);
     while (!Object.values(merklIndex).includes(startEpoch)) {
       startEpoch -= 1;
     }
-    let endEpoch = Math.floor(endTimestamp / 3600);
+    let endEpoch = Math.floor(params.endTimestamp / 3600);
     while (!Object.values(merklIndex).includes(endEpoch)) {
       endEpoch -= 1;
     }
     startTree = (
-      await axios.get<AggregatedRewardsType>(githubURL + `${chainId + `/backup/rewards_${startEpoch}.json`}`, {
+      await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${startEpoch}.json`}`, {
         timeout: 5000,
       })
     ).data;
     endTree = (
-      await axios.get<AggregatedRewardsType>(githubURL + `${chainId + `/backup/rewards_${endEpoch}.json`}`, {
+      await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${endEpoch}.json`}`, {
         timeout: 5000,
       })
     ).data;
 
     console.log(`Comparing ${startEpoch} and ${endEpoch} jsons`);
+  } else if (params.MODE === 'ROOTS') {
+    const call = await axios.get<MerklIndexType>(GITHUB_URL + `${chainId + `/index.json`}`, {
+      timeout: 5000,
+    });
+    const merklIndex = call.data;
+    const startEpoch = merklIndex[params.startRoot];
+    const endEpoch = merklIndex[params.endRoot];
+    startTree = (
+      await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${startEpoch}.json`}`, {
+        timeout: 5000,
+      })
+    ).data;
+    endTree = (
+      await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${endEpoch}.json`}`, {
+        timeout: 5000,
+      })
+    ).data;
   } else {
     startTree = startJson as unknown as AggregatedRewardsType;
     endTree = endJson as unknown as AggregatedRewardsType;
@@ -176,6 +190,28 @@ const provider = httpProvider(chainId);
     l.percent = (l?.diff / changePerDistrib[l?.distribution]?.diff) * 100;
   }
 
+  const alreadyClaimed: { [address: string]: { [symbol: string]: string } } = {};
+
+  const calls = [];
+  for (const d of details) {
+    if (!alreadyClaimed[d.holder]) alreadyClaimed[d.holder] = {};
+    if (!alreadyClaimed[d.holder][d.tokenAddress]) {
+      alreadyClaimed[d.holder][d.tokenAddress] = 'PENDING';
+      calls.push({
+        callData: distributorInterface.encodeFunctionData('claimed', [d.holder, d.tokenAddress]),
+        target: registry(chainId).Merkl.Distributor,
+        allowFailure: false,
+      });
+    }
+  }
+  const res = await multicall.callStatic.aggregate3(calls);
+  let decodingIndex = 0;
+  for (const d of details) {
+    if (alreadyClaimed[d.holder][d.tokenAddress] === 'PENDING') {
+      alreadyClaimed[d.holder][d.tokenAddress] = distributorInterface.decodeFunctionResult('claimed', res[decodingIndex++].returnData)[0];
+    }
+  }
+
   // Sort details by distribution and format numbers
   details = await Promise.all(
     details
@@ -183,13 +219,7 @@ const provider = httpProvider(chainId);
         a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : a.percent > b.percent ? -1 : b.percent > a.percent ? 1 : 0
       )
       .map(async (d) => {
-        const alreadyClaimed = round(
-          Int256.from(
-            (await Distributor__factory.connect(registry(chainId).Merkl.Distributor, provider).claimed(d.holder, d.tokenAddress)).amount,
-            d.decimals
-          ).toNumber(),
-          2
-        );
+        const alreadyClaimedValue = round(Int256.from(alreadyClaimed[d.holder][d.tokenAddress], d.decimals).toNumber(), 2);
         const totalCumulated = round(unclaimed[d.holder][d.symbol].toNumber(), 2);
         return {
           ...d,
@@ -197,8 +227,8 @@ const provider = httpProvider(chainId);
           percent: round(d.percent, 2),
           distribution: d.distribution.slice(0, 5),
           totalCumulated,
-          alreadyClaimed,
-          issueSpotted: totalCumulated < alreadyClaimed,
+          alreadyClaimed: alreadyClaimedValue,
+          issueSpotted: totalCumulated < alreadyClaimedValue,
         };
       })
   );
@@ -221,4 +251,4 @@ const provider = httpProvider(chainId);
       })
       .sort((a, b) => (a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : 0))
   );
-})();
+};

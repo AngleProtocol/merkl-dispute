@@ -26,7 +26,7 @@ const pool = '0x109830a1AAaD605BbF02a9dFA7B0B92EC2FB7dAa'.toLowerCase();
 const startTimestamp = 1689501600; // Cutoff to fetch positions
 const endTimestamp = 1689775200; // To filter swaps
 const swaps_number = 100;
-const merklSubgraphPrefix = getMerklSubgraphPrefix('prod');
+const subgraphMode = 'prod';
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                END OF PARAMETERS                                                
@@ -205,7 +205,16 @@ export async function fetchSwaps(
   return swaps;
 }
 
-(async () => {
+export const reportPool = async (
+  chainId: MerklSupportedChainIdsType,
+  amm: AMMType,
+  pool: string,
+  startTimestamp: number, // Cutoff to fetch positions
+  endTimestamp: number, // To filter swaps
+  swaps_number: number,
+  subgraphMode: 'prod' | 'dev' | 'local'
+) => {
+  const merklSubgraphPrefix = getMerklSubgraphPrefix(subgraphMode);
   const provider = httpProvider(chainId);
   const poolContract = UniswapV3Pool__factory.connect(pool, provider);
   let sqrtPriceX96: string;
@@ -337,4 +346,6 @@ export async function fetchSwaps(
       })
       .sort((a, b) => (a.tvl > b.tvl ? -1 : b.tvl > a.tvl ? 1 : 0))
   );
-})();
+};
+
+reportPool(chainId, amm, pool, startTimestamp, endTimestamp, swaps_number, subgraphMode);

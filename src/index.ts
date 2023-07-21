@@ -1,8 +1,8 @@
 import 'dotenv/config';
 
-import express, { Application, Response } from 'express';
+import express, { Application } from 'express';
 
-import disputeBot from './routes/dispute-bot';
+import index from './routes';
 
 const app: Application = express();
 
@@ -13,12 +13,7 @@ const PORT = process.env.PORT || 8080;
 
 // =================================== ROUTES ==================================
 
-app.get('/', (_req, res: Response) => {
-  console.log(`Listening on port ${PORT}`);
-  res.send(`Server is running on port: ${PORT}`);
-});
-
-app.use('/dispute', disputeBot);
+app.use('/', index);
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
