@@ -20,7 +20,7 @@ export function getChainId(): ChainId {
 }
 const octokit = new Octokit({ auth: process.env.KEEPER_GITHUB_AUTH_TOKEN });
 
-export async function createGist(content: string): Promise<void> {
+export async function createGist(description: string, content: string): Promise<string> {
   try {
     const response = await octokit.gists.create({
       files: {
@@ -28,12 +28,26 @@ export async function createGist(content: string): Promise<void> {
           content: content,
         },
       },
-      description: 'This is a sample gist',
+      description,
       public: false,
     });
 
-    console.log('Gist created: ' + response.data.html_url);
+    return response.data.html_url;
   } catch (error) {
-    console.error('Error creating gist:', error);
+    throw `Error creating gist:', ${error}`;
+  }
+}
+
+export async function retryWithExponentialBackoff<T>(fn: (...any) => Promise<T>, retries = 5, delay = 500, ...args): Promise<T> {
+  try {
+    const result = await fn(args);
+    return result;
+  } catch (error) {
+    if (retries === 0) {
+      throw error;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    return retryWithExponentialBackoff(fn, retries - 1, delay * 2, ...args);
   }
 }

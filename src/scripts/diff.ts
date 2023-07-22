@@ -17,10 +17,13 @@ import startJson from './jsons/start.json';
 
 dotenv.config();
 
+import console from 'console';
+
 import { GITHUB_URL } from '../constants';
 import { fetchPoolName, round } from '../helpers';
 import { httpProvider } from '../providers';
 import { MerklIndexType } from '../routes';
+import { retryWithExponentialBackoff } from '../utils';
 
 export const reportDiff = async (
   chainId: ChainId,
@@ -37,7 +40,8 @@ export const reportDiff = async (
         MODE: 'ROOTS';
         startRoot: string;
         endRoot: string;
-      }
+      },
+  overridenConsole: typeof console = console
 ) => {
   const provider = httpProvider(chainId);
   const multicall = Multicall__factory.connect('0xcA11bde05977b3631167028862bE2a173976CA11', provider);
@@ -76,24 +80,30 @@ export const reportDiff = async (
       })
     ).data;
 
-    console.log(`Comparing ${startEpoch} and ${endEpoch} jsons`);
+    overridenConsole.log(`Comparing ${startEpoch} and ${endEpoch} jsons`);
   } else if (params.MODE === 'ROOTS') {
-    const call = await axios.get<MerklIndexType>(GITHUB_URL + `${chainId + `/index.json`}`, {
-      timeout: 5000,
-    });
-    const merklIndex = call.data;
+    let merklIndex;
+
+    await retryWithExponentialBackoff(async () => {
+      return await axios.get<MerklIndexType>(GITHUB_URL + `${chainId + `/index.json`}`, {
+        timeout: 5000,
+      });
+    }).then((r) => (merklIndex = r.data));
+
     const startEpoch = merklIndex[params.startRoot];
     const endEpoch = merklIndex[params.endRoot];
-    startTree = (
-      await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${startEpoch}.json`}`, {
+
+    await retryWithExponentialBackoff(async () => {
+      return await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${startEpoch}.json`}`, {
         timeout: 5000,
-      })
-    ).data;
-    endTree = (
-      await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${endEpoch}.json`}`, {
+      });
+    }).then((r) => (startTree = r.data));
+
+    await retryWithExponentialBackoff(async () => {
+      return await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${endEpoch}.json`}`, {
         timeout: 5000,
-      })
-    ).data;
+      });
+    }).then((r) => (endTree = r.data));
   } else {
     startTree = startJson as unknown as AggregatedRewardsType;
     endTree = endJson as unknown as AggregatedRewardsType;
@@ -232,7 +242,7 @@ export const reportDiff = async (
         };
       })
   );
-  console.table(details, [
+  overridenConsole.table(details, [
     'holder',
     'diff',
     'symbol',
@@ -244,7 +254,7 @@ export const reportDiff = async (
     'issueSpotted',
   ]);
 
-  console.table(
+  overridenConsole.table(
     Object.keys(changePerDistrib)
       .map((k) => {
         return { ...changePerDistrib[k], epoch: round(changePerDistrib[k].epoch, 4) };
