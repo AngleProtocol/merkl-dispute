@@ -42,13 +42,17 @@ export const reportDiff = async (
         endRoot: string;
       },
   overridenConsole: typeof console = console
-) => {
+): Promise<{ error: boolean; reason: string }> => {
+  let error = false;
+  let reason = '';
   const provider = httpProvider(chainId);
   const multicall = Multicall__factory.connect('0xcA11bde05977b3631167028862bE2a173976CA11', provider);
   const distributorInterface = Distributor__factory.createInterface();
 
   let startTree: AggregatedRewardsType;
   let endTree: AggregatedRewardsType;
+
+  // ONLY THE ROOTS MODE NEEDS TO BE FULLY SAFE
   if (params.MODE === 'TIMESTAMP') {
     if (params.startTimestamp > params.endTimestamp) {
       throw 'Start timestamp is after end timestamp';
@@ -84,26 +88,41 @@ export const reportDiff = async (
   } else if (params.MODE === 'ROOTS') {
     let merklIndex;
 
-    await retryWithExponentialBackoff(async () => {
-      return await axios.get<MerklIndexType>(GITHUB_URL + `${chainId + `/index.json`}`, {
-        timeout: 5000,
-      });
-    }).then((r) => (merklIndex = r.data));
+    try {
+      await retryWithExponentialBackoff(async () => {
+        return await axios.get<MerklIndexType>(GITHUB_URL + `${chainId + `/index.json`}`, {
+          timeout: 5000,
+        });
+      }).then((r) => (merklIndex = r.data));
+    } catch {
+      error = true;
+      reason = `Could't find index on Github`;
+    }
 
     const startEpoch = merklIndex[params.startRoot];
     const endEpoch = merklIndex[params.endRoot];
 
-    await retryWithExponentialBackoff(async () => {
-      return await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${startEpoch}.json`}`, {
-        timeout: 5000,
-      });
-    }).then((r) => (startTree = r.data));
+    try {
+      await retryWithExponentialBackoff(async () => {
+        return await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${startEpoch}.json`}`, {
+          timeout: 5000,
+        });
+      }).then((r) => (startTree = r.data));
+    } catch {
+      error = true;
+      reason = `Could't find json corresponding to ${params.startRoot} on Github`;
+    }
 
-    await retryWithExponentialBackoff(async () => {
-      return await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${endEpoch}.json`}`, {
-        timeout: 5000,
-      });
-    }).then((r) => (endTree = r.data));
+    try {
+      await retryWithExponentialBackoff(async () => {
+        return await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${endEpoch}.json`}`, {
+          timeout: 5000,
+        });
+      }).then((r) => (endTree = r.data));
+    } catch {
+      error = true;
+      reason = `Could't find json corresponding to ${params.endRoot} on Github`;
+    }
   } else {
     startTree = startJson as unknown as AggregatedRewardsType;
     endTree = endJson as unknown as AggregatedRewardsType;
@@ -125,11 +144,15 @@ export const reportDiff = async (
     }
   }
 
-  const activeDistributions = await DistributionCreator__factory.connect(
-    registry(chainId).Merkl.DistributionCreator,
-    provider
-  ).getActiveDistributions();
+  let activeDistributions;
+  try {
+    activeDistributions = await DistributionCreator__factory.connect(
+      registry(chainId).Merkl.DistributionCreator,
+      provider
+    ).getActiveDistributions();
+  } catch {}
 
+  // The goal will be to fill this for every holder
   let details: {
     holder: string;
     diff: number;
@@ -150,6 +173,8 @@ export const reportDiff = async (
     for (const k of Object.keys(endTree.rewards)) {
       const symbol = endTree?.rewards?.[k].tokenSymbol;
       const decimals = endTree?.rewards?.[k].tokenDecimals;
+      const pool = endTree?.rewards?.[k]?.pool;
+
       if (!unclaimed[holder]) unclaimed[holder] = {};
       if (!unclaimed[holder][symbol]) {
         unclaimed[holder][symbol] = Int256.from(endTree?.rewards?.[k]?.holders?.[holder]?.amount ?? 0, decimals);
@@ -165,15 +190,21 @@ export const reportDiff = async (
           ),
           decimals
         ).toNumber();
-        const symbol = endTree?.rewards?.[k].tokenSymbol;
-        const pool = endTree?.rewards?.[k]?.pool;
+        if (diff < 0) {
+          error = true;
+          reason = `Holder ${holder} has negative diff for ${symbol}`;
+        }
 
         if (!poolName[pool]) {
           poolName[pool] = await fetchPoolName(chainId, pool, endTree?.rewards?.[k]?.amm);
         }
-
-        const solidityDist = activeDistributions.find((d) => d.base.rewardId === k);
-        const ratePerEpoch = Int256.from(solidityDist?.base.amount ?? 0, decimals).toNumber() / solidityDist?.base.numEpoch;
+        let ratePerEpoch;
+        try {
+          const solidityDist = activeDistributions?.find((d) => d.base.rewardId === k);
+          ratePerEpoch = Int256.from(solidityDist?.base?.amount ?? 0, decimals)?.toNumber() / solidityDist?.base?.numEpoch;
+        } catch {
+          ratePerEpoch = 1;
+        }
         changePerDistrib[k] = {
           diff: (changePerDistrib[k]?.diff ?? 0) + diff,
           symbol,
@@ -261,4 +292,6 @@ export const reportDiff = async (
       })
       .sort((a, b) => (a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : 0))
   );
+
+  return { error, reason };
 };

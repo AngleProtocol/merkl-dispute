@@ -18,12 +18,12 @@ import { Console } from 'console';
 import { Transform } from 'stream';
 import { StringDecoder } from 'string_decoder';
 
-import { GITHUB_URL, NULL_ADDRESS } from '../constants';
+import { NULL_ADDRESS } from '../constants';
 import { httpProvider } from '../providers';
 import { reportDiff } from '../scripts/diff';
 import { createGist, getChainId, retryWithExponentialBackoff } from '../utils';
 import { sendSummary } from '../utils/discord';
-import { computeAccumulatedRewardSinceInception, log } from '../utils/merkl';
+import { log } from '../utils/merkl';
 
 export type MerklIndexType = { [merklRoot: string]: number };
 
@@ -124,7 +124,13 @@ router.get('', async (_, res) => {
   const provider = httpProvider(chainId);
   const distributor = registry(chainId).Merkl.Distributor;
 
-  const onChainParams = await retryWithExponentialBackoff(fetchDataOnChain, 5, 500, provider, distributor);
+  let onChainParams;
+  try {
+    onChainParams = await retryWithExponentialBackoff(fetchDataOnChain, 5, 500, provider, distributor);
+  } catch (e) {
+    await sendSummary(`Dispute Bot on ${NETWORK_LABELS[chainId]}`, false, "Couldn't fetch on-chain data", [], 'merkl dispute bot');
+    return res.status(500).json({ message: "Couldn't fetch on-chain data" });
+  }
 
   log(
     'merkl dispute bot',
@@ -132,7 +138,7 @@ router.get('', async (_, res) => {
       `current time: ${moment.unix(currentTimestamp).format('DD MMM HH:mm:SS')} \n` +
       `dispute period: ${onChainParams.disputePeriod} hour(s) \n` +
       `end of dispute period: ${moment.unix(onChainParams.endOfDisputePeriod).format('DD MMM HH:mm:SS')} \n` +
-      `dispute amount: ${onChainParams.disputeAmount.toNumber()} \n` +
+      `dispute amount: ${onChainParams.disputeAmount.toString()} \n` +
       `dispute token: ${onChainParams.disputeToken} \n` +
       `current disputer: ${onChainParams.disputer} \n` +
       `tree root: ${onChainParams.endRoot} \n` +
@@ -141,6 +147,7 @@ router.get('', async (_, res) => {
       `is dispute active?: ${currentTimestamp < onChainParams.endOfDisputePeriod} \n` +
       `----------------------------`
   );
+  // Check the values and continue only if the dispute period is active
   if (!!onChainParams.disputer && onChainParams.disputer !== NULL_ADDRESS) {
     log('merkl dispute bot', '✅ exiting because current tree is currently disputed');
     return res.status(200).json({ message: 'Tree already disputed' });
@@ -154,16 +161,9 @@ router.get('', async (_, res) => {
     return res.status(200).json({ message: 'Dispute period is over' });
   }
 
-  /**
-   * _2 Build dispute triggering function
-   */
+  log('merkl dispute bot', `🤖 tree update coming: from ${onChainParams.startRoot} to ${onChainParams.endRoot}`);
 
-  log('merkl dispute bot', `🤖 tree update coming: from ${startRoot} to ${endRoot}`);
-
-  /**
-   * _2 🌴 Check recently uploaded tree consistency
-   */
-  /** _2_a fetch current and previous tree */
+  // Save logs of `reportDiff` to then build a gist
   const ts = new Transform({
     transform(chunk, enc, cb) {
       cb(null, chunk);
@@ -171,27 +171,36 @@ router.get('', async (_, res) => {
   });
   const logger = new Console({ stdout: ts });
 
-  await reportDiff(chainId, { MODE: 'ROOTS', endRoot: onChainParams.endRoot, startRoot: onChainParams.startRoot }, logger);
+  const { error, reason } = await reportDiff(
+    chainId,
+    { MODE: 'ROOTS', endRoot: onChainParams.endRoot, startRoot: onChainParams.startRoot },
+    logger
+  );
 
   const description = `Dispute Bot run on ${NETWORK_LABELS[chainId]}. Upgrade from ${onChainParams.startRoot} to ${onChainParams.endRoot}`;
-  const url = await createGist(description, (ts.read() || '').toString());
+  let url = '';
+  try {
+    url = await createGist(description, (ts.read() || '').toString());
+  } catch {
+    console.error('Failed to create gist and send discord message');
+  }
+  console.log('>>> [error]: ', error);
+  console.log('>>> [reason]: ', reason);
 
-  await sendSummary(description, true, url, []);
-
-  const shouldTriggerDispute = false;
-  const reason = '';
-
-  if (shouldTriggerDispute) {
+  if (error) {
+    await sendSummary('ERROR - TRYING TO DISPUTE: ' + description, false, `GIST: ${url} \n` + reason, []);
     retryWithExponentialBackoff(
       triggerDispute,
       5,
-      500,
+      1000,
       provider,
       reason,
       onChainParams.disputeToken,
       distributor,
       onChainParams.disputeAmount
     );
+  } else {
+    await sendSummary('SUCCESS: ' + description, true, url, []);
   }
   console.timeEnd('>>> [execution time]: ');
   res.status(200).json({ exiting: 'ok' });

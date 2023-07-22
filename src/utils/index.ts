@@ -40,7 +40,7 @@ export async function createGist(description: string, content: string): Promise<
 
 export async function retryWithExponentialBackoff<T>(fn: (...any) => Promise<T>, retries = 5, delay = 500, ...args): Promise<T> {
   try {
-    const result = await fn(args);
+    const result = await fn(...args);
     return result;
   } catch (error) {
     if (retries === 0) {
