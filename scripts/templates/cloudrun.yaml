@@ -49,9 +49,14 @@ spec:
             secretKeyRef:
               key: latest
               name: DISCORD_TOKEN
+        - name: KEEPER_GITHUB_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: KEEPER_GITHUB_AUTH_TOKEN
         image: CHANGE_ME # spec.template.spec.containers.image
         ports:
-        - containerPort: '8080'
+        - containerPort: '5002'
           name: http1
         resources:
           limits:
@@ -61,7 +66,7 @@ spec:
           failureThreshold: 1
           periodSeconds: 240
           tcpSocket:
-            port: '8080'
+            port: '5002'
           timeoutSeconds: 240
       serviceAccountName: CHANGE_ME # spec.template.spec.serviceAccountName
       timeoutSeconds: '300'

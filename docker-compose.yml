@@ -9,9 +9,9 @@ services:
       - .env
     environment:
       - CHAINID=137
-      - PORT=8080
+      - PORT=5002
     ports:
-      - '8080:8080'
+      - '5002:5002'
     volumes:
       - ./src:/app/src
       - ~/docker/volumes/yalc:/app/yalc

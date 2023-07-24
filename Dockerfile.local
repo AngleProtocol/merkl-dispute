@@ -18,6 +18,6 @@ RUN yarn install
 # Copy the tsconfig.json to be able to compile the typescript
 COPY tsconfig.json ./
 
-EXPOSE 3000
+EXPOSE 5002
 
 CMD ["yarn", "start:local"]
