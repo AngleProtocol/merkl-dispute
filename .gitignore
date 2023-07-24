@@ -11,3 +11,6 @@ secrets*
 config
 staging-app-polygon.yaml
 report.txt
+src/scripts/jsons/end.json
+src/scripts/jsons/start.json
+
