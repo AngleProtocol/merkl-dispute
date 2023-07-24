@@ -14,7 +14,7 @@ export function getEnv(): EnvType {
 export function getChainId(): ChainId {
   const value = process.env['CHAINID'];
   if (!value) {
-    throw new Error(`❌ Missing environment variable ENV`);
+    throw new Error(`❌ Missing environment variable CHAINID`);
   }
   return parseInt(value) as ChainId;
 }

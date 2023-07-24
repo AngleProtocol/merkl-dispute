@@ -1,12 +1,4 @@
-import {
-  AggregatedRewardsType,
-  Distributor__factory,
-  Erc20__factory,
-  Multicall__factory,
-  NETWORK_LABELS,
-  registry,
-} from '@angleprotocol/sdk';
-import axios, { AxiosResponse } from 'axios';
+import { Distributor__factory, Erc20__factory, Multicall__factory, NETWORK_LABELS, registry } from '@angleprotocol/sdk';
 import dotenv from 'dotenv';
 import { BigNumber, Wallet } from 'ethers';
 import { Router } from 'express';
@@ -16,7 +8,6 @@ dotenv.config();
 
 import { Console } from 'console';
 import { Transform } from 'stream';
-import { StringDecoder } from 'string_decoder';
 
 import { NULL_ADDRESS } from '../constants';
 import { httpProvider } from '../providers';
@@ -88,19 +79,18 @@ const fetchDataOnChain = async (provider: any, distributor: string): Promise<OnC
   ];
 
   const result = await multicall.callStatic.aggregate3(calls);
-
+  let i = 0;
   return {
-    disputeToken: distributorInterface.decodeFunctionResult('disputeToken', result[0].returnData)[0],
-    disputeAmount: distributorInterface.decodeFunctionResult('disputeAmount', result[1].returnData)[0],
-    disputePeriod: distributorInterface.decodeFunctionResult('disputePeriod', result[2].returnData)[0],
-    endOfDisputePeriod: distributorInterface.decodeFunctionResult('endOfDisputePeriod', result[3].returnData)[0],
-    disputer: distributorInterface.decodeFunctionResult('disputer', result[4].returnData)[0],
-    endRoot: distributorInterface.decodeFunctionResult('tree', result[5].returnData)[0],
-    startRoot: distributorInterface.decodeFunctionResult('lastTree', result[6].returnData)[0],
-    currentRoot: distributorInterface.decodeFunctionResult('getMerkleRoot', result[7].returnData)[0],
+    disputeToken: distributorInterface.decodeFunctionResult('disputeToken', result[i++].returnData)[0],
+    disputeAmount: distributorInterface.decodeFunctionResult('disputeAmount', result[i++].returnData)[0],
+    disputePeriod: distributorInterface.decodeFunctionResult('disputePeriod', result[i++].returnData)[0],
+    endOfDisputePeriod: distributorInterface.decodeFunctionResult('endOfDisputePeriod', result[i++].returnData)[0],
+    disputer: distributorInterface.decodeFunctionResult('disputer', result[i++].returnData)[0],
+    endRoot: distributorInterface.decodeFunctionResult('tree', result[i++].returnData)[0],
+    startRoot: distributorInterface.decodeFunctionResult('lastTree', result[i++].returnData)[0],
+    currentRoot: distributorInterface.decodeFunctionResult('getMerkleRoot', result[i].returnData)[0],
   };
 };
-
 const triggerDispute = async (provider: any, reason: string, disputeToken: string, distributor: string, disputeAmount: BigNumber) => {
   const distributorContract = Distributor__factory.connect(distributor, provider);
 
