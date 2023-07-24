@@ -1,0 +1,3435 @@
+{
+  "lastUpdateEpoch": 469414,
+  "updateTimestamp": 1689890460,
+  "rewards": {
+    "0x8902dc47a9b865deb0b814f411b0081eb0d5265d2f7c0ce92d6407c06ff972d1": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "103573167510817820000000",
+          "breakdown": { "UniswapV3": "103573167510817820000000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "140523409760131970000000",
+          "breakdown": { "UniswapV3": "140523409760131970000000" }
+        },
+        "0x24e56740D621AA314E2F352e26A47734c3572eE3": {
+          "amount": "215077047339949400",
+          "breakdown": { "UniswapV3": "215077047339949400" }
+        },
+        "0x2f7E714c39572cf1F568d5aA55B3C72f31889904": {
+          "amount": "173703855018391580",
+          "breakdown": { "UniswapV3": "173703855018391580" }
+        },
+        "0x4Ca321E4966A6BCbC26c13921CD76cac7D1f1B02": {
+          "amount": "701954628992237200000",
+          "breakdown": { "Arrakis": "701954628992237200000" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "14177720170850935000",
+          "breakdown": { "Arrakis": "76347758674995700", "Gamma": "14101372412175942000" }
+        },
+        "0xaaC7359Fb5D39Db6C562cACe5E0947b591F16fF5": {
+          "amount": "1742988776004130800",
+          "breakdown": { "Arrakis": "1742988776004130800" }
+        },
+        "0xB0b0F6F13A5158eB67724282F586a552E75b5728": {
+          "amount": "62264524014884540000000",
+          "breakdown": { "Arrakis": "62264524014884540000000" }
+        },
+        "0xcdE2933c2017944B46B466AB9A0dfDfA36e4c35b": {
+          "amount": "4289470583939289600",
+          "breakdown": { "Arrakis": "4289470583939289600" }
+        },
+        "0xD13F8C25CceD32cdfA79EB5eD654Ce3e484dCAF5": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xdD84Ce1aDcb3A4908Db61A1dFA3353C3974c5a2B": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "7967921567392", "breakdown": { "Gamma": "7967921567392" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "223875100890397920", "breakdown": { "Gamma": "223875100890397920" } },
+        "0x6199e5Fa5F627FFE703291418Df9683c3608aB8b": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0x7C6Accd51cbbdd53354De581841803b4f79d48e7": {
+          "amount": "7385951857566340000000",
+          "breakdown": { "UniswapV3": "7385951857566340000000" }
+        }
+      },
+      "lastUpdateEpoch": 468545,
+      "pool": "0x735a26a57A0A0069dfABd41595A970faF5E1ee8b",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "314469830615894879997927"
+    },
+    "0xa922593be6d33b26bfad4d55a35c412b555d99e3bb8552397816a893e9fa4c2d": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0x5Be876Ed0a9655133226BE302ca6f5503E3DA569": {
+          "amount": "74774455129466900000000",
+          "breakdown": { "UniswapV3": "74774455129466900000000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "179887162696448000000000",
+          "breakdown": { "UniswapV3": "179887162696448000000000" }
+        },
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "101965074915568470000000",
+          "breakdown": { "UniswapV3": "101965074915568470000000" }
+        },
+        "0x1A162A5FdaEbb0113f7B83Ed87A43BCF0B6a4D1E": {
+          "amount": "16884810084315362000000",
+          "breakdown": { "UniswapV3": "16884810084315362000000" }
+        },
+        "0xfdA462548Ce04282f4B6D6619823a7C64Fdc0185": {
+          "amount": "158860673313822700000",
+          "breakdown": { "UniswapV3": "14914789774355227000", "Arrakis": "143945883539467580000" }
+        },
+        "0x6199e5Fa5F627FFE703291418Df9683c3608aB8b": {
+          "amount": "40346011140158560000000",
+          "breakdown": { "UniswapV3": "40346011140158560000000" }
+        },
+        "0xe980599BF7fa44230c58c270D30cb30c3Db7F99a": {
+          "amount": "4315866803775963600",
+          "breakdown": { "UniswapV3": "4315866803775963600" }
+        },
+        "0x203643c55E127330F15494B85FA6d0E2f1a259EF": { "amount": "78169637807065120", "breakdown": { "Arrakis": "78169637807065120" } },
+        "0x76b8579694d1769a0390aDb3b199085845804cC1": {
+          "amount": "2130522618260878500000",
+          "breakdown": { "Arrakis": "2130522618260878500000" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "114262111422067690000",
+          "breakdown": { "Arrakis": "2868272890594707000", "Gamma": "111393838531472930000" }
+        },
+        "0xbE18f84532d8f7fb6d7919401C0096f3e257DB8b": {
+          "amount": "6792400520402950000000",
+          "breakdown": { "Arrakis": "6792400520402950000000" }
+        },
+        "0xd1c9d16B4A803f1336650f17Eb99b47b1Fc90038": { "amount": "5980159233183", "breakdown": { "Arrakis": "5980159233183" } },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "987767885833954", "breakdown": { "Gamma": "987767885833954" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "197553577166790820", "breakdown": { "Gamma": "197553577166790820" } },
+        "0x0BABA1Ad5bE3a5C0a66E7ac838a129Bf948f1eA4": { "amount": "240106078993146700", "breakdown": { "UniswapV3": "240106078993146700" } }
+      },
+      "lastUpdateEpoch": 468545,
+      "pool": "0x8dB1b906d47dFc1D84A87fc49bd0522e285b98b9",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "423058392579202828719633"
+    },
+    "0xf5d43b3c63f4f0ffee501df627312881b58cbc04c595c6aa093743ce0508e9b8": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "96916709544034654800000",
+          "breakdown": { "UniswapV3": "96916709544034654800000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "155299478789600143300000",
+          "breakdown": { "UniswapV3": "155299478789600143300000" }
+        },
+        "0x24e56740D621AA314E2F352e26A47734c3572eE3": {
+          "amount": "183672329507921183",
+          "breakdown": { "UniswapV3": "183672329507921183" }
+        },
+        "0x2f7E714c39572cf1F568d5aA55B3C72f31889904": {
+          "amount": "144631660248545698",
+          "breakdown": { "UniswapV3": "144631660248545698" }
+        },
+        "0x4Ca321E4966A6BCbC26c13921CD76cac7D1f1B02": {
+          "amount": "484769304596862092000",
+          "breakdown": { "Arrakis": "484769304596862092000" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "12132433449818956010",
+          "breakdown": { "Arrakis": "66236801884266387", "Gamma": "12066196647934696300" }
+        },
+        "0xaaC7359Fb5D39Db6C562cACe5E0947b591F16fF5": {
+          "amount": "1512159678899599252",
+          "breakdown": { "Arrakis": "1512159678899599252" }
+        },
+        "0xB0b0F6F13A5158eB67724282F586a552E75b5728": {
+          "amount": "54018651145324951900000",
+          "breakdown": { "Arrakis": "54018651145324951900000" }
+        },
+        "0xcdE2933c2017944B46B466AB9A0dfDfA36e4c35b": {
+          "amount": "3721403459481337020",
+          "breakdown": { "Arrakis": "3721403459481337020" }
+        },
+        "0xD13F8C25CceD32cdfA79EB5eD654Ce3e484dCAF5": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xdD84Ce1aDcb3A4908Db61A1dFA3353C3974c5a2B": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "6817954004566", "breakdown": { "Gamma": "6817954004566" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "191564403304977904", "breakdown": { "Gamma": "191564403304977904" } },
+        "0x7C6Accd51cbbdd53354De581841803b4f79d48e7": {
+          "amount": "5224192908035984600000",
+          "breakdown": { "UniswapV3": "5224192908035984600000" }
+        }
+      },
+      "lastUpdateEpoch": 468556,
+      "pool": "0x735a26a57A0A0069dfABd41595A970faF5E1ee8b",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "311961687563391804279459"
+    },
+    "0x4cb3c3a0ac0444015847204ef416e2664f030d2c6591aa85c5c16eb3373ce661": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0x6199e5Fa5F627FFE703291418Df9683c3608aB8b": {
+          "amount": "19862330012691448000000",
+          "breakdown": { "UniswapV3": "19862330012691448000000" }
+        },
+        "0x5Be876Ed0a9655133226BE302ca6f5503E3DA569": {
+          "amount": "75295644085330605000000",
+          "breakdown": { "UniswapV3": "75295644085330605000000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "192944924929040762000000",
+          "breakdown": { "UniswapV3": "192944924929040762000000" }
+        },
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "105896365391890277900000",
+          "breakdown": { "UniswapV3": "105896365391890277900000" }
+        },
+        "0x1A162A5FdaEbb0113f7B83Ed87A43BCF0B6a4D1E": {
+          "amount": "17589338691382057310000",
+          "breakdown": { "UniswapV3": "17589338691382057310000" }
+        },
+        "0xfdA462548Ce04282f4B6D6619823a7C64Fdc0185": {
+          "amount": "146095334210956650200",
+          "breakdown": { "UniswapV3": "13279468532856872080", "Arrakis": "132815865678099794700" }
+        },
+        "0xe980599BF7fa44230c58c270D30cb30c3Db7F99a": {
+          "amount": "4293301806882556396",
+          "breakdown": { "UniswapV3": "4293301806882556396" }
+        },
+        "0x203643c55E127330F15494B85FA6d0E2f1a259EF": { "amount": "66149615042148800", "breakdown": { "Arrakis": "66149615042148800" } },
+        "0x76b8579694d1769a0390aDb3b199085845804cC1": {
+          "amount": "1951400346834984327000",
+          "breakdown": { "Arrakis": "1951400346834984327000" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "100592354267898267500",
+          "breakdown": { "Arrakis": "2427223060914868884", "Gamma": "98165131206983390200" }
+        },
+        "0xbE18f84532d8f7fb6d7919401C0096f3e257DB8b": {
+          "amount": "6064610272595452950000",
+          "breakdown": { "Arrakis": "6064610272595452950000" }
+        },
+        "0xd1c9d16B4A803f1336650f17Eb99b47b1Fc90038": { "amount": "5060599514892", "breakdown": { "Arrakis": "5060599514892" } },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "870464339798637", "breakdown": { "Gamma": "870464339798637" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "174092867959727747", "breakdown": { "Gamma": "174092867959727747" } },
+        "0xC9DE307d28202cDad6186884dD76BBF0CCcA0504": {
+          "amount": "67458568233620060000",
+          "breakdown": { "UniswapV3": "67458568233620060000" }
+        }
+      },
+      "lastUpdateEpoch": 468556,
+      "pool": "0x8dB1b906d47dFc1D84A87fc49bd0522e285b98b9",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "419923294406292792668626"
+    },
+    "0x0a84f739114a717ee694c5c4e7c75c834d8d78060f95e5d40f06cbb441df0441": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "124130232862941521200000",
+          "breakdown": { "UniswapV3": "124130232862941521200000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "256648877352783189400000",
+          "breakdown": { "UniswapV3": "256648877352783189400000" }
+        },
+        "0x24e56740D621AA314E2F352e26A47734c3572eE3": {
+          "amount": "140643269808781531",
+          "breakdown": { "UniswapV3": "140643269808781531" }
+        },
+        "0x2f7E714c39572cf1F568d5aA55B3C72f31889904": { "amount": "93359276222273169", "breakdown": { "UniswapV3": "93359276222273169" } },
+        "0x4Ca321E4966A6BCbC26c13921CD76cac7D1f1B02": {
+          "amount": "699200016992778819000",
+          "breakdown": { "Arrakis": "699200016992778819000" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "9018364095310593840",
+          "breakdown": { "Arrakis": "57079176536390844", "Gamma": "8961284918774202940" }
+        },
+        "0xaaC7359Fb5D39Db6C562cACe5E0947b591F16fF5": {
+          "amount": "1303094757110015802",
+          "breakdown": { "Arrakis": "1303094757110015802" }
+        },
+        "0xB0b0F6F13A5158eB67724282F586a552E75b5728": {
+          "amount": "46550256613674470500000",
+          "breakdown": { "Arrakis": "46550256613674470500000" }
+        },
+        "0xcdE2933c2017944B46B466AB9A0dfDfA36e4c35b": {
+          "amount": "3206897660880679750",
+          "breakdown": { "Arrakis": "3206897660880679750" }
+        },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "5063536603997", "breakdown": { "Gamma": "5063536603997" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "142270447631458887", "breakdown": { "Gamma": "142270447631458887" } },
+        "0xC279c3c50E3eaB383aD5A0284f8EF8Cb0dD2983e": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0x5Be876Ed0a9655133226BE302ca6f5503E3DA569": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0xCCe810ab3fa880EcA2CE8c00bf5cC9F20cfe0783": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0x1A162A5FdaEbb0113f7B83Ed87A43BCF0B6a4D1E": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0xFE105197324DD92b55dcA239BE0450251D7379d0": { "amount": "0", "breakdown": { "Gamma": "0" } },
+        "0x6712B7F12D9D335A15b0CddeeE7A061ee522bDa0": {
+          "amount": "9421755581447909250000",
+          "breakdown": { "UniswapV3": "9421755581447909250000" }
+        },
+        "0x30bACd12a889C9Be7E5DA52aa089744C62AFF878": {
+          "amount": "24082240673896553700000",
+          "breakdown": { "UniswapV3": "24082240673896553700000" }
+        },
+        "0xeE3F16B8bCf2492571A2a27BABa8159ef935a8aC": {
+          "amount": "5985998544425626780000",
+          "breakdown": { "UniswapV3": "5985998544425626780000" }
+        },
+        "0x2Bd93343DED12d371A49e3fB205846862A74AF39": {
+          "amount": "1467341338111048225000",
+          "breakdown": { "UniswapV3": "1467341338111048225000" }
+        }
+      },
+      "lastUpdateEpoch": 468724,
+      "pool": "0x735a26a57A0A0069dfABd41595A970faF5E1ee8b",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "468999807618843526931345"
+    },
+    "0x0b283f810f01bfad00913dec42c514395a797cbfa7c4e385311e850793a9f5a7": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0x5Be876Ed0a9655133226BE302ca6f5503E3DA569": {
+          "amount": "44200726215657663600000",
+          "breakdown": { "UniswapV3": "44200726215657663600000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "117271669769839874800000",
+          "breakdown": { "UniswapV3": "117271669769839874800000" }
+        },
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "64059747298302299400000",
+          "breakdown": { "UniswapV3": "64059747298302299400000" }
+        },
+        "0x1A162A5FdaEbb0113f7B83Ed87A43BCF0B6a4D1E": {
+          "amount": "13336425377123113370000",
+          "breakdown": { "UniswapV3": "11212914081635714140000", "Arrakis": "2123511295487399210000" }
+        },
+        "0xfdA462548Ce04282f4B6D6619823a7C64Fdc0185": {
+          "amount": "83229582998550578000",
+          "breakdown": { "UniswapV3": "7751410265261172120", "Arrakis": "75478172733289407200" }
+        },
+        "0xe980599BF7fa44230c58c270D30cb30c3Db7F99a": {
+          "amount": "2653426445044189680",
+          "breakdown": { "UniswapV3": "2653426445044189680" }
+        },
+        "0x203643c55E127330F15494B85FA6d0E2f1a259EF": { "amount": "37136305939203612", "breakdown": { "Arrakis": "37136305939203612" } },
+        "0x76b8579694d1769a0390aDb3b199085845804cC1": {
+          "amount": "1106359022899581543000",
+          "breakdown": { "Arrakis": "1106359022899581543000" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "58857365049209858600",
+          "breakdown": { "Arrakis": "1362639799421224308", "Gamma": "57494725249788633900" }
+        },
+        "0xbE18f84532d8f7fb6d7919401C0096f3e257DB8b": {
+          "amount": "3411776472627244280000",
+          "breakdown": { "Arrakis": "3411776472627244280000" }
+        },
+        "0xd1c9d16B4A803f1336650f17Eb99b47b1Fc90038": { "amount": "2841013839616", "breakdown": { "Arrakis": "2841013839616" } },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "509825713480016", "breakdown": { "Gamma": "509825713480016" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "101965142696006618", "breakdown": { "Gamma": "101965142696006618" } },
+        "0x6199e5Fa5F627FFE703291418Df9683c3608aB8b": {
+          "amount": "502585317165362460000",
+          "breakdown": { "UniswapV3": "502585317165362460000" }
+        },
+        "0x529619a10129396a2F642cae32099C1eA7FA2834": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0x0267ceF0E0Ad7E46b067a0f00624AE387e4eaccf": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0x357Db7aB93Eef87334f12Aa4D02bfaA548C27514": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0x08048f6D9db401d2716DCbb1979513231e5e3C81": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0x4Ce674f5f462Ed707e5FE1fEf65B0Bb1ea87c099": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0x519e19Eac9EAd404343c68224dD2A22C5c25F992": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0x0BABA1Ad5bE3a5C0a66E7ac838a129Bf948f1eA4": {
+          "amount": "310210761300373244",
+          "breakdown": { "UniswapV3": "310210761300373244" }
+        },
+        "0xC9DE307d28202cDad6186884dD76BBF0CCcA0504": {
+          "amount": "2175766457452124015000",
+          "breakdown": { "UniswapV3": "2175766457452124015000" }
+        },
+        "0x52ea58f4FC3CEd48fa18E909226c1f8A0EF887DC": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xa0022debeB2275cf05B9c659493F89efe3AB89a6": { "amount": "17498803671648872", "breakdown": { "Arrakis": "17498803671648872" } },
+        "0xD13F8C25CceD32cdfA79EB5eD654Ce3e484dCAF5": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xF6F12EfFb70A9a5372dC9eA6848991799bB3ff96": { "amount": "0", "breakdown": { "Arrakis": "0" } }
+      },
+      "lastUpdateEpoch": 468724,
+      "pool": "0x8dB1b906d47dFc1D84A87fc49bd0522e285b98b9",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "246210263629240398234622"
+    },
+    "0xb3fc2abc303c70a16ab9d5fc38d7e8aeae66593a87a3d971b024dd34b97e94b1": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "39453464247568655",
+          "breakdown": { "SushiSwapV3": "39453464247568655" }
+        },
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "48460546535752430000",
+          "breakdown": { "SushiSwapV3": "48460546535752430000" }
+        }
+      },
+      "lastUpdateEpoch": 468736,
+      "pool": "0x84b2F2D7E1577d6EEbbb2239157Cd2d644959bA3",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "48500000000000000000"
+    },
+    "0x46eaedb774a3c452478d609019ec399fee9420882e7c242e34579564f518289a": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": { "amount": "7097417629869506", "breakdown": { "SushiSwapV3": "7097417629869506" } },
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "12374539975737412960",
+          "breakdown": { "SushiSwapV3": "12374539975737412960" }
+        },
+        "0xE4bcDc619C581a70a91307C3d6aF2159Ee3C0248": {
+          "amount": "1317326827236659378",
+          "breakdown": { "SushiSwapV3": "1317326827236659378" }
+        },
+        "0x44cCd9d41ba1c4Ef27D689520De643373A866973": {
+          "amount": "19189168625951373940",
+          "breakdown": { "SushiSwapV3": "19189168625951373940" }
+        },
+        "0x5eDf621bC259b7bF920e1bd24CCd6DC01811B2F2": {
+          "amount": "6375350285963477900",
+          "breakdown": { "SushiSwapV3": "6375350285963477900" }
+        },
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "3256794509754823000",
+          "breakdown": { "SushiSwapV3": "3256794509754823000" }
+        },
+        "0xC224D452294eeFB3f875B547D483126B32EcaDF2": {
+          "amount": "3766964998172922400",
+          "breakdown": { "SushiSwapV3": "3766964998172922400" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "2211714905953734000",
+          "breakdown": { "SushiSwapV3": "2211714905953734000" }
+        },
+        "0x7F429edeff8afC7Bb3A2CF7DB832Fc86f6FA99DA": { "amount": "1042453599724098", "breakdown": { "SushiSwapV3": "1042453599724098" } }
+      },
+      "lastUpdateEpoch": 468736,
+      "pool": "0x72c2178E082feDB13246877B5aA42ebcE1b72218",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "48500000000000000000"
+    },
+    "0x7c9878f4b55cac4604804f3e4c2c88930970c320638d98ab0ef4c21ca8a5b3db": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0xe26B4eDEB70aC8723077e2637b214eb850561e99": {
+          "amount": "42330805725241506000",
+          "breakdown": { "SushiSwapV3": "42330805725241506000" }
+        },
+        "0x81Ba93B26bCe8cA5d649B6607DF15E6D45462D8F": { "amount": "1740122260094150", "breakdown": { "SushiSwapV3": "1740122260094150" } },
+        "0x3Ac37D72489B4Ab8697632E3B46DCB598b6b6701": {
+          "amount": "48728703268674239",
+          "breakdown": { "SushiSwapV3": "48728703268674239" }
+        },
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": { "amount": "259176613354329", "breakdown": { "SushiSwapV3": "259176613354329" } },
+        "0x16F75aa4BCAB8a8FDa2BCAb023Ca1AE581453Ac5": {
+          "amount": "6077676426351527000",
+          "breakdown": { "SushiSwapV3": "6077676426351527000" }
+        },
+        "0x97a1CA841B4792068932D4224681f6F6fa22C549": { "amount": "40789846264842570", "breakdown": { "SushiSwapV3": "40789846264842570" } }
+      },
+      "lastUpdateEpoch": 468736,
+      "pool": "0x35644Fb61aFBc458bf92B15AdD6ABc1996Be5014",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "48500000000000000000"
+    },
+    "0xf57a896d993f043c760dc45c409aa25d9ab7fa7bb9c782e3bab7abcf2c53f4a5": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": {
+          "amount": "11533973594559629",
+          "breakdown": { "SushiSwapV3": "11533973594559629" }
+        },
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "18561825990772368000",
+          "breakdown": { "SushiSwapV3": "18561825990772368000" }
+        },
+        "0x5eDf621bC259b7bF920e1bd24CCd6DC01811B2F2": {
+          "amount": "20069355983379546000",
+          "breakdown": { "SushiSwapV3": "20069355983379546000" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "9857284052253526000",
+          "breakdown": { "SushiSwapV3": "9857284052253526000" }
+        }
+      },
+      "lastUpdateEpoch": 468736,
+      "pool": "0x801CCFae9d2C77893B545E8D0E4637C055CD26cB",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "48500000000000000000"
+    },
+    "0x2535a3afdc464af72c8c6083ef9c5df19b4aeb18618de3e7927764136a322568": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "18363293206477812480",
+          "breakdown": { "SushiSwapV3": "18363293206477812480" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "1574887295110515900",
+          "breakdown": { "SushiSwapV3": "1574887295110515900" }
+        },
+        "0x3d6194C33CFC85f6138b7679C046404984AE96b1": {
+          "amount": "28213849833896120000",
+          "breakdown": { "SushiSwapV3": "28213849833896120000" }
+        },
+        "0xbc172aaEAc951b9479D6650e258052AD407a927D": {
+          "amount": "347969664515550100",
+          "breakdown": { "SushiSwapV3": "347969664515550100" }
+        }
+      },
+      "lastUpdateEpoch": 468736,
+      "pool": "0x31ac258B911Af9a0d2669ebDFC4e39D92e96b772",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "48500000000000000000"
+    },
+    "0x88a8c6a1418ea55ab7d7f1bacb533aed6c023d649d362bf0eb470023d9f055cd": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x5eDf621bC259b7bF920e1bd24CCd6DC01811B2F2": {
+          "amount": "27630721388353259600",
+          "breakdown": { "SushiSwapV3": "27630721388353259600" }
+        },
+        "0x3d6194C33CFC85f6138b7679C046404984AE96b1": {
+          "amount": "18685027937230398000",
+          "breakdown": { "SushiSwapV3": "18685027937230398000" }
+        },
+        "0x16F75aa4BCAB8a8FDa2BCAb023Ca1AE581453Ac5": {
+          "amount": "2184250674416344600",
+          "breakdown": { "SushiSwapV3": "2184250674416344600" }
+        }
+      },
+      "lastUpdateEpoch": 468736,
+      "pool": "0xfA6e8E97ecECDC36302eCA534f63439b1E79487B",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "48500000000000000000"
+    },
+    "0x6da0bed89aff0c2a708409c51b0f69f09edc746ad23f5c72889554d1c04e9633": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x803f859CE7874994fE9e94189202eF38e3c6E1Af": { "amount": "161420485302979", "breakdown": { "SushiSwapV3": "161420485302979" } },
+        "0xBD251F2d6E8132d44d076f12e0520F2Bc74b0013": { "amount": "322840970605959", "breakdown": { "SushiSwapV3": "322840970605959" } },
+        "0x4d7F48f06f19465De95141085782Aa04D13b97A6": {
+          "amount": "30095943758741220",
+          "breakdown": { "SushiSwapV3": "30095943758741220" }
+        },
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": { "amount": "96246556678381", "breakdown": { "SushiSwapV3": "96246556678381" } },
+        "0x0e2481cdC9fFD4DA1EE17b3060D41c7A0a4906B7": {
+          "amount": "30761254444472440",
+          "breakdown": { "SushiSwapV3": "30761254444472440" }
+        },
+        "0x03dF740E2215F3495218F9c15C6774ced369252c": {
+          "amount": "73460936472497210",
+          "breakdown": { "SushiSwapV3": "73460936472497210" }
+        },
+        "0x215462dC79523ac795216e1Baa27586840Fa9382": {
+          "amount": "48112579624006880000",
+          "breakdown": { "SushiSwapV3": "48112579624006880000" }
+        },
+        "0x4d03D7BB49E6869b324d965E905bb09A89954b26": {
+          "amount": "252521733304819840",
+          "breakdown": { "SushiSwapV3": "252521733304819840" }
+        }
+      },
+      "lastUpdateEpoch": 468736,
+      "pool": "0x87C7056BBE6084f03304196Be51c6B90B6d85Aa2",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "48500000000000000000"
+    },
+    "0x0369ecc90fefb75772e34548219d3dcfbda7664e1e0cfcf1efa7c98b9cd5966b": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": {
+          "amount": "47479028543797695",
+          "breakdown": { "SushiSwapV3": "47479028543797695" }
+        },
+        "0xE4bcDc619C581a70a91307C3d6aF2159Ee3C0248": {
+          "amount": "10068859161017124018",
+          "breakdown": { "SushiSwapV3": "10068859161017124018" }
+        },
+        "0x44cCd9d41ba1c4Ef27D689520De643373A866973": {
+          "amount": "143275436544983552700",
+          "breakdown": { "SushiSwapV3": "143275436544983552700" }
+        },
+        "0x5eDf621bC259b7bF920e1bd24CCd6DC01811B2F2": {
+          "amount": "97341407129622283000",
+          "breakdown": { "SushiSwapV3": "97341407129622283000" }
+        },
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "82177544271631228000",
+          "breakdown": { "SushiSwapV3": "82177544271631228000" }
+        },
+        "0xC224D452294eeFB3f875B547D483126B32EcaDF2": {
+          "amount": "29918074656157632000",
+          "breakdown": { "SushiSwapV3": "29918074656157632000" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "322872048322882352000",
+          "breakdown": { "SushiSwapV3": "322872048322882352000" }
+        },
+        "0x7F429edeff8afC7Bb3A2CF7DB832Fc86f6FA99DA": {
+          "amount": "23243972759334810",
+          "breakdown": { "SushiSwapV3": "23243972759334810" }
+        },
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "8572537253693815290",
+          "breakdown": { "SushiSwapV3": "8572537253693815290" }
+        },
+        "0xEfe71D4CD571a0757E5aC6e915353a4347E2b468": {
+          "amount": "996465925379801780000",
+          "breakdown": { "SushiSwapV3": "996465925379801780000" }
+        },
+        "0x0e2481cdC9fFD4DA1EE17b3060D41c7A0a4906B7": {
+          "amount": "395600768898638000",
+          "breakdown": { "SushiSwapV3": "395600768898638000" }
+        }
+      },
+      "lastUpdateEpoch": 468886,
+      "pool": "0x72c2178E082feDB13246877B5aA42ebcE1b72218",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "1691158156490000000000"
+    },
+    "0xde7bba83837c11e66a4e5c8b1c3a3d09dcfe5bd70eeee1cd3e0322240ebdc1d6": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0xe26B4eDEB70aC8723077e2637b214eb850561e99": {
+          "amount": "349663626646644758000",
+          "breakdown": { "SushiSwapV3": "349663626646644758000" }
+        },
+        "0x81Ba93B26bCe8cA5d649B6607DF15E6D45462D8F": {
+          "amount": "19720071685934033",
+          "breakdown": { "SushiSwapV3": "19720071685934033" }
+        },
+        "0x3Ac37D72489B4Ab8697632E3B46DCB598b6b6701": {
+          "amount": "385946407102666133",
+          "breakdown": { "SushiSwapV3": "385946407102666133" }
+        },
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": { "amount": "3967109187375252", "breakdown": { "SushiSwapV3": "3967109187375252" } },
+        "0x16F75aa4BCAB8a8FDa2BCAb023Ca1AE581453Ac5": {
+          "amount": "148106155041815754000",
+          "breakdown": { "SushiSwapV3": "148106155041815754000" }
+        },
+        "0x97a1CA841B4792068932D4224681f6F6fa22C549": {
+          "amount": "84725551608131189",
+          "breakdown": { "SushiSwapV3": "84725551608131189" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "195589325285106926000",
+          "breakdown": { "SushiSwapV3": "195589325285106926000" }
+        },
+        "0xFf782191EfF41701E82d564E1607704bc46625b0": {
+          "amount": "694696046223238398",
+          "breakdown": { "SushiSwapV3": "694696046223238398" }
+        },
+        "0x8dd9FC21De21972074bAE4a34BC93fA2Dd7Ec349": {
+          "amount": "2867845053843297300",
+          "breakdown": { "SushiSwapV3": "2867845053843297300" }
+        },
+        "0xed39Cc7879bCA2bebCC3d9422bb674a3Ad820986": {
+          "amount": "858328586135080100000",
+          "breakdown": { "SushiSwapV3": "858328586135080100000" }
+        },
+        "0xaB6c96f8d1D05F2C7eBc9fecb5850D8120Cf54F8": {
+          "amount": "135327893541233602000",
+          "breakdown": { "SushiSwapV3": "135327893541233602000" }
+        },
+        "0x212C2a2891227f39B48D655C5ecA0b1377daFF90": {
+          "amount": "17802964984137916",
+          "breakdown": { "SushiSwapV3": "17802964984137916" }
+        },
+        "0x04e710d1f454A4e7Af720aceD09Ca1EeAa96E18A": { "amount": "67866635475369290", "breakdown": { "SushiSwapV3": "67866635475369290" } }
+      },
+      "lastUpdateEpoch": 468886,
+      "pool": "0x35644Fb61aFBc458bf92B15AdD6ABc1996Be5014",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "1691158156490000000000"
+    },
+    "0xbef1ad7d9a41f89081b4c012f1bf5f31376b3cb7109bf22b7c778104a482689e": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x5eDf621bC259b7bF920e1bd24CCd6DC01811B2F2": {
+          "amount": "256834918656672201000",
+          "breakdown": { "SushiSwapV3": "256834918656672201000" }
+        },
+        "0x3d6194C33CFC85f6138b7679C046404984AE96b1": {
+          "amount": "467737160180137653000",
+          "breakdown": { "SushiSwapV3": "467737160180137653000" }
+        },
+        "0x16F75aa4BCAB8a8FDa2BCAb023Ca1AE581453Ac5": {
+          "amount": "210417674711162010000",
+          "breakdown": { "SushiSwapV3": "210417674711162010000" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "16634617976998277000",
+          "breakdown": { "SushiSwapV3": "16634617976998277000" }
+        },
+        "0x00641Ed1aAE8A9700fD3FD4D899F2577D1Ae6b22": {
+          "amount": "238781786704252465000",
+          "breakdown": { "SushiSwapV3": "238781786704252465000" }
+        },
+        "0xc60861680f748fb8164e392Dff70ece0577B4389": {
+          "amount": "20176599080273350900",
+          "breakdown": { "SushiSwapV3": "20176599080273350900" }
+        },
+        "0x154001A2F9f816389b2F6D9E07563cE0359D813D": {
+          "amount": "34792574489602563000",
+          "breakdown": { "SushiSwapV3": "34792574489602563000" }
+        },
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "106757623230373938000",
+          "breakdown": { "SushiSwapV3": "106757623230373938000" }
+        },
+        "0x28177B138fdeC353c1DA1858798c52AC0bE0A0a8": {
+          "amount": "788026762746236000",
+          "breakdown": { "SushiSwapV3": "788026762746236000" }
+        },
+        "0x262d007d9245Cfc7C6f62cccC0660EFC251e96E3": { "amount": "5539907774000000", "breakdown": { "SushiSwapV3": "5539907774000000" } }
+      },
+      "lastUpdateEpoch": 468886,
+      "pool": "0xfA6e8E97ecECDC36302eCA534f63439b1E79487B",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "1352926521700000000000"
+    },
+    "0xee1118e71c9070c114d1ec56675579b268aa065da762eb214da1bae46eeb4b7a": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "3579052905944804760",
+          "breakdown": { "SushiSwapV3": "3579052905944804760" }
+        },
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "1349347468794052750000",
+          "breakdown": { "SushiSwapV3": "1349347468794052750000" }
+        }
+      },
+      "lastUpdateEpoch": 468886,
+      "pool": "0x84b2F2D7E1577d6EEbbb2239157Cd2d644959bA3",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "1352926521700000000000"
+    },
+    "0xce50a3dffca73a59ba940eba35e3dc6d5368bdc5aa3019e041508bd7da1f3b3d": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "13429282431951500100",
+          "breakdown": { "SushiSwapV3": "13429282431951500100" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "113348720797641502000",
+          "breakdown": { "SushiSwapV3": "113348720797641502000" }
+        },
+        "0x3d6194C33CFC85f6138b7679C046404984AE96b1": {
+          "amount": "718370328162713625000",
+          "breakdown": { "SushiSwapV3": "718370328162713625000" }
+        },
+        "0x00641Ed1aAE8A9700fD3FD4D899F2577D1Ae6b22": {
+          "amount": "285601118703258536000",
+          "breakdown": { "SushiSwapV3": "285601118703258536000" }
+        },
+        "0xbc172aaEAc951b9479D6650e258052AD407a927D": {
+          "amount": "31912692145276268800",
+          "breakdown": { "SushiSwapV3": "31912692145276268800" }
+        },
+        "0x7f055F4d9035ccC9678c4173856056Fd87b2db6d": {
+          "amount": "190264379459156117000",
+          "breakdown": { "SushiSwapV3": "190264379459156117000" }
+        }
+      },
+      "lastUpdateEpoch": 468886,
+      "pool": "0x31ac258B911Af9a0d2669ebDFC4e39D92e96b772",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "1352926521700000000000"
+    },
+    "0x0783a12e939bf26ec5821608142559760eea9746ab45253fdf8780e7afcc75e5": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": {
+          "amount": "17843504254695640",
+          "breakdown": { "SushiSwapV3": "17843504254695640" }
+        },
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "15912018287647004300",
+          "breakdown": { "SushiSwapV3": "15912018287647004300" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "402584234045490561000",
+          "breakdown": { "SushiSwapV3": "402584234045490561000" }
+        },
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "220882431676870770000",
+          "breakdown": { "SushiSwapV3": "220882431676870770000" }
+        },
+        "0x7D51598d425b68b41436C97c3029cbde4850DFa8": {
+          "amount": "26026072789255311400",
+          "breakdown": { "SushiSwapV3": "26026072789255311400" }
+        },
+        "0xC224D452294eeFB3f875B547D483126B32EcaDF2": {
+          "amount": "11040655696477765400",
+          "breakdown": { "SushiSwapV3": "11040655696477765400" }
+        }
+      },
+      "lastUpdateEpoch": 468886,
+      "pool": "0x801CCFae9d2C77893B545E8D0E4637C055CD26cB",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "676463256000000000000"
+    },
+    "0x9766d05002f4380ef3e4231bbd02313347d6c88a29c9a9b28e98a20a5b3d5a53": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x4d03D7BB49E6869b324d965E905bb09A89954b26": {
+          "amount": "3801809136304093110",
+          "breakdown": { "SushiSwapV3": "3801809136304093110" }
+        },
+        "0x803f859CE7874994fE9e94189202eF38e3c6E1Af": { "amount": "1075876601563065", "breakdown": { "SushiSwapV3": "1075876601563065" } },
+        "0xBD251F2d6E8132d44d076f12e0520F2Bc74b0013": { "amount": "2151753205126136", "breakdown": { "SushiSwapV3": "2151753205126136" } },
+        "0x4d7F48f06f19465De95141085782Aa04D13b97A6": {
+          "amount": "200591155925745846",
+          "breakdown": { "SushiSwapV3": "200591155925745846" }
+        },
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": { "amount": "641488706983945", "breakdown": { "SushiSwapV3": "641488706983945" } },
+        "0x0e2481cdC9fFD4DA1EE17b3060D41c7A0a4906B7": {
+          "amount": "251114918941481150",
+          "breakdown": { "SushiSwapV3": "251114918941481150" }
+        },
+        "0x03dF740E2215F3495218F9c15C6774ced369252c": {
+          "amount": "466379384174916228",
+          "breakdown": { "SushiSwapV3": "466379384174916228" }
+        },
+        "0x215462dC79523ac795216e1Baa27586840Fa9382": {
+          "amount": "329091762928053564000",
+          "breakdown": { "SushiSwapV3": "329091762928053564000" }
+        },
+        "0x04e710d1f454A4e7Af720aceD09Ca1EeAa96E18A": {
+          "amount": "62786850944435499",
+          "breakdown": { "SushiSwapV3": "62786850944435499" }
+        },
+        "0x5f9d4E3811e05F005Cd2599E4A4F2bDe385c0EBc": {
+          "amount": "3815503247868865500",
+          "breakdown": { "SushiSwapV3": "3815503247868865500" }
+        },
+        "0xb025503C1a95d387616cf763979eF413446c3fA0": {
+          "amount": "494477801204896590",
+          "breakdown": { "SushiSwapV3": "494477801204896590" }
+        },
+        "0xC224D452294eeFB3f875B547D483126B32EcaDF2": { "amount": "5912086873319702", "breakdown": { "SushiSwapV3": "5912086873319702" } },
+        "0x723DAF0139a02bAFa74e2765A4808F6597D94e9F": { "amount": "37424281182000000", "breakdown": { "SushiSwapV3": "37424281182000000" } }
+      },
+      "lastUpdateEpoch": 468886,
+      "pool": "0x87C7056BBE6084f03304196Be51c6B90B6d85Aa2",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "338231630910000000000"
+    },
+    "0x637094122af9e2a54745db74829152988342743abdec2a04c2e0bd9abc562013": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0x2f7E714c39572cf1F568d5aA55B3C72f31889904": {
+          "amount": "140237639434963233",
+          "breakdown": { "UniswapV3": "140237639434963233" }
+        },
+        "0x24e56740D621AA314E2F352e26A47734c3572eE3": {
+          "amount": "201488644660280329",
+          "breakdown": { "UniswapV3": "201488644660280329" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "234002978778349509000000",
+          "breakdown": { "UniswapV3": "234002978778349509000000" }
+        },
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "125496994627278466000000",
+          "breakdown": { "UniswapV3": "125496994627278466000000" }
+        },
+        "0x2Bd93343DED12d371A49e3fB205846862A74AF39": {
+          "amount": "5158488146345388940000",
+          "breakdown": { "UniswapV3": "5158488146345388940000" }
+        },
+        "0x4Ca321E4966A6BCbC26c13921CD76cac7D1f1B02": {
+          "amount": "519306215694439486910",
+          "breakdown": { "Arrakis": "519306215694439486910" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "7065768069807232390",
+          "breakdown": { "Arrakis": "79891022781850995", "Gamma": "6985877047024381040" }
+        },
+        "0xaaC7359Fb5D39Db6C562cACe5E0947b591F16fF5": {
+          "amount": "1823880077562030148",
+          "breakdown": { "Arrakis": "1823880077562030148" }
+        },
+        "0xB0b0F6F13A5158eB67724282F586a552E75b5728": {
+          "amount": "65154191726927009200000",
+          "breakdown": { "Arrakis": "65154191726927009200000" }
+        },
+        "0xcdE2933c2017944B46B466AB9A0dfDfA36e4c35b": {
+          "amount": "4488542926405061680",
+          "breakdown": { "Arrakis": "4488542926405061680" }
+        },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "3947340404727", "breakdown": { "Gamma": "3947340404727" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "110908632364720537", "breakdown": { "Gamma": "110908632364720537" } },
+        "0xeE3F16B8bCf2492571A2a27BABa8159ef935a8aC": {
+          "amount": "10839357317470896270000",
+          "breakdown": { "UniswapV3": "10839357317470896270000" }
+        },
+        "0x2633E2bCcD8baD67168356641FC9A99816A80b28": {
+          "amount": "1284290543762974700000",
+          "breakdown": { "UniswapV3": "1284290543762974700000" }
+        },
+        "0x6712B7F12D9D335A15b0CddeeE7A061ee522bDa0": {
+          "amount": "142045576773320457000",
+          "breakdown": { "UniswapV3": "142045576773320457000" }
+        },
+        "0x30bACd12a889C9Be7E5DA52aa089744C62AFF878": {
+          "amount": "12257657712062974400000",
+          "breakdown": { "UniswapV3": "12257657712062974400000" }
+        },
+        "0x1649FF31c30F9Fc7ecAe5c76Ad00Ae3AeCF18eCE": {
+          "amount": "1633709551683849510000",
+          "breakdown": { "Arrakis": "1633709551683849510000" }
+        },
+        "0xD13F8C25CceD32cdfA79EB5eD654Ce3e484dCAF5": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xdD84Ce1aDcb3A4908Db61A1dFA3353C3974c5a2B": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0x154001A2F9f816389b2F6D9E07563cE0359D813D": {
+          "amount": "483423422780434190000",
+          "breakdown": { "Gamma": "263185657534134190000", "UniswapV3": "220237765246300000000" }
+        },
+        "0xAC95712Ccf7fd178f198C7B6fd2d5f6f7a202929": {
+          "amount": "7012760376392294964700",
+          "breakdown": { "Gamma": "2033104091021735024700", "UniswapV3": "4979656285370558400000" }
+        },
+        "0xDDC2412E725f184DD69a825A64f2f86E0AF06F05": {
+          "amount": "318413695013383000000",
+          "breakdown": { "UniswapV3": "318413695013383000000" }
+        },
+        "0xaebb8FDBD5E52F99630cEBB80D0a1c19892EB4C2": {
+          "amount": "8995143995151000000",
+          "breakdown": { "UniswapV3": "8995143995151000000" }
+        }
+      },
+      "lastUpdateEpoch": 468926,
+      "pool": "0x735a26a57A0A0069dfABd41595A970faF5E1ee8b",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "464326443664467624503624"
+    },
+    "0x375987dbbefb16500717f6fac259c8b79b5643dcf776075b2329a2962594c925": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0xfdA462548Ce04282f4B6D6619823a7C64Fdc0185": {
+          "amount": "69916794307400949600",
+          "breakdown": { "UniswapV3": "7691479446038779090", "Arrakis": "62225314861362169500" }
+        },
+        "0x1A162A5FdaEbb0113f7B83Ed87A43BCF0B6a4D1E": {
+          "amount": "27732974071954898300000",
+          "breakdown": { "UniswapV3": "10990801970928473540000", "Arrakis": "16742172101026432600000" }
+        },
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "48165366484850076800000",
+          "breakdown": { "UniswapV3": "48165366484850076800000" }
+        },
+        "0x5Be876Ed0a9655133226BE302ca6f5503E3DA569": {
+          "amount": "30469440623510678600000",
+          "breakdown": { "UniswapV3": "30469440623510678600000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "79947730999178975500000",
+          "breakdown": { "UniswapV3": "79947730999178975500000" }
+        },
+        "0xe980599BF7fa44230c58c270D30cb30c3Db7F99a": {
+          "amount": "2730910020665314744",
+          "breakdown": { "UniswapV3": "2730910020665314744" }
+        },
+        "0x203643c55E127330F15494B85FA6d0E2f1a259EF": { "amount": "38280331903632324", "breakdown": { "Arrakis": "38280331903632324" } },
+        "0x52ea58f4FC3CEd48fa18E909226c1f8A0EF887DC": { "amount": "3", "breakdown": { "Arrakis": "3" } },
+        "0x76b8579694d1769a0390aDb3b199085845804cC1": {
+          "amount": "838226804068895950000",
+          "breakdown": { "Arrakis": "838226804068895950000" }
+        },
+        "0xa0022debeB2275cf05B9c659493F89efe3AB89a6": {
+          "amount": "15881283369665489809891",
+          "breakdown": { "Arrakis": "15881283369665489809891" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "59169879727176222300",
+          "breakdown": { "Arrakis": "1404617461745901688", "Gamma": "57765262265430328900" }
+        },
+        "0xbE18f84532d8f7fb6d7919401C0096f3e257DB8b": {
+          "amount": "2722937234800640000000",
+          "breakdown": { "Arrakis": "2722937234800640000000" }
+        },
+        "0xd1c9d16B4A803f1336650f17Eb99b47b1Fc90038": { "amount": "2928534488639", "breakdown": { "Arrakis": "2928534488639" } },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "512224659234151", "breakdown": { "Gamma": "512224659234151" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "102444931846830649", "breakdown": { "Gamma": "102444931846830649" } },
+        "0x0BABA1Ad5bE3a5C0a66E7ac838a129Bf948f1eA4": {
+          "amount": "2968984714669528330",
+          "breakdown": { "UniswapV3": "2968984714669528330" }
+        },
+        "0xD13F8C25CceD32cdfA79EB5eD654Ce3e484dCAF5": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xdD92062aDF9F6EDf528babe7F04804fe86424A74": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xedEFd5ba17f3382aD4BdD8022388E53dFd05d58d": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xF6F12EfFb70A9a5372dC9eA6848991799bB3ff96": {
+          "amount": "2990117016087516000",
+          "breakdown": { "Arrakis": "2990117016087516000" }
+        },
+        "0x154001A2F9f816389b2F6D9E07563cE0359D813D": {
+          "amount": "321315619641158770000",
+          "breakdown": { "Gamma": "321315619641158770000" }
+        }
+      },
+      "lastUpdateEpoch": 468862,
+      "pool": "0x8dB1b906d47dFc1D84A87fc49bd0522e285b98b9",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "243975270749935139555664"
+    },
+    "0x5165089c85a1885f208b588a41997123854352e712f9fb71b5e01767d3d551f9": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "229897930427239000000",
+          "breakdown": { "SushiSwapV3": "229897930427239000000" }
+        },
+        "0xEfe71D4CD571a0757E5aC6e915353a4347E2b468": {
+          "amount": "1364386198709608000000",
+          "breakdown": { "SushiSwapV3": "1364386198709608000000" }
+        },
+        "0x0e2481cdC9fFD4DA1EE17b3060D41c7A0a4906B7": {
+          "amount": "2029765094322000000",
+          "breakdown": { "SushiSwapV3": "2029765094322000000" }
+        },
+        "0x7F429edeff8afC7Bb3A2CF7DB832Fc86f6FA99DA": {
+          "amount": "25578393549000000",
+          "breakdown": { "SushiSwapV3": "25578393549000000" }
+        },
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": { "amount": "1418496002000000", "breakdown": { "SushiSwapV3": "1418496002000000" } },
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "5828495202405000000",
+          "breakdown": { "SushiSwapV3": "5828495202405000000" }
+        },
+        "0xE4bcDc619C581a70a91307C3d6aF2159Ee3C0248": {
+          "amount": "833221366953000000",
+          "breakdown": { "SushiSwapV3": "833221366953000000" }
+        },
+        "0x5eDf621bC259b7bF920e1bd24CCd6DC01811B2F2": {
+          "amount": "88155548799872000000",
+          "breakdown": { "SushiSwapV3": "88155548799872000000" }
+        }
+      },
+      "lastUpdateEpoch": 469054,
+      "pool": "0x72c2178E082feDB13246877B5aA42ebcE1b72218",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "1691158156490000000000"
+    },
+    "0x52e46b5ebb59effbc14511a9be2443255f7d919ed8e40d983c82acc3e618ab8b": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0xe26B4eDEB70aC8723077e2637b214eb850561e99": {
+          "amount": "147060528416464000000",
+          "breakdown": { "SushiSwapV3": "147060528416464000000" }
+        },
+        "0x16F75aa4BCAB8a8FDa2BCAb023Ca1AE581453Ac5": {
+          "amount": "129926588855395000000",
+          "breakdown": { "SushiSwapV3": "129926588855395000000" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "154123916844484000000",
+          "breakdown": { "SushiSwapV3": "154123916844484000000" }
+        },
+        "0xFf782191EfF41701E82d564E1607704bc46625b0": {
+          "amount": "625309809265000000",
+          "breakdown": { "SushiSwapV3": "625309809265000000" }
+        },
+        "0xed39Cc7879bCA2bebCC3d9422bb674a3Ad820986": {
+          "amount": "1194751254073609000000",
+          "breakdown": { "SushiSwapV3": "1194751254073609000000" }
+        },
+        "0xaB6c96f8d1D05F2C7eBc9fecb5850D8120Cf54F8": {
+          "amount": "401763014248220000000",
+          "breakdown": { "SushiSwapV3": "401763014248220000000" }
+        },
+        "0x81Ba93B26bCe8cA5d649B6607DF15E6D45462D8F": { "amount": "5547621600000000", "breakdown": { "SushiSwapV3": "5547621600000000" } },
+        "0x3Ac37D72489B4Ab8697632E3B46DCB598b6b6701": {
+          "amount": "170668606815000000",
+          "breakdown": { "SushiSwapV3": "170668606815000000" }
+        },
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": { "amount": "741955290000000", "breakdown": { "SushiSwapV3": "741955290000000" } },
+        "0x97a1CA841B4792068932D4224681f6F6fa22C549": {
+          "amount": "32163489153000000",
+          "breakdown": { "SushiSwapV3": "32163489153000000" }
+        },
+        "0x212C2a2891227f39B48D655C5ecA0b1377daFF90": {
+          "amount": "28698748725000000",
+          "breakdown": { "SushiSwapV3": "28698748725000000" }
+        },
+        "0xc0D3a8d939d8653F0Fd8fE7a0646DD3884293466": {
+          "amount": "19810343997000000",
+          "breakdown": { "SushiSwapV3": "19810343997000000" }
+        },
+        "0x12514ed8d7bD2599AA08e47646882b07F0507C5f": {
+          "amount": "881544386905000000",
+          "breakdown": { "SushiSwapV3": "881544386905000000" }
+        }
+      },
+      "lastUpdateEpoch": 469054,
+      "pool": "0x35644Fb61aFBc458bf92B15AdD6ABc1996Be5014",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "2029389787400000000000"
+    },
+    "0x157a32c11ce34030465e1c28c309f38c18161028355f3446f54b677d11ceb63a": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "176784039712729000000",
+          "breakdown": { "SushiSwapV3": "176784039712729000000" }
+        },
+        "0x7D51598d425b68b41436C97c3029cbde4850DFa8": {
+          "amount": "8029793911701000000",
+          "breakdown": { "SushiSwapV3": "8029793911701000000" }
+        },
+        "0xC224D452294eeFB3f875B547D483126B32EcaDF2": {
+          "amount": "13514785830743000000",
+          "breakdown": { "SushiSwapV3": "13514785830743000000" }
+        },
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": { "amount": "2599703348000000", "breakdown": { "SushiSwapV3": "2599703348000000" } },
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "2870317386863000000",
+          "breakdown": { "SushiSwapV3": "2870317386863000000" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "65382514630554000000",
+          "breakdown": { "SushiSwapV3": "65382514630554000000" }
+        },
+        "0x5eDf621bC259b7bF920e1bd24CCd6DC01811B2F2": {
+          "amount": "71647576824035000000",
+          "breakdown": { "SushiSwapV3": "71647576824035000000" }
+        }
+      },
+      "lastUpdateEpoch": 469054,
+      "pool": "0x801CCFae9d2C77893B545E8D0E4637C055CD26cB",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "338231628000000000000"
+    },
+    "0xa260dc759594a70c249e72bf990104593d7ce48e8575581b1535dcba2682373c": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x00641Ed1aAE8A9700fD3FD4D899F2577D1Ae6b22": {
+          "amount": "124670810698084000000",
+          "breakdown": { "SushiSwapV3": "124670810698084000000" }
+        },
+        "0x3d6194C33CFC85f6138b7679C046404984AE96b1": {
+          "amount": "10382501047384000000",
+          "breakdown": { "SushiSwapV3": "10382501047384000000" }
+        },
+        "0x7f055F4d9035ccC9678c4173856056Fd87b2db6d": {
+          "amount": "771160818710112000000",
+          "breakdown": { "SushiSwapV3": "771160818710112000000" }
+        },
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "4817416801555000000",
+          "breakdown": { "SushiSwapV3": "4817416801555000000" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "42894553551902000000",
+          "breakdown": { "SushiSwapV3": "42894553551902000000" }
+        },
+        "0xbc172aaEAc951b9479D6650e258052AD407a927D": { "amount": "0", "breakdown": { "SushiSwapV3": "0" } },
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "60768791920940000000",
+          "breakdown": { "SushiSwapV3": "60768791920940000000" }
+        }
+      },
+      "lastUpdateEpoch": 469054,
+      "pool": "0x31ac258B911Af9a0d2669ebDFC4e39D92e96b772",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "1014694892730000000000"
+    },
+    "0x7f9105af4c6c7964394a0a8530c1838ac7942dfb59c52ce9cf104f41e6ca87d6": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x00641Ed1aAE8A9700fD3FD4D899F2577D1Ae6b22": {
+          "amount": "108074833262736000000",
+          "breakdown": { "SushiSwapV3": "108074833262736000000" }
+        },
+        "0x3d6194C33CFC85f6138b7679C046404984AE96b1": {
+          "amount": "39390350944040000000",
+          "breakdown": { "SushiSwapV3": "39390350944040000000" }
+        },
+        "0xc60861680f748fb8164e392Dff70ece0577B4389": {
+          "amount": "17376021533410000000",
+          "breakdown": { "SushiSwapV3": "17376021533410000000" }
+        },
+        "0x154001A2F9f816389b2F6D9E07563cE0359D813D": {
+          "amount": "64398010051633000000",
+          "breakdown": { "SushiSwapV3": "64398010051633000000" }
+        },
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "366110695204698000000",
+          "breakdown": { "SushiSwapV3": "366110695204698000000" }
+        },
+        "0x28177B138fdeC353c1DA1858798c52AC0bE0A0a8": {
+          "amount": "164441992517000000",
+          "breakdown": { "SushiSwapV3": "164441992517000000" }
+        },
+        "0x262d007d9245Cfc7C6f62cccC0660EFC251e96E3": {
+          "amount": "353681887618000000",
+          "breakdown": { "SushiSwapV3": "353681887618000000" }
+        },
+        "0x5eDf621bC259b7bF920e1bd24CCd6DC01811B2F2": {
+          "amount": "86926849921675000000",
+          "breakdown": { "SushiSwapV3": "86926849921675000000" }
+        },
+        "0x16F75aa4BCAB8a8FDa2BCAb023Ca1AE581453Ac5": {
+          "amount": "184011122051919000000",
+          "breakdown": { "SushiSwapV3": "184011122051919000000" }
+        },
+        "0x8bd708F9755F656cF581BbfC01f4adBE0CF9C191": {
+          "amount": "147888885879708000000",
+          "breakdown": { "SushiSwapV3": "147888885879708000000" }
+        }
+      },
+      "lastUpdateEpoch": 469054,
+      "pool": "0xfA6e8E97ecECDC36302eCA534f63439b1E79487B",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "1014694892730000000000"
+    },
+    "0x6feb908a18592973414608221a8d79c9afd6be145f197310dccfdf1244526c1f": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "3525778879891000000",
+          "breakdown": { "SushiSwapV3": "3525778879891000000" }
+        },
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "1349400742820099000000",
+          "breakdown": { "SushiSwapV3": "1349400742820099000000" }
+        }
+      },
+      "lastUpdateEpoch": 469054,
+      "pool": "0x84b2F2D7E1577d6EEbbb2239157Cd2d644959bA3",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "1352926521700000000000"
+    },
+    "0x94b9f8cda29ec20f7cd8654498dd3d6535fd3a7a78c5fe9897a19ee6d2f56c75": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x4d03D7BB49E6869b324d965E905bb09A89954b26": {
+          "amount": "15975474509729000000",
+          "breakdown": { "SushiSwapV3": "15975474509729000000" }
+        },
+        "0x04e710d1f454A4e7Af720aceD09Ca1EeAa96E18A": {
+          "amount": "502552444448000000",
+          "breakdown": { "SushiSwapV3": "502552444448000000" }
+        },
+        "0xb025503C1a95d387616cf763979eF413446c3fA0": {
+          "amount": "6838966588086000000",
+          "breakdown": { "SushiSwapV3": "6838966588086000000" }
+        },
+        "0xC224D452294eeFB3f875B547D483126B32EcaDF2": {
+          "amount": "143305682642000000",
+          "breakdown": { "SushiSwapV3": "143305682642000000" }
+        },
+        "0x803f859CE7874994fE9e94189202eF38e3c6E1Af": { "amount": "3125397035000000", "breakdown": { "SushiSwapV3": "3125397035000000" } },
+        "0xBD251F2d6E8132d44d076f12e0520F2Bc74b0013": { "amount": "6250794079000000", "breakdown": { "SushiSwapV3": "6250794079000000" } },
+        "0x4d7F48f06f19465De95141085782Aa04D13b97A6": {
+          "amount": "582712741898000000",
+          "breakdown": { "SushiSwapV3": "582712741898000000" }
+        },
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": { "amount": "1863510086000000", "breakdown": { "SushiSwapV3": "1863510086000000" } },
+        "0x0e2481cdC9fFD4DA1EE17b3060D41c7A0a4906B7": {
+          "amount": "889100812075000000",
+          "breakdown": { "SushiSwapV3": "889100812075000000" }
+        },
+        "0x03dF740E2215F3495218F9c15C6774ced369252c": {
+          "amount": "2214526589299000000",
+          "breakdown": { "SushiSwapV3": "2214526589299000000" }
+        },
+        "0x215462dC79523ac795216e1Baa27586840Fa9382": {
+          "amount": "1962039982545025000000",
+          "breakdown": { "SushiSwapV3": "1962039982545025000000" }
+        },
+        "0x723DAF0139a02bAFa74e2765A4808F6597D94e9F": {
+          "amount": "4565155734594000000",
+          "breakdown": { "SushiSwapV3": "4565155734594000000" }
+        },
+        "0x911A6D66A2a60cEaFb894ceDf60Cd00042f6300d": {
+          "amount": "21511618977364000000",
+          "breakdown": { "SushiSwapV3": "21511618977364000000" }
+        },
+        "0x5f9d4E3811e05F005Cd2599E4A4F2bDe385c0EBc": {
+          "amount": "13225212820775000000",
+          "breakdown": { "SushiSwapV3": "13225212820775000000" }
+        },
+        "0x12514ed8d7bD2599AA08e47646882b07F0507C5f": {
+          "amount": "140693939369000000",
+          "breakdown": { "SushiSwapV3": "140693939369000000" }
+        },
+        "0xdb7d4E3F70Ab6EF7A699B3a8c15528A908e4aC7E": {
+          "amount": "645028642014000000",
+          "breakdown": { "SushiSwapV3": "645028642014000000" }
+        },
+        "0x23E1984B39de147559829357fCE054034c916675": {
+          "amount": "17047077031000000",
+          "breakdown": { "SushiSwapV3": "17047077031000000" }
+        },
+        "0xEFde8095822E1bc9fa2E47dbb3252ff5CE50892B": { "amount": "87168594351000000", "breakdown": { "SushiSwapV3": "87168594351000000" } }
+      },
+      "lastUpdateEpoch": 469054,
+      "pool": "0x87C7056BBE6084f03304196Be51c6B90B6d85Aa2",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "2029389787400000000000"
+    },
+    "0x17b452a72e1fbbf5b12e00a32905ac3ad999c7a0bb13a50fd0ddad53f9d37742": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0x2f7E714c39572cf1F568d5aA55B3C72f31889904": {
+          "amount": "158061911320000000",
+          "breakdown": { "UniswapV3": "158061911320000000" }
+        },
+        "0x24e56740D621AA314E2F352e26A47734c3572eE3": {
+          "amount": "227258975809000000",
+          "breakdown": { "UniswapV3": "227258975809000000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "247828243083650735000000",
+          "breakdown": { "UniswapV3": "247828243083650735000000" }
+        },
+        "0x30bACd12a889C9Be7E5DA52aa089744C62AFF878": {
+          "amount": "13232600786109095800000",
+          "breakdown": { "UniswapV3": "13232600786109095800000" }
+        },
+        "0x2Bd93343DED12d371A49e3fB205846862A74AF39": {
+          "amount": "5333730247822265000000",
+          "breakdown": { "UniswapV3": "5333730247822265000000" }
+        },
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "117307130829321929000000",
+          "breakdown": { "UniswapV3": "117307130829321929000000" }
+        },
+        "0x154001A2F9f816389b2F6D9E07563cE0359D813D": {
+          "amount": "1529491993876883000000",
+          "breakdown": { "UniswapV3": "1529491993876883000000" }
+        },
+        "0x1649FF31c30F9Fc7ecAe5c76Ad00Ae3AeCF18eCE": {
+          "amount": "6298219346416632900000",
+          "breakdown": { "Arrakis": "6298219346416632900000" }
+        },
+        "0x4Ca321E4966A6BCbC26c13921CD76cac7D1f1B02": {
+          "amount": "1088852206589000000",
+          "breakdown": { "Arrakis": "1088852206589000000" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "12873551877525000000",
+          "breakdown": { "Arrakis": "88888423637000000", "Gamma": "12784663453883000000" }
+        },
+        "0xaaC7359Fb5D39Db6C562cACe5E0947b591F16fF5": {
+          "amount": "2029287138433000000",
+          "breakdown": { "Arrakis": "2029287138433000000" }
+        },
+        "0xB0b0F6F13A5158eB67724282F586a552E75b5728": {
+          "amount": "72491917047289571600000",
+          "breakdown": { "Arrakis": "72491917047289571600000" }
+        },
+        "0xcdE2933c2017944B46B466AB9A0dfDfA36e4c35b": {
+          "amount": "4994046781327000000",
+          "breakdown": { "Arrakis": "4994046781327000000" }
+        },
+        "0xAC95712Ccf7fd178f198C7B6fd2d5f6f7a202929": {
+          "amount": "23724391455374169100000",
+          "breakdown": { "Gamma": "6246896141707858000000", "UniswapV3": "17477495313666307700000" }
+        },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "7223915000000", "breakdown": { "Gamma": "7223915000000" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "202970869560000000", "breakdown": { "Gamma": "202970869560000000" } },
+        "0xeE3F16B8bCf2492571A2a27BABa8159ef935a8aC": {
+          "amount": "41890740934318932200000",
+          "breakdown": { "UniswapV3": "41890740934318932200000" }
+        },
+        "0xDDC2412E725f184DD69a825A64f2f86E0AF06F05": {
+          "amount": "586721714340747000000",
+          "breakdown": { "UniswapV3": "586721714340747000000" }
+        },
+        "0xaebb8FDBD5E52F99630cEBB80D0a1c19892EB4C2": {
+          "amount": "227042122503210000000",
+          "breakdown": { "UniswapV3": "227042122503210000000" }
+        },
+        "0xb1682aBc8827A836c01f81C639E5E2f0E9a3723C": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xD13F8C25CceD32cdfA79EB5eD654Ce3e484dCAF5": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xdD92062aDF9F6EDf528babe7F04804fe86424A74": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xB2D6ef31d536c4a3999e3c96F070209A8598dC57": {
+          "amount": "14144654716268341200000",
+          "breakdown": { "UniswapV3": "14144654716268341200000" }
+        },
+        "0xDB611d682cb1ad72fcBACd944a8a6e2606a6d158": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0x97d505d5155CdC2D4F2553797031396E8eA3F7d6": { "amount": "264892112419000000", "breakdown": { "UniswapV3": "264892112419000000" } }
+      },
+      "lastUpdateEpoch": 469066,
+      "pool": "0x735a26a57A0A0069dfABd41595A970faF5E1ee8b",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "544616723206389449671543"
+    },
+    "0xfa68c174a8d55305817d3c5ecbc6e571e4d59b73d054cd20141d0724c16a6d36": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0xfdA462548Ce04282f4B6D6619823a7C64Fdc0185": {
+          "amount": "117198978433255000000",
+          "breakdown": { "UniswapV3": "9870130024364000000", "Arrakis": "107328848408884000000" }
+        },
+        "0x1A162A5FdaEbb0113f7B83Ed87A43BCF0B6a4D1E": {
+          "amount": "13194794027418673100000",
+          "breakdown": { "UniswapV3": "12932277898553842000000", "Arrakis": "262516128864830000000" }
+        },
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "77500049563403703000000",
+          "breakdown": { "UniswapV3": "77500049563403703000000" }
+        },
+        "0x5Be876Ed0a9655133226BE302ca6f5503E3DA569": {
+          "amount": "57979538522703701600000",
+          "breakdown": { "UniswapV3": "57979538522703701600000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "129650707960822261000000",
+          "breakdown": { "UniswapV3": "129650707960822261000000" }
+        },
+        "0xe980599BF7fa44230c58c270D30cb30c3Db7F99a": {
+          "amount": "3287668778701000000",
+          "breakdown": { "UniswapV3": "3287668778701000000" }
+        },
+        "0x203643c55E127330F15494B85FA6d0E2f1a259EF": { "amount": "50604891154000000", "breakdown": { "Arrakis": "50604891154000000" } },
+        "0x52ea58f4FC3CEd48fa18E909226c1f8A0EF887DC": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0x76b8579694d1769a0390aDb3b199085845804cC1": {
+          "amount": "1490452957011211000000",
+          "breakdown": { "Arrakis": "1490452957011211000000" }
+        },
+        "0xa0022debeB2275cf05B9c659493F89efe3AB89a6": {
+          "amount": "40306408647416256000000",
+          "breakdown": { "Arrakis": "40306408647416256000000" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "76907922134651000000",
+          "breakdown": { "Arrakis": "1856841626909000000", "Gamma": "75051080507738000000" }
+        },
+        "0xbE18f84532d8f7fb6d7919401C0096f3e257DB8b": {
+          "amount": "4622203008385395000000",
+          "breakdown": { "Arrakis": "4622203008385395000000" }
+        },
+        "0xd1c9d16B4A803f1336650f17Eb99b47b1Fc90038": { "amount": "3871386000000", "breakdown": { "Arrakis": "3871386000000" } },
+        "0x154001A2F9f816389b2F6D9E07563cE0359D813D": {
+          "amount": "3379346017974994000000",
+          "breakdown": { "Gamma": "619208282025122000000", "UniswapV3": "2760137735949872000000" }
+        },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "665504011000000", "breakdown": { "Gamma": "665504011000000" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "133100803594000000", "breakdown": { "Gamma": "133100803594000000" } },
+        "0x0BABA1Ad5bE3a5C0a66E7ac838a129Bf948f1eA4": {
+          "amount": "538497924150000000",
+          "breakdown": { "UniswapV3": "538497924150000000" }
+        },
+        "0xdfBFD6A4ea6893bb0A2a35EB1e77344177c7b2cC": { "amount": "299200694374000000", "breakdown": { "Gamma": "299200694374000000" } },
+        "0xd72b821a1d9180FFAC4375f6F11142211a025657": {
+          "amount": "7575472114477263000000",
+          "breakdown": { "Arrakis": "7575472114477263000000" }
+        },
+        "0x16F75aa4BCAB8a8FDa2BCAb023Ca1AE581453Ac5": {
+          "amount": "744721470338994000000",
+          "breakdown": { "UniswapV3": "744721470338994000000" }
+        }
+      },
+      "lastUpdateEpoch": 469066,
+      "pool": "0x8dB1b906d47dFc1D84A87fc49bd0522e285b98b9",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "336642110932987767738927"
+    },
+    "0x21e89b8eec9d3dc97a5be3c82656761e4585bc3c715a40ff386cc1bc62b58a01": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "404147564460530000000",
+          "breakdown": { "SushiSwapV3": "404147564460530000000" }
+        },
+        "0xEfe71D4CD571a0757E5aC6e915353a4347E2b468": {
+          "amount": "1551278785386914000000",
+          "breakdown": { "SushiSwapV3": "1551278785386914000000" }
+        },
+        "0x0e2481cdC9fFD4DA1EE17b3060D41c7A0a4906B7": {
+          "amount": "3353975577492000000",
+          "breakdown": { "SushiSwapV3": "3353975577492000000" }
+        },
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": { "amount": "2138060376000000", "breakdown": { "SushiSwapV3": "2138060376000000" } },
+        "0xE4bcDc619C581a70a91307C3d6aF2159Ee3C0248": {
+          "amount": "1378734180582000000",
+          "breakdown": { "SushiSwapV3": "1378734180582000000" }
+        },
+        "0x5eDf621bC259b7bF920e1bd24CCd6DC01811B2F2": {
+          "amount": "129637983685839000000",
+          "breakdown": { "SushiSwapV3": "129637983685839000000" }
+        },
+        "0x7F429edeff8afC7Bb3A2CF7DB832Fc86f6FA99DA": {
+          "amount": "57150949044000000",
+          "breakdown": { "SushiSwapV3": "57150949044000000" }
+        },
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "17394298339546000000",
+          "breakdown": { "SushiSwapV3": "17394298339546000000" }
+        },
+        "0x4cB75146e98562C9d79b31649C6C739e4DCB7CD5": {
+          "amount": "872278972682000000",
+          "breakdown": { "SushiSwapV3": "872278972682000000" }
+        },
+        "0x09bB137D5De483e6A6338639A13298A92752c455": {
+          "amount": "114523361897400000000",
+          "breakdown": { "SushiSwapV3": "114523361897400000000" }
+        },
+        "0xed39Cc7879bCA2bebCC3d9422bb674a3Ad820986": {
+          "amount": "613857975800100000000",
+          "breakdown": { "SushiSwapV3": "613857975800100000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0x72c2178E082feDB13246877B5aA42ebcE1b72218",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "5797690000000000000000"
+    },
+    "0x82996eeb8984e02d0983d49674d80c28451c714b4299bf490db86a822d1e8cd7": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0xe26B4eDEB70aC8723077e2637b214eb850561e99": {
+          "amount": "322856579796393000000",
+          "breakdown": { "SushiSwapV3": "322856579796393000000" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "340091137136160000000",
+          "breakdown": { "SushiSwapV3": "340091137136160000000" }
+        },
+        "0xFf782191EfF41701E82d564E1607704bc46625b0": {
+          "amount": "1409807753638000000",
+          "breakdown": { "SushiSwapV3": "1409807753638000000" }
+        },
+        "0xed39Cc7879bCA2bebCC3d9422bb674a3Ad820986": {
+          "amount": "4180753007353369000000",
+          "breakdown": { "SushiSwapV3": "4180753007353369000000" }
+        },
+        "0xaB6c96f8d1D05F2C7eBc9fecb5850D8120Cf54F8": {
+          "amount": "823072757651881000000",
+          "breakdown": { "SushiSwapV3": "823072757651881000000" }
+        },
+        "0x12514ed8d7bD2599AA08e47646882b07F0507C5f": {
+          "amount": "3371642416399000000",
+          "breakdown": { "SushiSwapV3": "3371642416399000000" }
+        },
+        "0xc0D3a8d939d8653F0Fd8fE7a0646DD3884293466": {
+          "amount": "56713736034000000",
+          "breakdown": { "SushiSwapV3": "56713736034000000" }
+        },
+        "0x81Ba93B26bCe8cA5d649B6607DF15E6D45462D8F": {
+          "amount": "12133182641000000",
+          "breakdown": { "SushiSwapV3": "12133182641000000" }
+        },
+        "0x3Ac37D72489B4Ab8697632E3B46DCB598b6b6701": {
+          "amount": "373999084073000000",
+          "breakdown": { "SushiSwapV3": "373999084073000000" }
+        },
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": { "amount": "1672792864000000", "breakdown": { "SushiSwapV3": "1672792864000000" } },
+        "0x97a1CA841B4792068932D4224681f6F6fa22C549": {
+          "amount": "209565567866000000",
+          "breakdown": { "SushiSwapV3": "209565567866000000" }
+        },
+        "0x07bb98C1c3dBbDdBe0BEf1a8043F705EcC3D4273": {
+          "amount": "35318408677000000",
+          "breakdown": { "SushiSwapV3": "35318408677000000" }
+        },
+        "0x212C2a2891227f39B48D655C5ecA0b1377daFF90": {
+          "amount": "116797823772000000",
+          "breakdown": { "SushiSwapV3": "116797823772000000" }
+        },
+        "0xA8e51014aF09A67F7dE50751bB8edeB3a644A9b0": {
+          "amount": "672566766300000000",
+          "breakdown": { "SushiSwapV3": "672566766300000000" }
+        },
+        "0xc7C61C3779C16ed1a01511f1949fbDdBC8E3ecd1": {
+          "amount": "449365044200000000",
+          "breakdown": { "SushiSwapV3": "449365044200000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0x35644Fb61aFBc458bf92B15AdD6ABc1996Be5014",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "11596350000000000000000"
+    },
+    "0xf47d6c53a4508264cd1f0ecdccf4a7a42b88fc0644debc670c9c88e9f13a1f66": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "182603599713095000000",
+          "breakdown": { "SushiSwapV3": "182603599713095000000" }
+        },
+        "0x7D51598d425b68b41436C97c3029cbde4850DFa8": {
+          "amount": "4335585129899000000",
+          "breakdown": { "SushiSwapV3": "4335585129899000000" }
+        },
+        "0xC224D452294eeFB3f875B547D483126B32EcaDF2": {
+          "amount": "9111211044251000000",
+          "breakdown": { "SushiSwapV3": "9111211044251000000" }
+        },
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": { "amount": "1752620632000000", "breakdown": { "SushiSwapV3": "1752620632000000" } },
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "2267766856964000000",
+          "breakdown": { "SushiSwapV3": "2267766856964000000" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "43056539190436000000",
+          "breakdown": { "SushiSwapV3": "43056539190436000000" }
+        },
+        "0x66d029aAD6a1E008dFD7845752b3391e8EaDF6B4": {
+          "amount": "84365321597000000000",
+          "breakdown": { "SushiSwapV3": "84365321597000000000" }
+        },
+        "0x5eDf621bC259b7bF920e1bd24CCd6DC01811B2F2": {
+          "amount": "28761933524400000000",
+          "breakdown": { "SushiSwapV3": "28761933524400000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0x801CCFae9d2C77893B545E8D0E4637C055CD26cB",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "724590000000000000000"
+    },
+    "0x52e61a731c07aae04546a7df4ef3c55713ac54ab70655d7143daea52aa05bcd7": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x00641Ed1aAE8A9700fD3FD4D899F2577D1Ae6b22": {
+          "amount": "113636897068706000000",
+          "breakdown": { "SushiSwapV3": "113636897068706000000" }
+        },
+        "0x7f055F4d9035ccC9678c4173856056Fd87b2db6d": {
+          "amount": "776066261060856000000",
+          "breakdown": { "SushiSwapV3": "776066261060856000000" }
+        },
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "149450673815691000000",
+          "breakdown": { "SushiSwapV3": "149450673815691000000" }
+        },
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "4349986780508000000",
+          "breakdown": { "SushiSwapV3": "4349986780508000000" }
+        },
+        "0xcD96F53caba4119Dccc27867dCcF9131411d128b": {
+          "amount": "20007310305907000000",
+          "breakdown": { "SushiSwapV3": "20007310305907000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0x31ac258B911Af9a0d2669ebDFC4e39D92e96b772",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "2173770000000000000000"
+    },
+    "0x808a7dd7fa8b003a1b6b05ac7eecffd21eb308af295a44128a2277785c357ec3": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x00641Ed1aAE8A9700fD3FD4D899F2577D1Ae6b22": {
+          "amount": "107374776752740000000",
+          "breakdown": { "SushiSwapV3": "107374776752740000000" }
+        },
+        "0x154001A2F9f816389b2F6D9E07563cE0359D813D": {
+          "amount": "72105447270848000000",
+          "breakdown": { "SushiSwapV3": "72105447270848000000" }
+        },
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "360157636811971000000",
+          "breakdown": { "SushiSwapV3": "360157636811971000000" }
+        },
+        "0x262d007d9245Cfc7C6f62cccC0660EFC251e96E3": {
+          "amount": "349701768005000000",
+          "breakdown": { "SushiSwapV3": "349701768005000000" }
+        },
+        "0xc60861680f748fb8164e392Dff70ece0577B4389": {
+          "amount": "25145865454681000000",
+          "breakdown": { "SushiSwapV3": "25145865454681000000" }
+        },
+        "0x8bd708F9755F656cF581BbfC01f4adBE0CF9C191": {
+          "amount": "538100897399708000000",
+          "breakdown": { "SushiSwapV3": "538100897399708000000" }
+        },
+        "0x5eDf621bC259b7bF920e1bd24CCd6DC01811B2F2": {
+          "amount": "86439288200933000000",
+          "breakdown": { "SushiSwapV3": "86439288200933000000" }
+        },
+        "0x16F75aa4BCAB8a8FDa2BCAb023Ca1AE581453Ac5": {
+          "amount": "23390548397356000000",
+          "breakdown": { "SushiSwapV3": "23390548397356000000" }
+        },
+        "0x099ab80eF9c3CFE199C3f0C493021307f5c715D8": {
+          "amount": "204950676652581000000",
+          "breakdown": { "SushiSwapV3": "204950676652581000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0xfA6e8E97ecECDC36302eCA534f63439b1E79487B",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "2898360000000000000000"
+    },
+    "0x360ca33460a5ad5ea208cd6096a5363cbbb1ad3e05a9a10f61075c98bb525e7e": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0xA626Bd40A8c88F59A4CF9b1821A7bD71faD96285": {
+          "amount": "1354601597728591000000",
+          "breakdown": { "SushiSwapV3": "1354601597728591000000" }
+        },
+        "0x4bb4c1B0745ef7B4642fEECcd0740deC417ca0a0": {
+          "amount": "2411395645484000000",
+          "breakdown": { "SushiSwapV3": "2411395645484000000" }
+        },
+        "0x00641Ed1aAE8A9700fD3FD4D899F2577D1Ae6b22": {
+          "amount": "61001845335200000000",
+          "breakdown": { "SushiSwapV3": "61001845335200000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0x84b2F2D7E1577d6EEbbb2239157Cd2d644959bA3",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "2898360000000000000000"
+    },
+    "0x7fafa932761a246c92395f21d52a2ee61654d6f2842c31d88708a6bc00088e75": {
+      "amm": 1,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x4d03D7BB49E6869b324d965E905bb09A89954b26": {
+          "amount": "68807124502658000000",
+          "breakdown": { "SushiSwapV3": "68807124502658000000" }
+        },
+        "0xb025503C1a95d387616cf763979eF413446c3fA0": {
+          "amount": "21883491420456000000",
+          "breakdown": { "SushiSwapV3": "21883491420456000000" }
+        },
+        "0xC224D452294eeFB3f875B547D483126B32EcaDF2": {
+          "amount": "571267422254000000",
+          "breakdown": { "SushiSwapV3": "571267422254000000" }
+        },
+        "0x723DAF0139a02bAFa74e2765A4808F6597D94e9F": {
+          "amount": "14671420965892000000",
+          "breakdown": { "SushiSwapV3": "14671420965892000000" }
+        },
+        "0x911A6D66A2a60cEaFb894ceDf60Cd00042f6300d": {
+          "amount": "98519177283820000000",
+          "breakdown": { "SushiSwapV3": "98519177283820000000" }
+        },
+        "0x12514ed8d7bD2599AA08e47646882b07F0507C5f": {
+          "amount": "1160468437846000000",
+          "breakdown": { "SushiSwapV3": "1160468437846000000" }
+        },
+        "0xdb7d4E3F70Ab6EF7A699B3a8c15528A908e4aC7E": {
+          "amount": "5471681448744000000",
+          "breakdown": { "SushiSwapV3": "5471681448744000000" }
+        },
+        "0x23E1984B39de147559829357fCE054034c916675": {
+          "amount": "294844982638000000",
+          "breakdown": { "SushiSwapV3": "294844982638000000" }
+        },
+        "0xEFde8095822E1bc9fa2E47dbb3252ff5CE50892B": {
+          "amount": "180581669580000000",
+          "breakdown": { "SushiSwapV3": "180581669580000000" }
+        },
+        "0x803f859CE7874994fE9e94189202eF38e3c6E1Af": { "amount": "7628776707000000", "breakdown": { "SushiSwapV3": "7628776707000000" } },
+        "0xBD251F2d6E8132d44d076f12e0520F2Bc74b0013": {
+          "amount": "15257553621000000",
+          "breakdown": { "SushiSwapV3": "15257553621000000" }
+        },
+        "0x4d7F48f06f19465De95141085782Aa04D13b97A6": {
+          "amount": "1864578386618000000",
+          "breakdown": { "SushiSwapV3": "1864578386618000000" }
+        },
+        "0x329C787B163a730BD7900DF2BEb3Ff4fe4670375": { "amount": "4548638795000000", "breakdown": { "SushiSwapV3": "4548638795000000" } },
+        "0x0e2481cdC9fFD4DA1EE17b3060D41c7A0a4906B7": {
+          "amount": "3230236846858000000",
+          "breakdown": { "SushiSwapV3": "3230236846858000000" }
+        },
+        "0x03dF740E2215F3495218F9c15C6774ced369252c": {
+          "amount": "9116164256255000000",
+          "breakdown": { "SushiSwapV3": "9116164256255000000" }
+        },
+        "0x215462dC79523ac795216e1Baa27586840Fa9382": {
+          "amount": "2446547710732139000000",
+          "breakdown": { "SushiSwapV3": "2446547710732139000000" }
+        },
+        "0x27cAFf28136DCE030aa4811249297c0962219a33": {
+          "amount": "5679506105559000000",
+          "breakdown": { "SushiSwapV3": "5679506105559000000" }
+        },
+        "0x029cF801DA43C361ED45B7210dFDe88e1E121b08": {
+          "amount": "51308508885000000",
+          "breakdown": { "SushiSwapV3": "51308508885000000" }
+        },
+        "0xCc86501e6bAd159bfD1C51b24978295AD79EC7fB": {
+          "amount": "44361796849159000000",
+          "breakdown": { "SushiSwapV3": "44361796849159000000" }
+        },
+        "0xc56E357599De4418c3a33ad611130D2b2b36b19a": {
+          "amount": "59186194215658000000",
+          "breakdown": { "SushiSwapV3": "59186194215658000000" }
+        },
+        "0x8995c3BeE9655f41DEe4F34f9508a56589252f67": {
+          "amount": "1333802913100000000",
+          "breakdown": { "SushiSwapV3": "1333802913100000000" }
+        },
+        "0x74A4Df8e4332c32846114BABA52b723959254f8b": {
+          "amount": "958993724800000000",
+          "breakdown": { "SushiSwapV3": "958993724800000000" }
+        },
+        "0x5f9d4E3811e05F005Cd2599E4A4F2bDe385c0EBc": {
+          "amount": "28371164550600000000",
+          "breakdown": { "SushiSwapV3": "28371164550600000000" }
+        },
+        "0x0dc7cA9dBA8ECC9384819af715b3768E99D9D409": {
+          "amount": "264221556300000000",
+          "breakdown": { "SushiSwapV3": "264221556300000000" }
+        },
+        "0x2B3e3E467F671739895F3f674bba581ed3F488C1": {
+          "amount": "21839332915700000000",
+          "breakdown": { "SushiSwapV3": "21839332915700000000" }
+        },
+        "0xAFa454AD02AE3ad5caC4d04342756fb90e51462c": {
+          "amount": "856884313000000000",
+          "breakdown": { "SushiSwapV3": "856884313000000000" }
+        },
+        "0xa7A13659692239c143daE313a0116D5b5C18d26C": {
+          "amount": "655938847000000000",
+          "breakdown": { "SushiSwapV3": "655938847000000000" }
+        },
+        "0xc7C61C3779C16ed1a01511f1949fbDdBC8E3ecd1": {
+          "amount": "49958804100000000",
+          "breakdown": { "SushiSwapV3": "49958804100000000" }
+        },
+        "0xfB9357f2fec6f437bf7757d5FCb7fB1296816715": { "amount": "0", "breakdown": { "SushiSwapV3": "0" } },
+        "0x4ef08c86E553250659Ef1c6B420220AACC4aC68d": {
+          "amount": "548960678900000000",
+          "breakdown": { "SushiSwapV3": "548960678900000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0x87C7056BBE6084f03304196Be51c6B90B6d85Aa2",
+      "token": "0x6B3595068778DD592e39A122f4f5a5cF09C90fE2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "SUSHI",
+      "totalAmount": "5797690000000000000000"
+    },
+    "0xd8ad185dbdc83ab04fb676269d12e4270f5a460c4e2181e6863ed2e9e73f6385": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0x2f7E714c39572cf1F568d5aA55B3C72f31889904": {
+          "amount": "103128192024000000",
+          "breakdown": { "UniswapV3": "103128192024000000" }
+        },
+        "0x24e56740D621AA314E2F352e26A47734c3572eE3": {
+          "amount": "178449045504000000",
+          "breakdown": { "UniswapV3": "178449045504000000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "218064816782189455800000",
+          "breakdown": { "UniswapV3": "218064816782189455800000" }
+        },
+        "0x2Bd93343DED12d371A49e3fB205846862A74AF39": {
+          "amount": "5716545950069555000000",
+          "breakdown": { "UniswapV3": "5716545950069555000000" }
+        },
+        "0xeE3F16B8bCf2492571A2a27BABa8159ef935a8aC": {
+          "amount": "17772862639084129400000",
+          "breakdown": { "UniswapV3": "17772862639084129400000" }
+        },
+        "0x154001A2F9f816389b2F6D9E07563cE0359D813D": {
+          "amount": "738527859970075000000",
+          "breakdown": { "UniswapV3": "738527859970075000000" }
+        },
+        "0xaebb8FDBD5E52F99630cEBB80D0a1c19892EB4C2": {
+          "amount": "10333742669259651000000",
+          "breakdown": { "UniswapV3": "10333742669259651000000" }
+        },
+        "0xB2D6ef31d536c4a3999e3c96F070209A8598dC57": {
+          "amount": "20439184818216066300000",
+          "breakdown": { "UniswapV3": "20006018726963962300000", "Arrakis": "433166091252104000000" }
+        },
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "109466216435270700200000",
+          "breakdown": { "UniswapV3": "109466216435270700200000" }
+        },
+        "0x1649FF31c30F9Fc7ecAe5c76Ad00Ae3AeCF18eCE": {
+          "amount": "15564134971147104300000",
+          "breakdown": { "Arrakis": "15564134971147104300000" }
+        },
+        "0x4Ca321E4966A6BCbC26c13921CD76cac7D1f1B02": {
+          "amount": "1283763464992000000",
+          "breakdown": { "Arrakis": "1283763464992000000" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "14188166522684000000",
+          "breakdown": { "Arrakis": "104799999521000000", "Gamma": "14083366523159000000" }
+        },
+        "0xaaC7359Fb5D39Db6C562cACe5E0947b591F16fF5": {
+          "amount": "2392542047981000000",
+          "breakdown": { "Arrakis": "2392542047981000000" }
+        },
+        "0xB0b0F6F13A5158eB67724282F586a552E75b5728": {
+          "amount": "85468417154767184500000",
+          "breakdown": { "Arrakis": "85468417154767184500000" }
+        },
+        "0xcdE2933c2017944B46B466AB9A0dfDfA36e4c35b": {
+          "amount": "5888011946468000000",
+          "breakdown": { "Arrakis": "5888011946468000000" }
+        },
+        "0xAC95712Ccf7fd178f198C7B6fd2d5f6f7a202929": {
+          "amount": "7389475773206378000000",
+          "breakdown": { "Gamma": "6881473909199430000000", "UniswapV3": "508001864006948000000" }
+        },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "7957741000000", "breakdown": { "Gamma": "7957741000000" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "223589237204000000", "breakdown": { "Gamma": "223589237204000000" } },
+        "0x97d505d5155CdC2D4F2553797031396E8eA3F7d6": {
+          "amount": "164202845080263000000",
+          "breakdown": { "UniswapV3": "164202845080263000000" }
+        },
+        "0xDB611d682cb1ad72fcBACd944a8a6e2606a6d158": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xEf585CF8CAcb909eDAa23e8E8d596b338cb72403": {
+          "amount": "1384240152929796000000",
+          "breakdown": { "Arrakis": "1384167084073790000000", "UniswapV3": "73068856005000000" }
+        },
+        "0x1A162A5FdaEbb0113f7B83Ed87A43BCF0B6a4D1E": { "amount": "471921247972000000", "breakdown": { "Gamma": "471921247972000000" } },
+        "0x4A277e11f55Be48b27C453188A74F115a327BB2e": {
+          "amount": "626284093823259000000",
+          "breakdown": { "Gamma": "626284093823259000000" }
+        },
+        "0x30bACd12a889C9Be7E5DA52aa089744C62AFF878": {
+          "amount": "4311269472745057000000",
+          "breakdown": { "UniswapV3": "4311269472745057000000" }
+        },
+        "0x2633E2bCcD8baD67168356641FC9A99816A80b28": {
+          "amount": "8940667138106632200000",
+          "breakdown": { "UniswapV3": "8940667138106632200000" }
+        },
+        "0x7C6Accd51cbbdd53354De581841803b4f79d48e7": {
+          "amount": "12058499457448696600000",
+          "breakdown": { "UniswapV3": "12058499457448696600000" }
+        },
+        "0x11d67Fa925877813B744aBC0917900c2b1D6Eb81": {
+          "amount": "15764871213146912500000",
+          "breakdown": { "UniswapV3": "14367217516621754500000", "Arrakis": "1397653696525157000000" }
+        },
+        "0xdD84Ce1aDcb3A4908Db61A1dFA3353C3974c5a2B": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xdD92062aDF9F6EDf528babe7F04804fe86424A74": { "amount": "0", "breakdown": { "Arrakis": "0" } }
+      },
+      "lastUpdateEpoch": 469234,
+      "pool": "0x735a26a57A0A0069dfABd41595A970faF5E1ee8b",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "534228689006123621327322"
+    },
+    "0x8002db0010362f0163c9f16d3720f6f2174b0077613cd311de8052fea1442d86": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0xfdA462548Ce04282f4B6D6619823a7C64Fdc0185": {
+          "amount": "77607737109010000000",
+          "breakdown": { "UniswapV3": "11249975019356000000", "Arrakis": "66357762089644000000" }
+        },
+        "0x1A162A5FdaEbb0113f7B83Ed87A43BCF0B6a4D1E": {
+          "amount": "2085012511165758000000",
+          "breakdown": { "UniswapV3": "2079704415278048000000", "Arrakis": "5308095887710000000" }
+        },
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "48961684014102297900000",
+          "breakdown": { "UniswapV3": "48961684014102297900000" }
+        },
+        "0x5Be876Ed0a9655133226BE302ca6f5503E3DA569": {
+          "amount": "39713931915462731000000",
+          "breakdown": { "UniswapV3": "39713931915462731000000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "115046520133300541900000",
+          "breakdown": { "UniswapV3": "115046520133300541900000" }
+        },
+        "0x154001A2F9f816389b2F6D9E07563cE0359D813D": {
+          "amount": "5367069436132198000000",
+          "breakdown": { "UniswapV3": "5367069436132198000000" }
+        },
+        "0x16F75aa4BCAB8a8FDa2BCAb023Ca1AE581453Ac5": {
+          "amount": "3692228016867599000000",
+          "breakdown": { "UniswapV3": "3692228016867599000000" }
+        },
+        "0xe980599BF7fa44230c58c270D30cb30c3Db7F99a": {
+          "amount": "4319946571503000000",
+          "breakdown": { "UniswapV3": "4319946571503000000" }
+        },
+        "0x203643c55E127330F15494B85FA6d0E2f1a259EF": { "amount": "50651388164000000", "breakdown": { "Arrakis": "50651388164000000" } },
+        "0x52ea58f4FC3CEd48fa18E909226c1f8A0EF887DC": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0x76b8579694d1769a0390aDb3b199085845804cC1": {
+          "amount": "994789723086517000000",
+          "breakdown": { "Arrakis": "994789723086517000000" }
+        },
+        "0xa0022debeB2275cf05B9c659493F89efe3AB89a6": {
+          "amount": "110937129389335067000000",
+          "breakdown": { "Arrakis": "110937129389335067000000" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "86596129679574000000",
+          "breakdown": { "Arrakis": "1858547738489000000", "Gamma": "84737581941082000000" }
+        },
+        "0xbE18f84532d8f7fb6d7919401C0096f3e257DB8b": {
+          "amount": "3307583368290118000000",
+          "breakdown": { "Arrakis": "3307583368290118000000" }
+        },
+        "0xd1c9d16B4A803f1336650f17Eb99b47b1Fc90038": { "amount": "3874943000000", "breakdown": { "Arrakis": "3874943000000" } },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "751397585000000", "breakdown": { "Gamma": "751397585000000" } },
+        "0xdfBFD6A4ea6893bb0A2a35EB1e77344177c7b2cC": { "amount": "698696716426000000", "breakdown": { "Gamma": "698696716426000000" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "150279518623000000", "breakdown": { "Gamma": "150279518623000000" } },
+        "0xD13F8C25CceD32cdfA79EB5eD654Ce3e484dCAF5": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xdD92062aDF9F6EDf528babe7F04804fe86424A74": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xE84ADC0964ee34CE0319DF3418636eD6a4117B97": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0xF6F12EfFb70A9a5372dC9eA6848991799bB3ff96": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0x7FF7602507DF37c0B7A2981ca3278e9142A7F14A": {
+          "amount": "3290934701126000000",
+          "breakdown": { "UniswapV3": "3290934701126000000" }
+        },
+        "0x411B9b6cF2377D0B8494CC23235FE524d058EDF0": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0x0BABA1Ad5bE3a5C0a66E7ac838a129Bf948f1eA4": { "amount": "510935909750000000", "breakdown": { "UniswapV3": "510935909750000000" } }
+      },
+      "lastUpdateEpoch": 469234,
+      "pool": "0x8dB1b906d47dFc1D84A87fc49bd0522e285b98b9",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "330279174574609577353156"
+    },
+    "0xa57fbe3e2d939c57ef5ab7cd60593c269db1ea334c7e3e2e6046fac667ef18dd": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "98947372273736652000000",
+          "breakdown": { "UniswapV3": "98947372273736652000000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "81534326858348544000000",
+          "breakdown": { "UniswapV3": "81534326858348544000000" }
+        },
+        "0x2633E2bCcD8baD67168356641FC9A99816A80b28": {
+          "amount": "2660648493049577000000",
+          "breakdown": { "UniswapV3": "2660648493049577000000" }
+        },
+        "0x97d505d5155CdC2D4F2553797031396E8eA3F7d6": {
+          "amount": "121524617883313000000",
+          "breakdown": { "UniswapV3": "121524617883313000000" }
+        },
+        "0x11d67Fa925877813B744aBC0917900c2b1D6Eb81": {
+          "amount": "3857316822971166600000",
+          "breakdown": { "Arrakis": "3857316822971166600000" }
+        },
+        "0x1649FF31c30F9Fc7ecAe5c76Ad00Ae3AeCF18eCE": {
+          "amount": "8844525212901385000000",
+          "breakdown": { "Arrakis": "8844525212901385000000" }
+        },
+        "0x4Ca321E4966A6BCbC26c13921CD76cac7D1f1B02": {
+          "amount": "1080152058584000000",
+          "breakdown": { "Arrakis": "1080152058584000000" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "10685081824310000000",
+          "breakdown": { "Arrakis": "88178187237000000", "Gamma": "10596903636971000000" }
+        },
+        "0xaaC7359Fb5D39Db6C562cACe5E0947b591F16fF5": {
+          "amount": "2013072726441000000",
+          "breakdown": { "Arrakis": "2013072726441000000" }
+        },
+        "0xB0b0F6F13A5158eB67724282F586a552E75b5728": {
+          "amount": "71912692063685763000000",
+          "breakdown": { "Arrakis": "71912692063685763000000" }
+        },
+        "0xB2D6ef31d536c4a3999e3c96F070209A8598dC57": {
+          "amount": "2019349585455313000000",
+          "breakdown": { "Arrakis": "2019349585455313000000" }
+        },
+        "0xcdE2933c2017944B46B466AB9A0dfDfA36e4c35b": {
+          "amount": "4954143343977000000",
+          "breakdown": { "Arrakis": "4954143343977000000" }
+        },
+        "0x4A277e11f55Be48b27C453188A74F115a327BB2e": {
+          "amount": "6562832721768195000000",
+          "breakdown": { "Gamma": "6562832721768195000000" }
+        },
+        "0xAC95712Ccf7fd178f198C7B6fd2d5f6f7a202929": {
+          "amount": "5177903719030316400000",
+          "breakdown": { "Gamma": "5177903719030316400000" }
+        },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "5987680000000", "breakdown": { "Gamma": "5987680000000" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "168237728985000000", "breakdown": { "Gamma": "168237728985000000" } },
+        "0xaebb8FDBD5E52F99630cEBB80D0a1c19892EB4C2": {
+          "amount": "12018445715323501000000",
+          "breakdown": { "UniswapV3": "12018445715323501000000" }
+        },
+        "0x24e56740D621AA314E2F352e26A47734c3572eE3": {
+          "amount": "145055103000000000",
+          "breakdown": { "UniswapV3": "145055103000000000" }
+        },
+        "0x2Bd93343DED12d371A49e3fB205846862A74AF39": {
+          "amount": "3081828311958999500000",
+          "breakdown": { "UniswapV3": "3081828311958999500000" }
+        }
+      },
+      "lastUpdateEpoch": 469401,
+      "pool": "0x735a26a57A0A0069dfABd41595A970faF5E1ee8b",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "296757812144886560332195"
+    },
+    "0x2dd47112ec61302dfecf96a391bfc801ab52a1a0a002727cfbd8ac4a0fd82fe8": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "137882322022026696000000",
+          "breakdown": { "UniswapV3": "137882322022026696000000" }
+        },
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "122334285691793768000000",
+          "breakdown": { "UniswapV3": "122334285691793768000000" }
+        },
+        "0x5Be876Ed0a9655133226BE302ca6f5503E3DA569": {
+          "amount": "47978616377423331000000",
+          "breakdown": { "UniswapV3": "47978616377423331000000" }
+        },
+        "0x16F75aa4BCAB8a8FDa2BCAb023Ca1AE581453Ac5": {
+          "amount": "3911238020164595000000",
+          "breakdown": { "UniswapV3": "3911238020164595000000" }
+        },
+        "0xfdA462548Ce04282f4B6D6619823a7C64Fdc0185": {
+          "amount": "104566231593681000000",
+          "breakdown": { "UniswapV3": "12395414026658000000", "Arrakis": "92170817567021000000" }
+        },
+        "0xe980599BF7fa44230c58c270D30cb30c3Db7F99a": {
+          "amount": "4771052167138000000",
+          "breakdown": { "UniswapV3": "4771052167138000000" }
+        },
+        "0x203643c55E127330F15494B85FA6d0E2f1a259EF": { "amount": "53993042680000000", "breakdown": { "Arrakis": "53993042680000000" } },
+        "0x52ea58f4FC3CEd48fa18E909226c1f8A0EF887DC": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0x76b8579694d1769a0390aDb3b199085845804cC1": {
+          "amount": "1154461980052757000000",
+          "breakdown": { "Arrakis": "1154461980052757000000" }
+        },
+        "0xa0022debeB2275cf05B9c659493F89efe3AB89a6": {
+          "amount": "146883929381478881000000",
+          "breakdown": { "Arrakis": "146883929381478881000000" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "95223861300480000000",
+          "breakdown": { "Arrakis": "1981162827932000000", "Gamma": "93242698472447000000" }
+        },
+        "0xbE18f84532d8f7fb6d7919401C0096f3e257DB8b": {
+          "amount": "3744137478266774000000",
+          "breakdown": { "Arrakis": "3744137478266774000000" }
+        },
+        "0xd1c9d16B4A803f1336650f17Eb99b47b1Fc90038": { "amount": "4130497000000", "breakdown": { "Arrakis": "4130497000000" } },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "826815327000000", "breakdown": { "Gamma": "826815327000000" } },
+        "0xdfBFD6A4ea6893bb0A2a35EB1e77344177c7b2cC": { "amount": "768824950618000000", "breakdown": { "Gamma": "768824950618000000" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "165363083522000000", "breakdown": { "Gamma": "165363083522000000" } },
+        "0x154001A2F9f816389b2F6D9E07563cE0359D813D": {
+          "amount": "5084192529562565000000",
+          "breakdown": { "UniswapV3": "5084192529562565000000" }
+        },
+        "0x11d67Fa925877813B744aBC0917900c2b1D6Eb81": {
+          "amount": "2574328877747700000000",
+          "breakdown": { "Arrakis": "2574328877747700000000" }
+        },
+        "0x0BABA1Ad5bE3a5C0a66E7ac838a129Bf948f1eA4": {
+          "amount": "1231986058000000000",
+          "breakdown": { "UniswapV3": "1231986058000000000" }
+        },
+        "0x7FF7602507DF37c0B7A2981ca3278e9142A7F14A": {
+          "amount": "3898571222700000000",
+          "breakdown": { "UniswapV3": "3898571222700000000" }
+        }
+      },
+      "lastUpdateEpoch": 469401,
+      "pool": "0x8dB1b906d47dFc1D84A87fc49bd0522e285b98b9",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "471758193072882679136778"
+    },
+    "0xfad8f7dd2dd317464eeb46eef32ad245bfb0383a91b6acf993fa8fd6460661cf": {
+      "amm": 0,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x24207c2Cc8Eb37de0A7759b6C780510ea27d2C45": {
+          "amount": "667180129435900000000",
+          "breakdown": { "UniswapV3": "667180129435900000000" }
+        },
+        "0xFE55C033617Ab8c7f8F6b8178a305e956A2C62EE": {
+          "amount": "376949353411100000000",
+          "breakdown": { "UniswapV3": "376949353411100000000" }
+        },
+        "0x07666923a19C2D6E01a6c64840C39585ebf0aAD8": {
+          "amount": "551658658672700000000",
+          "breakdown": { "UniswapV3": "551658658672700000000" }
+        },
+        "0x9321D8117E73B0c79035F0E87DEbCFd8dbb1D75A": {
+          "amount": "511768657783600000000",
+          "breakdown": { "UniswapV3": "511768657783600000000" }
+        },
+        "0x67959227cD09D25Fa4E43BAff0DCA9E36e028cfc": {
+          "amount": "200735392180400000000",
+          "breakdown": { "UniswapV3": "200735392180400000000" }
+        },
+        "0x6dC492887ac242416de5Cadc17C92Ad89c3a16f1": {
+          "amount": "199808282231300000000",
+          "breakdown": { "UniswapV3": "199808282231300000000" }
+        },
+        "0xC24218e0Db7904883C1658101f7183a31E4863BE": {
+          "amount": "148561675544700000000",
+          "breakdown": { "UniswapV3": "148561675544700000000" }
+        },
+        "0x5501Fc30DD94B183A997d339EBd753C3Ef20F5d4": {
+          "amount": "166764817605500000000",
+          "breakdown": { "UniswapV3": "166764817605500000000" }
+        },
+        "0xb95F5B45aFE039499516703eAefed8A11Ea6065A": {
+          "amount": "152252287426500000000",
+          "breakdown": { "UniswapV3": "152252287426500000000" }
+        },
+        "0x06981EfbE070996654482F4F20786e0CEf0f8740": {
+          "amount": "154015398762300000000",
+          "breakdown": { "UniswapV3": "154015398762300000000" }
+        },
+        "0xEecCD8876b9bDFD4F5B67dcb3ba7b8f8dCf763e8": {
+          "amount": "79661058569500000000",
+          "breakdown": { "UniswapV3": "79661058569500000000" }
+        },
+        "0xA741cdDf8e708554772Df02216DcC3A0627F0C2a": {
+          "amount": "125844185442100000000",
+          "breakdown": { "UniswapV3": "125844185442100000000" }
+        },
+        "0xB86d17F42D9d3E5b6B2dfa08E7757e1A5b7c0afF": {
+          "amount": "118934342076400000000",
+          "breakdown": { "UniswapV3": "118934342076400000000" }
+        },
+        "0x628ec53729D1B30cEB85c6d20d7C6032601D0D4E": {
+          "amount": "114904529818600000000",
+          "breakdown": { "UniswapV3": "114904529818600000000" }
+        },
+        "0x591a3d6d12FCA9D1eC4AFbB265689efE1D5Da402": {
+          "amount": "95135021813900000000",
+          "breakdown": { "UniswapV3": "95135021813900000000" }
+        },
+        "0x8c6439fC4B3b0265d52D3b05620bF3e00726ed99": {
+          "amount": "71316643241500000000",
+          "breakdown": { "UniswapV3": "71316643241500000000" }
+        },
+        "0x50b7A3F9100930f3eDD665eeb7bd7DE6bbf285B7": {
+          "amount": "64891176101900000000",
+          "breakdown": { "UniswapV3": "64891176101900000000" }
+        },
+        "0x23A0029F1AE02C9f53fe35e2e29917a7A7126697": {
+          "amount": "45130004542700000000",
+          "breakdown": { "UniswapV3": "45130004542700000000" }
+        },
+        "0x40DCBa8E2508DDAa687fc26f9491b8cca563C845": {
+          "amount": "42510376897000000000",
+          "breakdown": { "UniswapV3": "42510376897000000000" }
+        },
+        "0x8abc435d708392C17D680873392712AF6BB7aEC2": {
+          "amount": "12696426329100000000",
+          "breakdown": { "UniswapV3": "12696426329100000000" }
+        },
+        "0x32594AeA1f052362Dda29b3554083b85EBcd2f11": {
+          "amount": "39445684447200000000",
+          "breakdown": { "UniswapV3": "39445684447200000000" }
+        },
+        "0x59ab1BD1531E79C52a5E61B54F30FB1DC7DA0AF1": {
+          "amount": "38572599072300000000",
+          "breakdown": { "UniswapV3": "38572599072300000000" }
+        },
+        "0x3A531c90e52a02817c0D31794D0ac4eA35a66602": {
+          "amount": "34396479542500000000",
+          "breakdown": { "UniswapV3": "34396479542500000000" }
+        },
+        "0xceD462398bDFBb1B45d75b7F2c61172643a18009": {
+          "amount": "33682735836600000000",
+          "breakdown": { "UniswapV3": "33682735836600000000" }
+        },
+        "0x765f1d6D19AC65805032FAbE9F2Bc158D72B2C84": {
+          "amount": "8575378181700000000",
+          "breakdown": { "UniswapV3": "8575378181700000000" }
+        },
+        "0x463B476aaa90b6E9d088CB92d96808ab399435B4": {
+          "amount": "19304043654400000000",
+          "breakdown": { "UniswapV3": "19304043654400000000" }
+        },
+        "0x9F60E4aF6020cc6a791B2d1Ce9902d25A72bA824": {
+          "amount": "30017873249100000000",
+          "breakdown": { "UniswapV3": "30017873249100000000" }
+        },
+        "0x279989EeEbB466cfB036954559a27fd3B82A96AD": {
+          "amount": "27448972131400000000",
+          "breakdown": { "UniswapV3": "27448972131400000000" }
+        },
+        "0x319d84CAe0F06F1f73B722623e08cDfc54Cfd30a": {
+          "amount": "45952531803700000000",
+          "breakdown": { "UniswapV3": "45952531803700000000" }
+        },
+        "0x99000eef26fBF655695FDaa618B68A53D101e180": {
+          "amount": "24486300458700000000",
+          "breakdown": { "UniswapV3": "24486300458700000000" }
+        },
+        "0x9E9D22Bf95102C5D0458a12Dd99257bf5485aF61": {
+          "amount": "14965675403200000000",
+          "breakdown": { "UniswapV3": "14965675403200000000" }
+        },
+        "0xB36753CFceA9e753dE2EAa040B06bC2734b37439": {
+          "amount": "21274653388200000000",
+          "breakdown": { "UniswapV3": "21274653388200000000" }
+        },
+        "0xD1818A80DAc94Fa1dB124B9B1A1BB71Dc20f228d": {
+          "amount": "19760916882900000000",
+          "breakdown": { "UniswapV3": "19760916882900000000" }
+        },
+        "0x0A9f1B3380617499E0033AEA09d42c96A8452d7D": {
+          "amount": "19552554453000000000",
+          "breakdown": { "UniswapV3": "19552554453000000000" }
+        },
+        "0xeFABE5c2765708edDD73aC4EFE9aDbe85C29655d": {
+          "amount": "8256429040400000000",
+          "breakdown": { "UniswapV3": "8256429040400000000" }
+        },
+        "0xeD7f2016130CA5083261079C7B869cc3ab82181a": {
+          "amount": "17241728823900000000",
+          "breakdown": { "UniswapV3": "17241728823900000000" }
+        },
+        "0x054e5631ae28a8D4d09beBa29F793f00BA8c4a17": {
+          "amount": "16574864633000000000",
+          "breakdown": { "UniswapV3": "16574864633000000000" }
+        },
+        "0x7c29F562823c2B3f58f81BaE83AbA456E1657e2f": {
+          "amount": "15915470628300000000",
+          "breakdown": { "UniswapV3": "15915470628300000000" }
+        },
+        "0xD1aa05AfeD75591d20BdaF74c8183EE1E1614286": {
+          "amount": "15723702195200000000",
+          "breakdown": { "UniswapV3": "15723702195200000000" }
+        },
+        "0x90Cd03a2dC6bDBD6D24eeB69F3fdebADDd1459af": {
+          "amount": "15516739718500000000",
+          "breakdown": { "UniswapV3": "15516739718500000000" }
+        },
+        "0x3e2B60682681AcB27d72C91E7A94639FAbE052FE": {
+          "amount": "14247920456800000000",
+          "breakdown": { "UniswapV3": "14247920456800000000" }
+        },
+        "0x6B92686c40747C85809a6772D0eda8e22a77C60c": {
+          "amount": "12730070193200000000",
+          "breakdown": { "UniswapV3": "12730070193200000000" }
+        },
+        "0x26842B2F02B89F0435FF5a9f4707dab44C58a00f": {
+          "amount": "11495077865800000000",
+          "breakdown": { "UniswapV3": "11495077865800000000" }
+        },
+        "0x676E14cDc7a4C5CE7b6ea5418f3604e68f21a4f7": {
+          "amount": "11086391435100000000",
+          "breakdown": { "UniswapV3": "11086391435100000000" }
+        },
+        "0xb6F67F980F46b60Fa1D606165B5dd2601DF4Bb30": {
+          "amount": "27479662712200000000",
+          "breakdown": { "UniswapV3": "27479662712200000000" }
+        },
+        "0x9A539f692cDE873D6B882fc326c8d62D4cEA8048": {
+          "amount": "9033075571300000000",
+          "breakdown": { "UniswapV3": "9033075571300000000" }
+        },
+        "0xA8e54c45DC86c3D3d770B7c1fA2D41a1eE218DE3": {
+          "amount": "6640582841200000000",
+          "breakdown": { "UniswapV3": "6640582841200000000" }
+        },
+        "0x34b9091256CA5B8759Be8cf1D5510A1279f81168": {
+          "amount": "7714803502100000000",
+          "breakdown": { "UniswapV3": "7714803502100000000" }
+        },
+        "0xE00d32d33594efaFE2af4b8d45b8969E1936FF66": {
+          "amount": "6961576628900000000",
+          "breakdown": { "UniswapV3": "6961576628900000000" }
+        },
+        "0x8072566Fcdbe9E1827C57A8091085a3095bd4cF0": {
+          "amount": "7508150206500000000",
+          "breakdown": { "UniswapV3": "7508150206500000000" }
+        },
+        "0x5E81FfF16cdbf5E6479EC50c11aD80d5774f5EC8": {
+          "amount": "6473018886100000000",
+          "breakdown": { "UniswapV3": "6473018886100000000" }
+        },
+        "0xf1772Dc0DbB2EC38F56F5a28a66Bd1A34CC06723": {
+          "amount": "4450859831400000000",
+          "breakdown": { "UniswapV3": "4450859831400000000" }
+        },
+        "0x2D870aa54Ff847ac1B2B6fD85cde2E5C4949b9D0": {
+          "amount": "5414304993900000000",
+          "breakdown": { "UniswapV3": "5414304993900000000" }
+        },
+        "0xe6344c46Bdae0bb3136B6300Ce84Eb728E5A869f": {
+          "amount": "3569536859500000000",
+          "breakdown": { "UniswapV3": "3569536859500000000" }
+        },
+        "0x96dFd8e116977B5795741BE1fd08d8BBF2aE31b2": {
+          "amount": "4582750240500000000",
+          "breakdown": { "UniswapV3": "4582750240500000000" }
+        },
+        "0x77Fe5e8E2BE8D93a73Ed097a70e1C915292B840F": {
+          "amount": "4212306935700000000",
+          "breakdown": { "UniswapV3": "4212306935700000000" }
+        },
+        "0x462a2Fe89A68f8284De9eb2aE180E7Ca646dB535": {
+          "amount": "4125434877000000000",
+          "breakdown": { "UniswapV3": "4125434877000000000" }
+        },
+        "0x79511daDf55eDb9D0eD490e3fCd1EA2CbEa62203": {
+          "amount": "3572112655300000000",
+          "breakdown": { "UniswapV3": "3572112655300000000" }
+        },
+        "0x7e95Cde1B7270155C62450D1931ABe977BfbFe9C": {
+          "amount": "3528126693000000000",
+          "breakdown": { "UniswapV3": "3528126693000000000" }
+        },
+        "0x16B00dB74167b7469dDa63b674Ca9A3B1b70C439": {
+          "amount": "3438263762600000000",
+          "breakdown": { "UniswapV3": "3438263762600000000" }
+        },
+        "0xaCfadBA982E41a2d75274aDbA82457fB012920D1": {
+          "amount": "3261700377800000000",
+          "breakdown": { "UniswapV3": "3261700377800000000" }
+        },
+        "0xE8220edD77693476EC8332369077A1A083445f4F": {
+          "amount": "1869610365600000000",
+          "breakdown": { "UniswapV3": "1869610365600000000" }
+        },
+        "0x25dB8930738462447E2bC28A2d090Df8dF12b53C": {
+          "amount": "2040444863600000000",
+          "breakdown": { "UniswapV3": "2040444863600000000" }
+        },
+        "0x3cA31c9cfEf27fD3d5Ae59cAaDcc33B9aaF09C22": {
+          "amount": "2940924573500000000",
+          "breakdown": { "UniswapV3": "2940924573500000000" }
+        },
+        "0x48B62Eac0230f474ae109DE0E085d4608b4B6400": {
+          "amount": "2242210465500000000",
+          "breakdown": { "UniswapV3": "2242210465500000000" }
+        },
+        "0x3982B7B3200F7669bCc3b4d56D8940d487Af8B2f": {
+          "amount": "1245397545200000000",
+          "breakdown": { "UniswapV3": "1245397545200000000" }
+        },
+        "0x8Fc6e825aAfc90142b8445145e9ABE62Cc46CBb3": {
+          "amount": "443894521200000000",
+          "breakdown": { "UniswapV3": "443894521200000000" }
+        },
+        "0x5A97d872dFe3e6545BF51DA76bcfB1000CeBC1DE": {
+          "amount": "1537286481400000000",
+          "breakdown": { "UniswapV3": "1537286481400000000" }
+        },
+        "0x1Ee9Bf537cD03745CDCc5E00627c0539fBCbD07B": {
+          "amount": "1398553258400000000",
+          "breakdown": { "UniswapV3": "1398553258400000000" }
+        },
+        "0xB9ec1D23256A4f16DdfC3742D12B0954ABCb39e0": {
+          "amount": "1420320717100000000",
+          "breakdown": { "UniswapV3": "1420320717100000000" }
+        },
+        "0xFE458Bc9418231F345d29CcE0b4E4418DFAC328B": {
+          "amount": "1369347106800000000",
+          "breakdown": { "UniswapV3": "1369347106800000000" }
+        },
+        "0x55eC32a6F612B2bf88fB8990e36c55effEF5a9e2": {
+          "amount": "1310069907700000000",
+          "breakdown": { "UniswapV3": "1310069907700000000" }
+        },
+        "0xA410BF260926688899758cc1A7c815377eb79A15": {
+          "amount": "381346732100000000",
+          "breakdown": { "UniswapV3": "381346732100000000" }
+        },
+        "0x3159BFBB1f89b363C24Ead3AA5AAAfe400269E69": {
+          "amount": "1169420126000000000",
+          "breakdown": { "UniswapV3": "1169420126000000000" }
+        },
+        "0x1FA5BDa886b8fd3B2223F0c87edB42b8E9e88aFa": {
+          "amount": "958479289100000000",
+          "breakdown": { "UniswapV3": "958479289100000000" }
+        },
+        "0x40f7645d96Ade7066E329bC48729AaaD7F901973": {
+          "amount": "942709720100000000",
+          "breakdown": { "UniswapV3": "942709720100000000" }
+        },
+        "0x062D48a4210547d1dF100a009F9548Fd187b427A": {
+          "amount": "866768272600000000",
+          "breakdown": { "UniswapV3": "866768272600000000" }
+        },
+        "0x6F5DFAaea405CABE6b3A2fc64a881F43D8f1479e": {
+          "amount": "825264716800000000",
+          "breakdown": { "UniswapV3": "825264716800000000" }
+        },
+        "0x3b800aef3596cF43b856D4101c40Bd0BF8E6a926": {
+          "amount": "419147268100000000",
+          "breakdown": { "UniswapV3": "419147268100000000" }
+        },
+        "0x91Ea2dff37136FDe4370062997379299A7181B75": {
+          "amount": "699980867400000000",
+          "breakdown": { "UniswapV3": "699980867400000000" }
+        },
+        "0x53217412A0bB1ad408f7895CBC046F0684a102ad": {
+          "amount": "452278122900000000",
+          "breakdown": { "UniswapV3": "452278122900000000" }
+        },
+        "0xDa610b7CeF2285B7B81cb605538Bc3F83999b2cE": {
+          "amount": "498088834000000000",
+          "breakdown": { "UniswapV3": "498088834000000000" }
+        },
+        "0x6BA0219a51b07aa3ed95181002c245924bDe2425": {
+          "amount": "382953624000000000",
+          "breakdown": { "UniswapV3": "382953624000000000" }
+        },
+        "0x089D5100702B13fed52a2b16418e6DD93af5265d": {
+          "amount": "473520119100000000",
+          "breakdown": { "UniswapV3": "473520119100000000" }
+        },
+        "0x423F27B55fA88256fF80B68c09133858501803AF": {
+          "amount": "463734006000000000",
+          "breakdown": { "UniswapV3": "463734006000000000" }
+        },
+        "0x8E4637E0Ee1C6638731569c380C8A42cfB785337": {
+          "amount": "448324180700000000",
+          "breakdown": { "UniswapV3": "448324180700000000" }
+        },
+        "0xDd16c8F7e8ec1024610F7540C93EC761fC1DcC6C": {
+          "amount": "431219661300000000",
+          "breakdown": { "UniswapV3": "431219661300000000" }
+        },
+        "0xD41BeC94DeC5A5Fd139f0Cc9De726765b04Ff010": {
+          "amount": "350701657300000000",
+          "breakdown": { "UniswapV3": "350701657300000000" }
+        },
+        "0x54Ce2b02317b8adE1546C18E94A9a622094c01A1": {
+          "amount": "312700169500000000",
+          "breakdown": { "UniswapV3": "312700169500000000" }
+        },
+        "0xEff086b2403C02EB2e0B904BAEa158750Ed51540": {
+          "amount": "304066379100000000",
+          "breakdown": { "UniswapV3": "304066379100000000" }
+        },
+        "0xDDc15c1B5fFF71bd459C37483C22eC4D49CE27B6": {
+          "amount": "290078753900000000",
+          "breakdown": { "UniswapV3": "290078753900000000" }
+        },
+        "0xb86dE2Fd8B73B4EdEdC6d61F85AFc66A0df512F5": {
+          "amount": "233047830500000000",
+          "breakdown": { "UniswapV3": "233047830500000000" }
+        },
+        "0x3C3c9d516880fEcB85A5895ca606152f82C688Fd": {
+          "amount": "185299348600000000",
+          "breakdown": { "UniswapV3": "185299348600000000" }
+        },
+        "0xbf0430BE4E4425Ec04E58F5e09e2D832B79021E4": {
+          "amount": "121120466600000000",
+          "breakdown": { "UniswapV3": "121120466600000000" }
+        },
+        "0xCB6De832db2dCDb9A87626bE2D2cBc0E90f1DA7c": {
+          "amount": "117744530900000000",
+          "breakdown": { "UniswapV3": "117744530900000000" }
+        },
+        "0x3c59211297F9E3215E60BC02B4A8Ec3A78Eca169": {
+          "amount": "111329355300000000",
+          "breakdown": { "UniswapV3": "111329355300000000" }
+        },
+        "0xd9E042fb58536fE69F2975030A56Fd72dB104B2D": {
+          "amount": "104191336100000000",
+          "breakdown": { "UniswapV3": "104191336100000000" }
+        },
+        "0x447D07d1a1Ed9d25680175a3Ff982a15E02603Bc": { "amount": "88173258900000000", "breakdown": { "UniswapV3": "88173258900000000" } },
+        "0x2f4594fFE5868C25E941b5A03AF3f8d0DeB52505": { "amount": "78741305200000000", "breakdown": { "UniswapV3": "78741305200000000" } },
+        "0x766518D3e038ABEdf72eBde8935Ad0285F367771": { "amount": "64292830500000000", "breakdown": { "UniswapV3": "64292830500000000" } },
+        "0xB6A140565771e9A045Fa3A15EFeFD222139AC1b0": { "amount": "64020011300000000", "breakdown": { "UniswapV3": "64020011300000000" } },
+        "0x55c33c280BEa10c98F5668370Fc3B41b395da2ff": { "amount": "60476382800000000", "breakdown": { "UniswapV3": "60476382800000000" } },
+        "0x221a70D9cf2aad87e589915eA1EAA3feB9fF89Ba": { "amount": "54242848000000000", "breakdown": { "UniswapV3": "54242848000000000" } },
+        "0x75a980923f9861C0f4eC1437df6c8532E850d6fD": { "amount": "49695432300000000", "breakdown": { "UniswapV3": "49695432300000000" } },
+        "0xAbB18E33A5449Ec7658b66E8FeEfd4E14E78DF2E": { "amount": "22481075000000000", "breakdown": { "UniswapV3": "22481075000000000" } },
+        "0x1a0E80bbE2f6aC6AF1B5FB306D1d6cAfC0a66a50": { "amount": "18379491100000000", "breakdown": { "UniswapV3": "18379491100000000" } },
+        "0x7033a3527134bFd2Cbb22830eE2796f85E27Be0E": { "amount": "12580271300000000", "breakdown": { "UniswapV3": "12580271300000000" } },
+        "0xBE88Ee6F8A29eb426719B706aa38E2DC5DFd02bd": { "amount": "5217537900000000", "breakdown": { "UniswapV3": "5217537900000000" } },
+        "0x76C6cFc8EAad7ccA744ffd1D228e6f27122C8B36": { "amount": "7199591100000000", "breakdown": { "UniswapV3": "7199591100000000" } },
+        "0x59c37E94Da9747052d4C051D1832BAb10d4AF2b5": { "amount": "3083825700000000", "breakdown": { "UniswapV3": "3083825700000000" } },
+        "0xcD01A3acED67e266be21117376C7025B384Cd4d7": { "amount": "1576938700000000", "breakdown": { "UniswapV3": "1576938700000000" } },
+        "0xceb05Da6b9803143B9a44d4cdCEbbea73eb52614": { "amount": "1405365900000000", "breakdown": { "UniswapV3": "1405365900000000" } },
+        "0x6e3284ebe0EcB828fCd2630cb40dCc5C1C9D2a44": { "amount": "1405365900000000", "breakdown": { "UniswapV3": "1405365900000000" } },
+        "0xf052C1C1A212aB3Fb78289dB2F50E2C9DD3fac8B": { "amount": "1405365900000000", "breakdown": { "UniswapV3": "1405365900000000" } },
+        "0xF97a393f31E3E6b84A37603AC24b3605089d74ec": { "amount": "1405365900000000", "breakdown": { "UniswapV3": "1405365900000000" } },
+        "0x2527cF5f0cBf7E5e28888bc3a1e6B5E522f842DA": { "amount": "1405365900000000", "breakdown": { "UniswapV3": "1405365900000000" } },
+        "0xA2b0be841466be94A4Adb92541DF700c16383e97": { "amount": "1405365900000000", "breakdown": { "UniswapV3": "1405365900000000" } },
+        "0x29F731573b3acBd22A7C6023d9e3CC8EC758de42": { "amount": "1397135800000000", "breakdown": { "UniswapV3": "1397135800000000" } },
+        "0xd469Ce76ca266dC2B84B2782A1879e6E0743492d": { "amount": "1382233900000000", "breakdown": { "UniswapV3": "1382233900000000" } },
+        "0xf3D476566BCC8E882A3910F1471428522449d89E": { "amount": "1289783800000000", "breakdown": { "UniswapV3": "1289783800000000" } },
+        "0x344F9595C10D07bE394947b153E600AF727243ea": { "amount": "1285321800000000", "breakdown": { "UniswapV3": "1285321800000000" } },
+        "0x3D6a724247c4B133C3b279558e90EdD0c5d25751": { "amount": "1002641200000000", "breakdown": { "UniswapV3": "1002641200000000" } },
+        "0x423cf8C9c414583401Ab043390307F526bdEdb76": { "amount": "927206500000000", "breakdown": { "UniswapV3": "927206500000000" } },
+        "0x20dA28b10dEDC9366e92009150dCbB98A25f29c4": { "amount": "850732900000000", "breakdown": { "UniswapV3": "850732900000000" } },
+        "0x04629871122dd5b2d4A958C38c1acDBe652B0C78": { "amount": "742780700000000", "breakdown": { "UniswapV3": "742780700000000" } },
+        "0x2d040D4747a71012007b905917CB4Aa061d6e631": { "amount": "661120900000000", "breakdown": { "UniswapV3": "661120900000000" } },
+        "0xF637978800670ba2a978501D86f73442e108f946": { "amount": "596012600000000", "breakdown": { "UniswapV3": "596012600000000" } },
+        "0x9d054534FD9483af585cE8b6127aa1FBfFc331B4": { "amount": "373299100000000", "breakdown": { "UniswapV3": "373299100000000" } },
+        "0x9CB0525D06c14aA22c18414dC6EE4Cf4edb27566": { "amount": "280773900000000", "breakdown": { "UniswapV3": "280773900000000" } },
+        "0xC3e8aC233f02d13C1E299e47aE230C205E0177Ed": { "amount": "215869600000000", "breakdown": { "UniswapV3": "215869600000000" } },
+        "0x2C5F9cA3f378244833b218d8AB6dF011FF2c1381": { "amount": "151911200000000", "breakdown": { "UniswapV3": "151911200000000" } },
+        "0xA224935d47E2160CeDA9F68479f039036B3Dc7Ab": { "amount": "123086500000000", "breakdown": { "UniswapV3": "123086500000000" } },
+        "0xDEFF1E0d40655a47CC87cf3fa9BbEd06FC121E40": { "amount": "122702100000000", "breakdown": { "UniswapV3": "122702100000000" } },
+        "0xb6e9b43E89278c4c812f4a20F8C531FADb636808": { "amount": "93897300000000", "breakdown": { "UniswapV3": "93897300000000" } },
+        "0xCEF28ce7884Ae973990fb826C1986afaa9319B9A": { "amount": "40614100000000", "breakdown": { "UniswapV3": "40614100000000" } },
+        "0xBd91Ed15A05372A1FA9F9dc472c7506Ae946fd8B": { "amount": "15235700000000", "breakdown": { "UniswapV3": "15235700000000" } },
+        "0x26FDc242eCCc144971e558FF458a4ec21B75D4E8": { "amount": "15084400000000", "breakdown": { "UniswapV3": "15084400000000" } },
+        "0x166830B7198c70C0a39cf004e1ED1513b1Ce55bd": { "amount": "13645900000000", "breakdown": { "UniswapV3": "13645900000000" } },
+        "0x18A86bDC70D9E30903fc7A67e9481Eb5Ae343B50": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0xCB220fa6Aa71c83f94D9333Ac21E8763C21edfAb": {
+          "amount": "2925343692100000000",
+          "breakdown": { "UniswapV3": "2925343692100000000" }
+        },
+        "0x2409f508A23321d5D4bf31a06E636e84C1Bdf474": {
+          "amount": "27841525761600000000",
+          "breakdown": { "UniswapV3": "27841525761600000000" }
+        },
+        "0x0FCbf9A4398C15d6609580879681Aa5382FF8542": {
+          "amount": "30933667023700000000",
+          "breakdown": { "UniswapV3": "30933667023700000000" }
+        },
+        "0x6F7d05Abc3aE537F15cBC63D1b2A45dede21800a": {
+          "amount": "341619316400000000",
+          "breakdown": { "UniswapV3": "341619316400000000" }
+        },
+        "0x52fC153d440c669c1Fc8779A0508795832a51167": {
+          "amount": "49942200924700000000",
+          "breakdown": { "UniswapV3": "49942200924700000000" }
+        },
+        "0xb5087F95643A9a4069471A28d32C569D9bd57fE4": {
+          "amount": "15148312958500000000",
+          "breakdown": { "UniswapV3": "15148312958500000000" }
+        },
+        "0x1D3381E3dBA4D0e2B476E7A35fC49363BAF62389": {
+          "amount": "1680591219200000000",
+          "breakdown": { "UniswapV3": "1680591219200000000" }
+        },
+        "0xb8Bba950391D86DF52A0DC05ea89C6e7Dae88BDB": {
+          "amount": "227544862076200000000",
+          "breakdown": { "UniswapV3": "227544862076200000000" }
+        },
+        "0x1A8a409704F7f2a85ab21D0372b150BE0cE1f3c9": {
+          "amount": "271667228079900000000",
+          "breakdown": { "UniswapV3": "271667228079900000000" }
+        },
+        "0x407A0046879Ad987D37A76Ba5f692A739288feBd": {
+          "amount": "5018191589000000000",
+          "breakdown": { "UniswapV3": "5018191589000000000" }
+        },
+        "0x494AF2aA8F930a9232F7325C2C74b2736f6BD874": {
+          "amount": "29737567386200000000",
+          "breakdown": { "UniswapV3": "29737567386200000000" }
+        },
+        "0x3F5854Fb5e5F71C3d470D75B6c41bB299D21b795": {
+          "amount": "22925956515800000000",
+          "breakdown": { "UniswapV3": "22925956515800000000" }
+        },
+        "0x93D1041069d697aee62b2aFC3E53baDE65456f89": {
+          "amount": "1357668624300000000",
+          "breakdown": { "UniswapV3": "1357668624300000000" }
+        },
+        "0xebB23A626B45a55Df23Cb53443715C675ab9b90b": { "amount": "13368906200000000", "breakdown": { "UniswapV3": "13368906200000000" } },
+        "0x68d3181Fcee4F9785b3C982ce8d64749583204F7": { "amount": "97399208800000000", "breakdown": { "UniswapV3": "97399208800000000" } },
+        "0xFe3b142c277eC91fE0a9bFB27d5c3dBACeCA7153": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0xC53e4d64863f06F816613B1cFBdEED2e43037Bb2": { "amount": "83198890600000000", "breakdown": { "UniswapV3": "83198890600000000" } },
+        "0x66d35e676AC183f46D461bAED3FDC326603D4D5E": {
+          "amount": "259793864400000000",
+          "breakdown": { "UniswapV3": "259793864400000000" }
+        },
+        "0x8DF39DfA97Fa7f3Bb276E03a278cb6f767198d24": {
+          "amount": "32628484064300000000",
+          "breakdown": { "UniswapV3": "32628484064300000000" }
+        },
+        "0xdC6c86Dc862FdaB7c029655485B8Bb38eeDC67D9": {
+          "amount": "1687208636800000000",
+          "breakdown": { "UniswapV3": "1687208636800000000" }
+        },
+        "0x357Db7aB93Eef87334f12Aa4D02bfaA548C27514": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0x05426906d7564DB9e9267FDdfeD28d844E81940A": {
+          "amount": "13278607731700000000",
+          "breakdown": { "UniswapV3": "13278607731700000000" }
+        },
+        "0xF2EaEB6a0C248BCd69FD314180D69907B9be7491": {
+          "amount": "635022937000000000",
+          "breakdown": { "UniswapV3": "635022937000000000" }
+        },
+        "0x525837908C16a4f4184174e0AE89aA8410E38834": {
+          "amount": "1894188025600000000",
+          "breakdown": { "UniswapV3": "1894188025600000000" }
+        },
+        "0x92315Cc60A0600C119A7BEed7826DaF17FcB3DA6": {
+          "amount": "733683704800000000",
+          "breakdown": { "UniswapV3": "733683704800000000" }
+        },
+        "0xD6Aa72843eAed7cDd310123D143f36b899Bd0D55": { "amount": "20714552200000000", "breakdown": { "UniswapV3": "20714552200000000" } }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0xa3f558aebAecAf0e11cA4b2199cC5Ed341edfd74",
+      "token": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "tokenDecimals": 18,
+      "tokenSymbol": "UNI",
+      "totalAmount": "11865767500000000000000"
+    },
+    "0xde9c90e923da0b2899cbdc21fb43f7f55a7e4dd15c9250d739a71b60d3a88452": {
+      "amm": 0,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x598b014cbd88f3e131Fb3b9341bA57E85D8FEBc6": {
+          "amount": "237303558384000000000",
+          "breakdown": { "UniswapV3": "237303558384000000000" }
+        },
+        "0x8D8Aa4f2390dd31add06Ce6A9374542020272D6B": {
+          "amount": "295696314800000000",
+          "breakdown": { "UniswapV3": "295696314800000000" }
+        },
+        "0xB79A48cdFB85d1Ac45989f40793aBc7A1A15C5e3": {
+          "amount": "708628223637500000000",
+          "breakdown": { "UniswapV3": "708628223637500000000" }
+        },
+        "0xa5504d8aDC24183f4796e97642FD95593a6d1862": {
+          "amount": "49020057534600000000",
+          "breakdown": { "UniswapV3": "49020057534600000000" }
+        },
+        "0xA63DcC2F10B1ABb97fd1983fb3a33E70C0Afef3f": {
+          "amount": "71893971507100000000",
+          "breakdown": { "UniswapV3": "71893971507100000000" }
+        },
+        "0x4344764b9ca7Dc2e3Cb086cF485c08415590c81D": {
+          "amount": "10482095535600000000",
+          "breakdown": { "UniswapV3": "10482095535600000000" }
+        },
+        "0x79dCF9b238516b1cf1dEd4f84D35C6f1dcDd76C7": {
+          "amount": "847601293958800000000",
+          "breakdown": { "UniswapV3": "847601293958800000000" }
+        },
+        "0xaBa07748dE80049C3c9db2d33EDdfDC6052702c0": {
+          "amount": "293882876042000000000",
+          "breakdown": { "UniswapV3": "293882876042000000000" }
+        },
+        "0x80526e61EFF8d518469F30De38A6aD64C4426889": {
+          "amount": "16032048512600000000",
+          "breakdown": { "UniswapV3": "16032048512600000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0xd8857E7Da2D6e05667c5b9218f97EfAAA671f44a",
+      "token": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "tokenDecimals": 18,
+      "tokenSymbol": "UNI",
+      "totalAmount": "5006713200000000000000"
+    },
+    "0xa66ddff1094d2bea5aaaa304f358aa33a2015f5408f63ab4273a6a8c417ce6cd": {
+      "amm": 0,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x319232454BD89e6CeDb0cC82dD7857F36B79C994": {
+          "amount": "97078086712600000000",
+          "breakdown": { "UniswapV3": "97078086712600000000" }
+        },
+        "0x192c353AC852363f41e6A136C97cD45C90f1293e": {
+          "amount": "37058063121300000000",
+          "breakdown": { "UniswapV3": "37058063121300000000" }
+        },
+        "0x20D6aCfF5aF7DEdb007812e79Cf30739ee32523a": {
+          "amount": "20776682583300000000",
+          "breakdown": { "UniswapV3": "20776682583300000000" }
+        },
+        "0xC1d44533671C6618649F00FC74E82D5756B528b5": {
+          "amount": "18730966361300000000",
+          "breakdown": { "UniswapV3": "18730966361300000000" }
+        },
+        "0x85815178314e8e3Ed1FBD59701Eef0d4654bd904": {
+          "amount": "16079210618300000000",
+          "breakdown": { "UniswapV3": "16079210618300000000" }
+        },
+        "0xc5E15136A0889bf543D42F5203fb38c95D86358C": {
+          "amount": "15590234456900000000",
+          "breakdown": { "UniswapV3": "15590234456900000000" }
+        },
+        "0xDEe243a0d1CE2cee1E44c76Ceade7C5c9f8dB49e": {
+          "amount": "23481950298400000000",
+          "breakdown": { "UniswapV3": "23481950298400000000" }
+        },
+        "0x03869df967259b1f3eCcd808d5F076E0945D66b7": {
+          "amount": "10966580527200000000",
+          "breakdown": { "UniswapV3": "10966580527200000000" }
+        },
+        "0x46a0B4Fa58141ABa23185e79f7047A7dFd0FF100": {
+          "amount": "9098001539000000000",
+          "breakdown": { "UniswapV3": "9098001539000000000" }
+        },
+        "0x67a94cC28E770bDbe5d48448eDE20bCC371bB3D0": {
+          "amount": "328555616400000000",
+          "breakdown": { "UniswapV3": "328555616400000000" }
+        },
+        "0xA21D533C7DC7F117F84047E3e4ECC95f3649624c": {
+          "amount": "283143919500000000",
+          "breakdown": { "UniswapV3": "283143919500000000" }
+        },
+        "0xB068411139de737F13Ae487A80a18976C9f0094d": {
+          "amount": "144322401100000000",
+          "breakdown": { "UniswapV3": "144322401100000000" }
+        },
+        "0x77039DA9C30025ff953964a69D4546A34C104873": {
+          "amount": "143648978900000000",
+          "breakdown": { "UniswapV3": "143648978900000000" }
+        },
+        "0xBfd3bACDC5AA81b5F5ab533245673224442c0Ae0": {
+          "amount": "105644370600000000",
+          "breakdown": { "UniswapV3": "105644370600000000" }
+        },
+        "0xDc5Af05e98adE466dDd72B01F20477Df47F2483D": {
+          "amount": "100549551400000000",
+          "breakdown": { "UniswapV3": "100549551400000000" }
+        },
+        "0xAf46f8a061D1e01fbe167648eb20f731e71681cF": { "amount": "48203260700000000", "breakdown": { "UniswapV3": "48203260700000000" } },
+        "0x271Fb723Dd5B980550F94F388d581CF304645c41": { "amount": "37691645000000000", "breakdown": { "UniswapV3": "37691645000000000" } },
+        "0x11F630E1347a76A0C749dB71dAb0e53a4a326c4F": { "amount": "25243234100000000", "breakdown": { "UniswapV3": "25243234100000000" } },
+        "0xBEeB1FA8dA9730BbC9cB3B5Aa4e6BA0793FE0D21": { "amount": "24400477400000000", "breakdown": { "UniswapV3": "24400477400000000" } },
+        "0xf57d2B61068fA45CBd49cD9bAE942A78FA5f0dd5": { "amount": "23776686100000000", "breakdown": { "UniswapV3": "23776686100000000" } },
+        "0xa3c949e2700E394121bD151579Dec442e1BD33F6": { "amount": "11937715900000000", "breakdown": { "UniswapV3": "11937715900000000" } },
+        "0xf15739560F79d030287c3de6cf91b34d8A39e491": { "amount": "11868840900000000", "breakdown": { "UniswapV3": "11868840900000000" } },
+        "0xF9E1885F26Faa8F5f58D64C561C1E35284de7C2c": { "amount": "4816364000000000", "breakdown": { "UniswapV3": "4816364000000000" } },
+        "0x3890C6B13De444029c30621e911F0D5b2361810B": { "amount": "1185830100000000", "breakdown": { "UniswapV3": "1185830100000000" } },
+        "0x8844853428C59BAadD9b4840e83969DD4f58CEC9": { "amount": "1107779200000000", "breakdown": { "UniswapV3": "1107779200000000" } },
+        "0x636FDA05efd2B9619Be55Cc8Ed60b975EDDa0Fe7": { "amount": "497167100000000", "breakdown": { "UniswapV3": "497167100000000" } },
+        "0x3D75B3f53903b8E528b95E0B21dEDdB31DF37305": { "amount": "478047300000000", "breakdown": { "UniswapV3": "478047300000000" } },
+        "0x93Ef041be2953dcA451401e37DcF9f3076a5C561": { "amount": "443905800000000", "breakdown": { "UniswapV3": "443905800000000" } },
+        "0xB4ffeCb1aA10758988b83f7EeE5cb3765C133359": { "amount": "239643400000000", "breakdown": { "UniswapV3": "239643400000000" } },
+        "0x3D6a724247c4B133C3b279558e90EdD0c5d25751": { "amount": "232542000000000", "breakdown": { "UniswapV3": "232542000000000" } },
+        "0xbe33903B7d7BeCC0f4B0fb6E7A88e88Db5567C18": { "amount": "202143200000000", "breakdown": { "UniswapV3": "202143200000000" } },
+        "0xf4e22849bC1162082Cc7Ae62F23c25aCabEbfcEF": { "amount": "111123400000000", "breakdown": { "UniswapV3": "111123400000000" } },
+        "0x7F429edeff8afC7Bb3A2CF7DB832Fc86f6FA99DA": { "amount": "65130100000000", "breakdown": { "UniswapV3": "65130100000000" } },
+        "0x5411894842e610C4D0F6Ed4C232DA689400f94A1": { "amount": "43557200000000", "breakdown": { "UniswapV3": "43557200000000" } },
+        "0x62d51Fa08B15411D9429133aE5F224abf3867729": { "amount": "81490500000000", "breakdown": { "UniswapV3": "81490500000000" } },
+        "0x05Dfa0c431Be5BAC64F70F41C3A988cC1a25Ab8e": { "amount": "23978000000000", "breakdown": { "UniswapV3": "23978000000000" } },
+        "0x059213d0aDBD35DEf06aC6736C8bb310360C8a5D": { "amount": "2217300000000", "breakdown": { "UniswapV3": "2217300000000" } },
+        "0xd581f0B4493f6f5177165dcA75B64F0FBa02B61F": { "amount": "2115700000000", "breakdown": { "UniswapV3": "2115700000000" } },
+        "0x9637e2D90Dd3FC5c2E7286ef0bEFbDFc3Be4DC3a": {
+          "amount": "12902068326300000000",
+          "breakdown": { "UniswapV3": "12902068326300000000" }
+        },
+        "0x023B6Fc6D77a4b634dBCa5f0d21C94ca880DeeCA": {
+          "amount": "454457547600000000",
+          "breakdown": { "UniswapV3": "454457547600000000" }
+        },
+        "0x01d2084D5B67675B95438793b146502B9a1ebb2d": {
+          "amount": "25172609081300000000",
+          "breakdown": { "UniswapV3": "25172609081300000000" }
+        },
+        "0xE95c8E73C8Ba1e69dE136C37f55376665cdE32dC": { "amount": "5550290800000000", "breakdown": { "UniswapV3": "5550290800000000" } },
+        "0x30bACd12a889C9Be7E5DA52aa089744C62AFF878": {
+          "amount": "12529238500900000000",
+          "breakdown": { "UniswapV3": "12529238500900000000" }
+        },
+        "0x91E0D146484f691df906A92944b0090D403AE434": {
+          "amount": "22582842936900000000",
+          "breakdown": { "UniswapV3": "22582842936900000000" }
+        },
+        "0x32318D1366Ec4179c944D6b3AbA08119995E2200": {
+          "amount": "1687921433300000000",
+          "breakdown": { "UniswapV3": "1687921433300000000" }
+        },
+        "0x470FdE0dE20c6590CaE7036AA7DABe5dbe5d0fd6": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0x5a7854b12EE7b1e734dc4F645A2555d75a48F05E": {
+          "amount": "19116326112100000000",
+          "breakdown": { "UniswapV3": "19116326112100000000" }
+        },
+        "0x6912E6B6D490625E0d46D7E332b18809bbe116FC": {
+          "amount": "21381919781100000000",
+          "breakdown": { "UniswapV3": "21381919781100000000" }
+        },
+        "0xad3c0e2bFdD30F2651eD3A356abD776bcAF60460": {
+          "amount": "432730206400000000",
+          "breakdown": { "UniswapV3": "432730206400000000" }
+        },
+        "0x8D5AA87474992Ace837951eBE4206dEF0b1f9EEb": { "amount": "62380500000000", "breakdown": { "UniswapV3": "62380500000000" } },
+        "0x54Ca3b59Fd8a4D881976344623F0A9B882EE808B": { "amount": "14839500000000", "breakdown": { "UniswapV3": "14839500000000" } },
+        "0x7D0eD73A92D3bB273Ef43b4f7C2C0C7B3B3D183D": { "amount": "0", "breakdown": { "UniswapV3": "0" } },
+        "0x97e6E0a40a3D02F12d1cEC30ebfbAE04e37C119E": {
+          "amount": "585540025105300000000",
+          "breakdown": { "UniswapV3": "585540025105300000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0x48DA0965ab2d2cbf1C17C09cFB5Cbe67Ad5B1406",
+      "token": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "tokenDecimals": 18,
+      "tokenSymbol": "UNI",
+      "totalAmount": "2132399500000000000000"
+    },
+    "0x95137874a7d097b95d783acf38dbc4952ffb2a7260db6b2f4d4da29ff665b70f": {
+      "amm": 0,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x628ec53729D1B30cEB85c6d20d7C6032601D0D4E": {
+          "amount": "366267548642300000000",
+          "breakdown": { "UniswapV3": "366267548642300000000" }
+        },
+        "0x52ed87d44784BD80cB9b9bd23f46bCE6acB6769d": {
+          "amount": "10148140741400000000",
+          "breakdown": { "UniswapV3": "10148140741400000000" }
+        },
+        "0xf7be22f60ec1A62a4fA3C445c5dCdDc834D58B74": { "amount": "70817760000000000", "breakdown": { "UniswapV3": "70817760000000000" } },
+        "0xbE63a4beD16A903C3C1D171DED439Fa10F1A9b72": { "amount": "45578603600000000", "breakdown": { "UniswapV3": "45578603600000000" } },
+        "0x00D13B0AAb38F5f38FeD94F06A6fa029E2C529f6": { "amount": "2379301000000000", "breakdown": { "UniswapV3": "2379301000000000" } },
+        "0x965e7249CfBDa46120C88EFcCdE1D9bD02AD7e2F": {
+          "amount": "29784805982400000000",
+          "breakdown": { "UniswapV3": "29784805982400000000" }
+        },
+        "0xdD84Ce1aDcb3A4908Db61A1dFA3353C3974c5a2B": {
+          "amount": "54468021994500000000",
+          "breakdown": { "UniswapV3": "54468021994500000000" }
+        },
+        "0x7f055F4d9035ccC9678c4173856056Fd87b2db6d": {
+          "amount": "52485608759400000000",
+          "breakdown": { "UniswapV3": "52485608759400000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0x39c9E3128b8736e02A30B2B9b7E50FF522b935c5",
+      "token": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "tokenDecimals": 18,
+      "tokenSymbol": "UNI",
+      "totalAmount": "1149731300000000000000"
+    },
+    "0x448d961a104013fc49cf29e32c1dd7b64d2ddbc0c09cd53aa2336f121261f9c6": {
+      "amm": 0,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0xC25CD11121Ea80ca586b0FC02388db06E44B6b68": {
+          "amount": "46946296716700000000",
+          "breakdown": { "UniswapV3": "46946296716700000000" }
+        },
+        "0x192bDD30D272AabC2B1c3c719c518F0f2d10cc60": {
+          "amount": "54072930177800000000",
+          "breakdown": { "UniswapV3": "54072930177800000000" }
+        },
+        "0xdECD504c466d891B7833DE68838F0e2730E23a17": {
+          "amount": "28205924428900000000",
+          "breakdown": { "UniswapV3": "28205924428900000000" }
+        },
+        "0x5959030fdd90956608e3017312ed5f7de1C2ECc9": {
+          "amount": "14474691236700000000",
+          "breakdown": { "UniswapV3": "14474691236700000000" }
+        },
+        "0xf3e7c7E17698c5c17C0Dd958b532E9f3DBEC4871": {
+          "amount": "3913283470300000000",
+          "breakdown": { "UniswapV3": "3913283470300000000" }
+        },
+        "0x5C7893Ca655adEfb572aCfa59c18E624cA6A5473": {
+          "amount": "3478613160900000000",
+          "breakdown": { "UniswapV3": "3478613160900000000" }
+        },
+        "0x5De91016e02E892c47Bcd7AC0E9CC50eaB181307": {
+          "amount": "1939581586900000000",
+          "breakdown": { "UniswapV3": "1939581586900000000" }
+        },
+        "0x8410373DF6E9b20765c9599c26d585B2cd0Ef628": {
+          "amount": "1202202462300000000",
+          "breakdown": { "UniswapV3": "1202202462300000000" }
+        },
+        "0xAf182244B26Df1E1262ca3665dE0c81630d6Dd77": {
+          "amount": "686062413400000000",
+          "breakdown": { "UniswapV3": "686062413400000000" }
+        },
+        "0x2515B754e606b9461FC90F9C5AB3f2dF8767fbC0": { "amount": "65252284100000000", "breakdown": { "UniswapV3": "65252284100000000" } },
+        "0x7671BF4EF7DD8B2cB162b4e780d3a3193CD0198f": { "amount": "50464643700000000", "breakdown": { "UniswapV3": "50464643700000000" } },
+        "0xC7afE1e1155960Dcf4858d089746aE05699F7dAb": { "amount": "50371765900000000", "breakdown": { "UniswapV3": "50371765900000000" } },
+        "0x0793f149EE392885F37033dc55e9f0DFFbb1BfEa": { "amount": "50178174000000000", "breakdown": { "UniswapV3": "50178174000000000" } },
+        "0x517DF4f28EaBB59b962BcE3A706D27194279F7A2": { "amount": "50046297200000000", "breakdown": { "UniswapV3": "50046297200000000" } },
+        "0x6E76b3c45271f0AaC7A2B245AF18a9C883a493Ad": { "amount": "2202100000000", "breakdown": { "UniswapV3": "2202100000000" } },
+        "0x8Bc3FA55Ab0B36AAb355D2FB209E1Eed7345c032": { "amount": "42766882100000000", "breakdown": { "UniswapV3": "42766882100000000" } },
+        "0x7FfEF06F6c319004E14fCCc3325343282554b558": {
+          "amount": "6991023825000000000",
+          "breakdown": { "UniswapV3": "6991023825000000000" }
+        },
+        "0x2EffBEaA0079D63718E7aaD0b3A4caE6b27009AA": {
+          "amount": "1517037351400000000",
+          "breakdown": { "UniswapV3": "1517037351400000000" }
+        },
+        "0x39E761E4F039Ed77286F393c948AD6716170F897": {
+          "amount": "343783886757200000000",
+          "breakdown": { "UniswapV3": "343783886757200000000" }
+        },
+        "0x789432376D81c2915Db594dafA7244098bCA3292": {
+          "amount": "3389932620800000000",
+          "breakdown": { "UniswapV3": "3389932620800000000" }
+        },
+        "0x5E81FfF16cdbf5E6479EC50c11aD80d5774f5EC8": {
+          "amount": "2361393422100000000",
+          "breakdown": { "UniswapV3": "2361393422100000000" }
+        },
+        "0xdE5C933e0A5Fe0b7332FE5281a11420873d82D1a": { "amount": "959903300000000", "breakdown": { "UniswapV3": "959903300000000" } }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0x57aF956d3E2cCa3B86f3D8C6772C03ddca3eAacB",
+      "token": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "tokenDecimals": 18,
+      "tokenSymbol": "UNI",
+      "totalAmount": "1149731300000000000000"
+    },
+    "0x81305c8bc0e5ac1a4f5b7e7d2d443d80860065d4a98c76727b2b7d7e42e42ad8": {
+      "amm": 0,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x972eF69b8870dC317572fEB2dEd49e77c77Cb361": { "amount": "637280600000000", "breakdown": { "UniswapV3": "637280600000000" } },
+        "0x3F5854Fb5e5F71C3d470D75B6c41bB299D21b795": {
+          "amount": "5010387103300000000",
+          "breakdown": { "UniswapV3": "5010387103300000000" }
+        },
+        "0xf665F2eD351696817898fe0Ace20c5C1Bc3c5796": {
+          "amount": "3049841477400000000",
+          "breakdown": { "UniswapV3": "3049841477400000000" }
+        },
+        "0x02BC0a30878a7F3f5d74081F77A5aD34E651c6F0": {
+          "amount": "10293391978700000000",
+          "breakdown": { "UniswapV3": "10293391978700000000" }
+        },
+        "0x93293f3117fD5398A11A20674a6Deae2Ac51B099": {
+          "amount": "1038209026900000000",
+          "breakdown": { "UniswapV3": "1038209026900000000" }
+        },
+        "0xa5504d8aDC24183f4796e97642FD95593a6d1862": {
+          "amount": "88393817921200000000",
+          "breakdown": { "UniswapV3": "88393817921200000000" }
+        },
+        "0x910407E2f1a8927099be13e3E13D1997abb4eB6A": {
+          "amount": "77429963787900000000",
+          "breakdown": { "UniswapV3": "77429963787900000000" }
+        },
+        "0x7f055F4d9035ccC9678c4173856056Fd87b2db6d": {
+          "amount": "167350279943600000000",
+          "breakdown": { "UniswapV3": "167350279943600000000" }
+        },
+        "0x3586CF9aeac349D34368C2AbD2d803d671947A5d": {
+          "amount": "29098158979600000000",
+          "breakdown": { "UniswapV3": "29098158979600000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0xa89A1cdf5Fe93d754B6064B9F761747D03176c54",
+      "token": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "tokenDecimals": 18,
+      "tokenSymbol": "UNI",
+      "totalAmount": "854928900000000000000"
+    },
+    "0x7914e760f47b11dcbe29d65d573baa4b958e43d227d495dce82f4f537d3afa5b": {
+      "amm": 0,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0x3e3B3C3027cbBDa4D5F2bE6c8eBc8D856FBaD044": {
+          "amount": "125026071428500000000",
+          "breakdown": { "UniswapV3": "125026071428500000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0xb42Eede6Ad429B38DA26817aeB163f216E34B7f8",
+      "token": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "tokenDecimals": 18,
+      "tokenSymbol": "UNI",
+      "totalAmount": "280058400000000000000"
+    },
+    "0xdcd6ca3f38d0418f165315c3e2a0f065f08811a45e3bfce3063c5b8713254173": {
+      "amm": 0,
+      "boostedAddress": "0x0000000000000000000000000000000000000000",
+      "boostedReward": 0,
+      "holders": {
+        "0xb5b29320d2Dde5BA5BAFA1EbcD270052070483ec": {
+          "amount": "7646151897773900000000",
+          "breakdown": { "UniswapV3": "7646151897773900000000" }
+        },
+        "0x043027C0d28a1544AB43b3aaDeba8114Bbaaea54": { "amount": "60050062600000000", "breakdown": { "UniswapV3": "60050062600000000" } },
+        "0x598b014cbd88f3e131Fb3b9341bA57E85D8FEBc6": {
+          "amount": "1016658221726500000000",
+          "breakdown": { "UniswapV3": "1016658221726500000000" }
+        },
+        "0xED63c42f57e945D1AE070c2C9a435BB721566476": {
+          "amount": "258327751398000000000",
+          "breakdown": { "UniswapV3": "258327751398000000000" }
+        },
+        "0x3F5854Fb5e5F71C3d470D75B6c41bB299D21b795": {
+          "amount": "68729941238300000000",
+          "breakdown": { "UniswapV3": "68729941238300000000" }
+        },
+        "0xF9ab542616A0C8fA94e41c968622C3b2367F5ad1": {
+          "amount": "880679523035300000000",
+          "breakdown": { "UniswapV3": "880679523035300000000" }
+        },
+        "0xB81b239d90569FEfec06860f6c4b9A2F3FA8E21e": {
+          "amount": "115455628100000000",
+          "breakdown": { "UniswapV3": "115455628100000000" }
+        },
+        "0x0274a704a6D9129F90A62dDC6f6024b33EcDad36": {
+          "amount": "911531529564400000000",
+          "breakdown": { "UniswapV3": "911531529564400000000" }
+        },
+        "0xA8A8C7C4894d2c81d661902ab2DAf3D665f3c3Ee": {
+          "amount": "37306103565200000000",
+          "breakdown": { "UniswapV3": "37306103565200000000" }
+        },
+        "0xe8a280E6b5213E8Ccd6de4Fc4B50911De749E551": {
+          "amount": "169554054118400000000",
+          "breakdown": { "UniswapV3": "169554054118400000000" }
+        },
+        "0xCAb9a457Bf9e8B969a86439134EB624d33134d8c": {
+          "amount": "2722192934700000000",
+          "breakdown": { "UniswapV3": "2722192934700000000" }
+        },
+        "0x1de5366615BCEB1BDb7274536Bf3fc9f06Aa9c2C": {
+          "amount": "46634788131600000000",
+          "breakdown": { "UniswapV3": "46634788131600000000" }
+        },
+        "0x79F1bc5c5ee691206Fc55C66402F938dd1E96421": {
+          "amount": "122635632082100000000",
+          "breakdown": { "UniswapV3": "122635632082100000000" }
+        },
+        "0x398D07F671A5252C168fEdeD58FB1A30432d49A3": {
+          "amount": "73253757692400000000",
+          "breakdown": { "UniswapV3": "73253757692400000000" }
+        },
+        "0x14975679e5f87c25fa2c54958e735a79B5B93043": {
+          "amount": "6877156171800000000",
+          "breakdown": { "UniswapV3": "6877156171800000000" }
+        },
+        "0xb311bF4362DE99c90C87C060824B0f0CEF5Cd9BA": {
+          "amount": "64954465139100000000",
+          "breakdown": { "UniswapV3": "64954465139100000000" }
+        },
+        "0xF886Fa0DAb84278957a6455349F37F4F1b34fD3B": {
+          "amount": "208961464327300000000",
+          "breakdown": { "UniswapV3": "208961464327300000000" }
+        },
+        "0xFa4FC4ec2F81A4897743C5b4f45907c02ce06199": {
+          "amount": "277938956368000000000",
+          "breakdown": { "UniswapV3": "277938956368000000000" }
+        },
+        "0x7E6BEE8157aCeB2CBAaa74868f99a369f9E5d4c1": {
+          "amount": "28424703478800000000",
+          "breakdown": { "UniswapV3": "28424703478800000000" }
+        },
+        "0x6900C1F8E31B786aD9a85219D6D3FcA20FEdBD3F": {
+          "amount": "154298471800000000",
+          "breakdown": { "UniswapV3": "154298471800000000" }
+        },
+        "0x5bAaC7ccda079839C9524b90dF81720834FC039f": {
+          "amount": "84001087978200000000",
+          "breakdown": { "UniswapV3": "84001087978200000000" }
+        },
+        "0x0d00C45573b5D5FBb7D091Ae15e9Aa6Bf1d7f256": {
+          "amount": "9226701253000000000",
+          "breakdown": { "UniswapV3": "9226701253000000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0x109830a1AAaD605BbF02a9dFA7B0B92EC2FB7dAa",
+      "token": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "tokenDecimals": 18,
+      "tokenSymbol": "UNI",
+      "totalAmount": "26689375400000000000000"
+    },
+    "0x4e5b688778431c9960bc8a81cdaa8e23fa6e01da4ecfc410aaf2ab1a0b6c3522": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "13204763733863600500000",
+          "breakdown": { "UniswapV3": "13204763733863600500000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "10815918469426199800000",
+          "breakdown": { "UniswapV3": "10815918469426199800000" }
+        },
+        "0xaebb8FDBD5E52F99630cEBB80D0a1c19892EB4C2": {
+          "amount": "1978577579444900000000",
+          "breakdown": { "UniswapV3": "1978577579444900000000" }
+        },
+        "0x2Bd93343DED12d371A49e3fB205846862A74AF39": {
+          "amount": "725308154885000000000",
+          "breakdown": { "UniswapV3": "725308154885000000000" }
+        },
+        "0x97d505d5155CdC2D4F2553797031396E8eA3F7d6": {
+          "amount": "15979627694800000000",
+          "breakdown": { "UniswapV3": "15979627694800000000" }
+        },
+        "0x24e56740D621AA314E2F352e26A47734c3572eE3": { "amount": "24281927500000000", "breakdown": { "UniswapV3": "24281927500000000" } },
+        "0x11d67Fa925877813B744aBC0917900c2b1D6Eb81": {
+          "amount": "455566785749000000000",
+          "breakdown": { "Arrakis": "455566785749000000000" }
+        },
+        "0x1649FF31c30F9Fc7ecAe5c76Ad00Ae3AeCF18eCE": {
+          "amount": "1044608157559000000000",
+          "breakdown": { "Arrakis": "1044608157559000000000" }
+        },
+        "0x4Ca321E4966A6BCbC26c13921CD76cac7D1f1B02": { "amount": "127570905700000000", "breakdown": { "Arrakis": "127570905700000000" } },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "1398568146900000000",
+          "breakdown": { "Arrakis": "10414247600000000", "Gamma": "1388153899200000000" }
+        },
+        "0xaaC7359Fb5D39Db6C562cACe5E0947b591F16fF5": { "amount": "237753110000000000", "breakdown": { "Arrakis": "237753110000000000" } },
+        "0xB0b0F6F13A5158eB67724282F586a552E75b5728": {
+          "amount": "8493218338438299500000",
+          "breakdown": { "Arrakis": "8493218338438299500000" }
+        },
+        "0xcdE2933c2017944B46B466AB9A0dfDfA36e4c35b": { "amount": "585107021800000000", "breakdown": { "Arrakis": "585107021800000000" } },
+        "0x4A277e11f55Be48b27C453188A74F115a327BB2e": {
+          "amount": "1135696543802900000000",
+          "breakdown": { "Gamma": "1135696543802900000000" }
+        },
+        "0xAC95712Ccf7fd178f198C7B6fd2d5f6f7a202929": {
+          "amount": "678285609066600000000",
+          "breakdown": { "Gamma": "678285609066600000000" }
+        },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "784200000000", "breakdown": { "Gamma": "784200000000" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "22038499700000000", "breakdown": { "Gamma": "22038499700000000" } }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0x735a26a57A0A0069dfABd41595A970faF5E1ee8b",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "294384248991604218166121"
+    },
+    "0x757f565f6a9490d7acc2b6371676c03d619b3735f64bf5bb6e7db6fbec05322b": {
+      "amm": 0,
+      "boostedAddress": "0x52701bFA0599db6db2b2476075D9a2f4Cb77DAe3",
+      "boostedReward": 2.5,
+      "holders": {
+        "0x41Bc7d0687e6Cea57Fa26da78379DfDC5627C56d": {
+          "amount": "17633947420177700600000",
+          "breakdown": { "UniswapV3": "17633947420177700600000" }
+        },
+        "0x12d3D411d010891a88BFf2401bD73FA41fb1316e": {
+          "amount": "17186653933865201000000",
+          "breakdown": { "UniswapV3": "17186653933865201000000" }
+        },
+        "0x5Be876Ed0a9655133226BE302ca6f5503E3DA569": {
+          "amount": "5950845070006399800000",
+          "breakdown": { "UniswapV3": "5950845070006399800000" }
+        },
+        "0x154001A2F9f816389b2F6D9E07563cE0359D813D": {
+          "amount": "748627390597900000000",
+          "breakdown": { "UniswapV3": "748627390597900000000" }
+        },
+        "0x16F75aa4BCAB8a8FDa2BCAb023Ca1AE581453Ac5": {
+          "amount": "470230824572300000000",
+          "breakdown": { "UniswapV3": "470230824572300000000" }
+        },
+        "0xfdA462548Ce04282f4B6D6619823a7C64Fdc0185": {
+          "amount": "13107777755200000000",
+          "breakdown": { "UniswapV3": "1550136420400000000", "Arrakis": "11557641334700000000" }
+        },
+        "0xe980599BF7fa44230c58c270D30cb30c3Db7F99a": {
+          "amount": "590521642100000000",
+          "breakdown": { "UniswapV3": "590521642100000000" }
+        },
+        "0x11d67Fa925877813B744aBC0917900c2b1D6Eb81": {
+          "amount": "548828131286600000000",
+          "breakdown": { "Arrakis": "548828131286600000000" }
+        },
+        "0x203643c55E127330F15494B85FA6d0E2f1a259EF": { "amount": "6670796600000000", "breakdown": { "Arrakis": "6670796600000000" } },
+        "0x52ea58f4FC3CEd48fa18E909226c1f8A0EF887DC": { "amount": "0", "breakdown": { "Arrakis": "0" } },
+        "0x76b8579694d1769a0390aDb3b199085845804cC1": {
+          "amount": "143819700430900000000",
+          "breakdown": { "Arrakis": "143819700430900000000" }
+        },
+        "0xa0022debeB2275cf05B9c659493F89efe3AB89a6": {
+          "amount": "18147390386108400000000",
+          "breakdown": { "Arrakis": "18147390386108400000000" }
+        },
+        "0xA2dEe32662F6243dA539bf6A8613F9A9e39843D3": {
+          "amount": "11840967219700000000",
+          "breakdown": { "Arrakis": "244771061000000000", "Gamma": "11596196158500000000" }
+        },
+        "0xbE18f84532d8f7fb6d7919401C0096f3e257DB8b": {
+          "amount": "465347241989200000000",
+          "breakdown": { "Arrakis": "465347241989200000000" }
+        },
+        "0xd1c9d16B4A803f1336650f17Eb99b47b1Fc90038": { "amount": "510200000000", "breakdown": { "Arrakis": "510200000000" } },
+        "0xADE38bd2E8D5A52E60047AfFe6E595bB5E61923A": { "amount": "102827400000000", "breakdown": { "Gamma": "102827400000000" } },
+        "0xdfBFD6A4ea6893bb0A2a35EB1e77344177c7b2cC": { "amount": "95615475200000000", "breakdown": { "Gamma": "95615475200000000" } },
+        "0xF5FcD3a63abc766Ac5ADa296B4A4E860dBF9ebb0": { "amount": "20565500300000000", "breakdown": { "Gamma": "20565500300000000" } },
+        "0x7FF7602507DF37c0B7A2981ca3278e9142A7F14A": {
+          "amount": "2313050289600000000",
+          "breakdown": { "UniswapV3": "2313050289600000000" }
+        }
+      },
+      "lastUpdateEpoch": 469414,
+      "pool": "0x8dB1b906d47dFc1D84A87fc49bd0522e285b98b9",
+      "token": "0x31429d1856aD1377A8A0079410B297e1a9e214c2",
+      "tokenDecimals": 18,
+      "tokenSymbol": "ANGLE",
+      "totalAmount": "468289808288044618333002"
+    }
+  },
+  "merklRoot": "0x7c77819e0aad84f76d602ebce9285b02f38b07fc6c7eeb91498dc75a64296733",
+  "updateTxBlockNumber": 17737243
+}

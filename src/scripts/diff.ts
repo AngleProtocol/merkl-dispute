@@ -10,7 +10,6 @@ import {
 import axios from 'axios';
 import dotenv from 'dotenv';
 import { BigNumber } from 'ethers';
-import moment from 'moment';
 
 import endJson from './jsons/end.json';
 import startJson from './jsons/start.json';
