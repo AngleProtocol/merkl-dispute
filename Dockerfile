@@ -23,7 +23,7 @@ COPY ./src ./src
 RUN yarn build
 
 # Expose the port that the app listens on
-EXPOSE 8080
+EXPOSE 5002
 
 # Launch the app for local development (hot reloading)
 CMD ["yarn", "start"]
