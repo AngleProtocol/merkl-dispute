@@ -12,7 +12,7 @@ import { Transform } from 'stream';
 import { NULL_ADDRESS } from '../constants';
 import { httpProvider } from '../providers';
 import { reportDiff } from '../scripts/diff';
-import { createGist, getChainId, retryWithExponentialBackoff } from '../utils';
+import { getChainId, retryWithExponentialBackoff } from '../utils';
 import { sendSummary } from '../utils/discord';
 import { log } from '../utils/merkl';
 
@@ -168,13 +168,15 @@ router.get('', async (_, res) => {
   );
 
   const description = `Dispute Bot run on ${NETWORK_LABELS[chainId]}. Upgrade from ${onChainParams.startRoot} to ${onChainParams.endRoot}`;
-  let url = '';
-  try {
-    url = await createGist(description, (ts.read() || '').toString());
-  } catch (e) {
-    // console.log(e);
-    log('merkl dispute bot', `❌couldn't create gist: ${e}`);
-  }
+  /**
+   * @dev TODO @Picodes fix gist creation
+   */
+  const url = 'no diff checker report';
+  // try {
+  //   url = await createGist(description, (ts.read() || '').toString());
+  // } catch (e) {
+  //   log('merkl dispute bot', `❌couldn't create gist: ${e}`);
+  // }
   console.log('>>> [error]:', error);
   if (!!reason && reason !== '') {
     console.log('>>> [reason]: ', reason);
