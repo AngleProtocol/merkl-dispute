@@ -18,24 +18,19 @@ export function getChainId(): ChainId {
   }
   return parseInt(value) as ChainId;
 }
+
 const octokit = new Octokit({ auth: process.env.KEEPER_GITHUB_AUTH_TOKEN });
-
 export async function createGist(description: string, content: string): Promise<string> {
-  try {
-    const response = await octokit.gists.create({
-      files: {
-        'diff.txt': {
-          content: content,
-        },
+  const response = await octokit.gists.create({
+    files: {
+      'diff.txt': {
+        content: content,
       },
-      description,
-      public: false,
-    });
-
-    return response.data.html_url;
-  } catch (error) {
-    throw `Error creating gist:', ${error}`;
-  }
+    },
+    description,
+    public: false,
+  });
+  return response.data.html_url;
 }
 
 export async function retryWithExponentialBackoff<T>(fn: (...any) => Promise<T>, retries = 5, delay = 500, ...args): Promise<T> {

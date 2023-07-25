@@ -95,7 +95,7 @@ export const reportDiff = async (
       }).then((r) => (merklIndex = r.data));
     } catch {
       error = true;
-      reason = `Could't find index on Github`;
+      reason = `Couldn't find index on Github`;
     }
 
     const startEpoch = merklIndex[params.startRoot];
@@ -109,7 +109,7 @@ export const reportDiff = async (
       }).then((r) => (startTree = r.data));
     } catch {
       error = true;
-      reason = `Could't find json corresponding to ${params.startRoot} on Github`;
+      reason = `Couldn't find json corresponding to ${params.startRoot} on Github`;
     }
 
     try {
@@ -120,7 +120,7 @@ export const reportDiff = async (
       }).then((r) => (endTree = r.data));
     } catch {
       error = true;
-      reason = `Could't find json corresponding to ${params.endRoot} on Github`;
+      reason = `Couldn't find json corresponding to ${params.endRoot} on Github`;
     }
   } else {
     startTree = startJson as unknown as AggregatedRewardsType;

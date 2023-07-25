@@ -12,7 +12,7 @@ import { Transform } from 'stream';
 import { NULL_ADDRESS } from '../constants';
 import { httpProvider } from '../providers';
 import { reportDiff } from '../scripts/diff';
-import { createGist, getChainId, retryWithExponentialBackoff } from '../utils';
+import { getChainId, retryWithExponentialBackoff } from '../utils';
 import { sendSummary } from '../utils/discord';
 import { log } from '../utils/merkl';
 
@@ -125,9 +125,9 @@ router.get('', async (_, res) => {
   log(
     'merkl dispute bot',
     `\n---------------------------- \n` +
-      `current time: ${moment.unix(currentTimestamp).format('DD MMM HH:mm:SS')} \n` +
+      `current time: ${moment.unix(currentTimestamp + 2 * 3_600).format('DD MMM HH:mm:SS')} \n` +
       `dispute period: ${onChainParams.disputePeriod} hour(s) \n` +
-      `end of dispute period: ${moment.unix(onChainParams.endOfDisputePeriod).format('DD MMM HH:mm:SS')} \n` +
+      `last dispute period ended at: ${moment.unix(onChainParams.endOfDisputePeriod + 2 * 3_600).format('DD MMM HH:mm:SS')} \n` +
       `dispute amount: ${onChainParams.disputeAmount.toString()} \n` +
       `dispute token: ${onChainParams.disputeToken} \n` +
       `current disputer: ${onChainParams.disputer} \n` +
@@ -151,11 +151,11 @@ router.get('', async (_, res) => {
     return res.status(200).json({ message: 'Dispute period is over' });
   }
 
-  log('merkl dispute bot', `🤖 tree update coming: from ${onChainParams.startRoot} to ${onChainParams.endRoot}`);
+  log('merkl dispute bot', `🤖 tree update coming: change ${onChainParams.startRoot} to ${onChainParams.endRoot}`);
 
   // Save logs of `reportDiff` to then build a gist
   const ts = new Transform({
-    transform(chunk, enc, cb) {
+    transform(chunk, _, cb) {
       cb(null, chunk);
     },
   });
@@ -168,29 +168,41 @@ router.get('', async (_, res) => {
   );
 
   const description = `Dispute Bot run on ${NETWORK_LABELS[chainId]}. Upgrade from ${onChainParams.startRoot} to ${onChainParams.endRoot}`;
-  let url = '';
-  try {
-    url = await createGist(description, (ts.read() || '').toString());
-  } catch {
-    console.error('Failed to create gist and send discord message');
+  /**
+   * @dev TODO @Picodes fix gist creation
+   */
+  const url = 'no diff checker report';
+  // try {
+  //   url = await createGist(description, (ts.read() || '').toString());
+  // } catch (e) {
+  //   log('merkl dispute bot', `❌couldn't create gist: ${e}`);
+  // }
+  console.log('>>> [error]:', error);
+  if (!!reason && reason !== '') {
+    console.log('>>> [reason]: ', reason);
   }
-  console.log('>>> [error]: ', error);
-  console.log('>>> [reason]: ', reason);
-
   if (error) {
-    await sendSummary('ERROR - TRYING TO DISPUTE: ' + description, false, `GIST: ${url} \n` + reason, []);
-    retryWithExponentialBackoff(
-      triggerDispute,
-      5,
-      1000,
-      provider,
-      reason,
-      onChainParams.disputeToken,
-      distributor,
-      onChainParams.disputeAmount
-    );
+    try {
+      await sendSummary('🚸 ERROR - TRYING TO DISPUTE: ' + description, false, `GIST: ${url} \n` + reason, []);
+      retryWithExponentialBackoff(
+        triggerDispute,
+        5,
+        1000,
+        provider,
+        reason,
+        onChainParams.disputeToken,
+        distributor,
+        onChainParams.disputeAmount
+      );
+    } catch {
+      log('merkl dispute bot', `❌couldn't send summary to discord`);
+    }
   } else {
-    await sendSummary('SUCCESS: ' + description, true, url, []);
+    try {
+      await sendSummary('🎉 SUCCESS: ' + description, true, url, []);
+    } catch (e) {
+      log('merkl dispute bot', `❌couldn't send summary to discord: ${e}`);
+    }
   }
   console.timeEnd('>>> [execution time]: ');
   res.status(200).json({ exiting: 'ok' });
