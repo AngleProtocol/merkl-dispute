@@ -12,7 +12,7 @@ import { Transform } from 'stream';
 import { NULL_ADDRESS } from '../constants';
 import { httpProvider } from '../providers';
 import { reportDiff } from '../scripts/diff';
-import { getChainId, retryWithExponentialBackoff } from '../utils';
+import { createGist, getChainId, retryWithExponentialBackoff } from '../utils';
 import { sendSummary } from '../utils/discord';
 import { log } from '../utils/merkl';
 
@@ -171,12 +171,12 @@ router.get('', async (_, res) => {
   /**
    * @dev TODO @Picodes fix gist creation
    */
-  const url = 'no diff checker report';
-  // try {
-  //   url = await createGist(description, (ts.read() || '').toString());
-  // } catch (e) {
-  //   log('merkl dispute bot', `❌couldn't create gist: ${e}`);
-  // }
+  let url = 'no diff checker report';
+  try {
+    url = await createGist(description, (ts.read() || '').toString());
+  } catch (e) {
+    log('merkl dispute bot', `❌couldn't create gist: ${e}`);
+  }
   console.log('>>> [error]:', error);
   if (!!reason && reason !== '') {
     console.log('>>> [reason]: ', reason);
