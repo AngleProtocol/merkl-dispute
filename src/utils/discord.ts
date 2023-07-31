@@ -28,9 +28,10 @@ export const DiscordSpace = {
   value: '\u200b',
   inline: false,
 };
+
 export async function sendSummary(title: string, success: boolean, description: string, fields: APIEmbedField[], key = '') {
   const env = getEnv();
-  const channel = getChannel(success || env !== 'prod' ? 'merkl-logs' : 'merkl');
+  const channel = getChannel(success || env !== 'prod' ? 'dispute-bot-logs' : 'dispute-bot');
   if (!channel) {
     log(key, "❌ couldn't find channel");
     return;
