@@ -1,5 +1,6 @@
 import {
   AggregatedRewardsType,
+  buildMerklTree,
   ChainId,
   DistributionCreator__factory,
   Distributor__factory,
@@ -125,6 +126,12 @@ export const reportDiff = async (
   } else {
     startTree = startJson as unknown as AggregatedRewardsType;
     endTree = endJson as unknown as AggregatedRewardsType;
+  }
+
+  const root = buildMerklTree(endTree.rewards).tree.getHexRoot();
+  if (root !== endTree.merklRoot) {
+    error = true;
+    reason = `End tree merkl root is not correct`;
   }
 
   const holders = [];

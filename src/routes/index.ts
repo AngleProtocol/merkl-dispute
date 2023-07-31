@@ -168,32 +168,34 @@ router.get('', async (_, res) => {
   );
 
   const description = `Dispute Bot run on ${NETWORK_LABELS[chainId]}. Upgrade from ${onChainParams.startRoot} to ${onChainParams.endRoot}`;
-  /**
-   * @dev TODO @Picodes fix gist creation
-   */
+
   let url = 'no diff checker report';
   try {
     url = await createGist(description, (ts.read() || '').toString());
   } catch (e) {
     log('merkl dispute bot', `❌couldn't create gist: ${e}`);
   }
+
   console.log('>>> [error]:', error);
   if (!!reason && reason !== '') {
     console.log('>>> [reason]: ', reason);
   }
+
   if (error) {
     try {
       await sendSummary('🚸 ERROR - TRYING TO DISPUTE: ' + description, false, `GIST: ${url} \n` + reason, []);
-      retryWithExponentialBackoff(
-        triggerDispute,
-        5,
-        1000,
-        provider,
-        reason,
-        onChainParams.disputeToken,
-        distributor,
-        onChainParams.disputeAmount
-      );
+      if (process.env.ENV === 'prod') {
+        retryWithExponentialBackoff(
+          triggerDispute,
+          5,
+          1000,
+          provider,
+          reason,
+          onChainParams.disputeToken,
+          distributor,
+          onChainParams.disputeAmount
+        );
+      }
     } catch {
       log('merkl dispute bot', `❌couldn't send summary to discord`);
     }
