@@ -73,7 +73,7 @@ export async function fetchPositions(
         closedPositions: PositionType[];
       }
     >(request, [
-      merklSubgraphAMMEndpoints(merklSubgraphPrefix)[chainId][amm],
+      merklSubgraphAMMEndpoints(subgraphMode)[chainId][amm],
       nftPositionsQuery,
       {
         pool: pool,
@@ -116,7 +116,7 @@ export async function fetchPositions(
         closedPositions: PositionType[];
       }
     >(request, [
-      merklSubgraphAMMEndpoints(merklSubgraphPrefix)[chainId][amm],
+      merklSubgraphAMMEndpoints(subgraphMode)[chainId][amm],
       directPositionsQuery,
       {
         pool: pool,
