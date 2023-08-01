@@ -20,4 +20,5 @@ COPY tsconfig.json ./
 
 EXPOSE 5002
 
+# Launch the app for local development (hot reloading)
 CMD ["yarn", "start:local"]

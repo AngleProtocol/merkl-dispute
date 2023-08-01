@@ -7,8 +7,8 @@ read version
 
 accounts=("merkl-dispute-1") #"merkl-dispute-2")
 
-chainKeys=("polygon" "ethereum" "optimism" "arbitrum")
-chainValues=(137 1 10 42161)
+chainKeys=("polygon" "ethereum" "optimism" "arbitrum" "zkevm")
+chainValues=(137 1 10 42161 1101)
 
 for account in "${accounts[@]}"
 do
