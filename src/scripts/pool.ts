@@ -19,12 +19,12 @@ import { request } from 'graphql-request';
                                                   PARAMETERS                                                    
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-const chainId: ChainId = ChainId.MAINNET;
-const amm: AMMType = AMMType.UniswapV3;
-const pool = '0x109830a1AAaD605BbF02a9dFA7B0B92EC2FB7dAa'.toLowerCase();
+const chainId: ChainId = ChainId.POLYGON;
+const amm: AMMType = AMMType.Retro;
+const pool = '0xCE67850420c82dB45eb7fEeCcD2d181300D2BDB3'.toLowerCase();
 
-const startTimestamp = 1689501600; // Cutoff to fetch positions
-const endTimestamp = 1689775200; // To filter swaps
+const startTimestamp = 1691050732 - 3600*6; // Cutoff to fetch positions
+const endTimestamp = 1691050732; // To filter swaps
 const swaps_number = 100;
 const subgraphMode = 'prod';
 
