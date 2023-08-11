@@ -91,6 +91,7 @@ const fetchDataOnChain = async (provider: any, distributor: string): Promise<OnC
     currentRoot: distributorInterface.decodeFunctionResult('getMerkleRoot', result[i].returnData)[0],
   };
 };
+
 const triggerDispute = async (provider: any, reason: string, disputeToken: string, distributor: string, disputeAmount: BigNumber) => {
   const distributorContract = Distributor__factory.connect(distributor, provider);
 

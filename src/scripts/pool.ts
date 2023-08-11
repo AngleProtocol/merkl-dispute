@@ -2,8 +2,8 @@ import {
   AMMType,
   ChainId,
   Erc20__factory,
-  getMerklSubgraphPrefix,
   Int256,
+  merklFallbackTGEndpoint,
   merklSubgraphAMMEndpoints,
   MerklSupportedChainIdsType,
   swapsSubgraphsEndpoint,
@@ -14,6 +14,7 @@ import axios from 'axios';
 import dotenv from 'dotenv';
 import { BigNumber, constants } from 'ethers';
 import { request } from 'graphql-request';
+import moment from 'moment';
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                   PARAMETERS                                                    
@@ -21,10 +22,10 @@ import { request } from 'graphql-request';
 
 const chainId: ChainId = ChainId.POLYGON;
 const amm: AMMType = AMMType.Retro;
-const pool = '0xCE67850420c82dB45eb7fEeCcD2d181300D2BDB3'.toLowerCase();
+const pool = '0x547fd24aa2ed09d86dac02e36b8ce84a59fd644f'.toLowerCase();
 
-const startTimestamp = 1691050732 - 3600*6; // Cutoff to fetch positions
-const endTimestamp = 1691050732; // To filter swaps
+const startTimestamp = moment().unix() - 14400; // Cutoff to fetch positions
+const endTimestamp = moment().unix() - 7200; // To filter swaps
 const swaps_number = 100;
 const subgraphMode = 'prod';
 
@@ -33,8 +34,6 @@ const subgraphMode = 'prod';
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 dotenv.config();
-
-import moment from 'moment';
 
 import { BATCH_NUMBER, TVL_THRESHOLD } from '../constants';
 import { fetchPoolName, PositionType, round, SwapType } from '../helpers';
@@ -45,7 +44,6 @@ import { getAmountsForLiquidity } from '../utils/uniV3';
 type PriceType = { [token: string]: number };
 
 export async function fetchPositions(
-  merklSubgraphPrefix: string,
   chainId: MerklSupportedChainIdsType,
   amm: AMMType,
   pool: string,
@@ -182,7 +180,7 @@ export async function fetchSwaps(
    */
   const swapsEndpoint = !!swapsSubgraphsEndpoint[chainId][amm]
     ? swapsSubgraphsEndpoint[chainId][amm]
-    : merklSubgraphAMMEndpoints[chainId][amm];
+    : merklFallbackTGEndpoint[chainId][amm];
   const swapsData = await withRetry<any, { swaps: SwapType[] }>(request, [
     swapsEndpoint,
     swapQueryUniV3,
@@ -211,10 +209,8 @@ export const reportPool = async (
   pool: string,
   startTimestamp: number, // Cutoff to fetch positions
   endTimestamp: number, // To filter swaps
-  swaps_number: number,
-  subgraphMode: 'prod' | 'dev' | 'local'
+  swaps_number: number
 ) => {
-  const merklSubgraphPrefix = getMerklSubgraphPrefix(subgraphMode);
   const provider = httpProvider(chainId);
   const poolContract = UniswapV3Pool__factory.connect(pool, provider);
   let sqrtPriceX96: string;
@@ -269,7 +265,7 @@ export const reportPool = async (
 
   console.table({ name: name, pool: pool, startTimestamp, endTimestamp, TVL_THRESHOLD: TVL_THRESHOLD, tick, sqrtPriceX96 });
 
-  const { nftPositions, directPositions } = await fetchPositions(merklSubgraphPrefix, chainId, amm, pool, startTimestamp);
+  const { nftPositions, directPositions } = await fetchPositions(chainId, amm, pool, startTimestamp);
 
   console.table(
     (await fetchSwaps(chainId, pool, startTimestamp, endTimestamp, amm))
@@ -348,4 +344,4 @@ export const reportPool = async (
   );
 };
 
-reportPool(chainId, amm, pool, startTimestamp, endTimestamp, swaps_number, subgraphMode);
+reportPool(chainId, amm, pool, startTimestamp, endTimestamp, swaps_number);

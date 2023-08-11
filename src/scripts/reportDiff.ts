@@ -26,9 +26,7 @@ const params:
       startRoot: string;
       endRoot: string;
     } = {
-  MODE: 'ROOTS',
-  startRoot: '',
-  endRoot: '',
+  MODE: 'LOCAL',
 };
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
