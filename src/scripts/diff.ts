@@ -29,18 +29,18 @@ export const reportDiff = async (
   chainId: ChainId,
   params:
     | {
-        MODE: 'LOCAL';
-      }
+      MODE: 'LOCAL';
+    }
     | {
-        MODE: 'TIMESTAMP';
-        startTimestamp: number;
-        endTimestamp: number;
-      }
+      MODE: 'TIMESTAMP';
+      startTimestamp: number;
+      endTimestamp: number;
+    }
     | {
-        MODE: 'ROOTS';
-        startRoot: string;
-        endRoot: string;
-      },
+      MODE: 'ROOTS';
+      startRoot: string;
+      endRoot: string;
+    },
   overridenConsole: typeof console = console
 ): Promise<{ error: boolean; reason: string }> => {
   let error = false;
@@ -156,7 +156,7 @@ export const reportDiff = async (
       registry(chainId).Merkl.DistributionCreator,
       provider
     ).getActiveDistributions();
-  } catch {}
+  } catch { }
 
   // The goal will be to fill this for every holder
   let details: {
@@ -166,6 +166,7 @@ export const reportDiff = async (
     poolName: string;
     distribution: string;
     percent?: number;
+    diffAverageBoost?: number;
     decimals?: number;
     tokenAddress?: string;
     issueSpotted?: boolean;
@@ -200,6 +201,10 @@ export const reportDiff = async (
           error = true;
           reason = `Holder ${holder} has negative diff for ${symbol}`;
         }
+        const diffBoost =
+          Number(endTree?.rewards?.[k]?.holders?.[holder]?.averageBoost) ??
+          0 - Number(startTree?.rewards?.[k]?.holders?.[holder]?.averageBoost) ??
+          0;
 
         if (!poolName[pool]) {
           poolName[pool] = await fetchPoolName(chainId, pool, endTree?.rewards?.[k]?.amm);
@@ -224,6 +229,7 @@ export const reportDiff = async (
           holder,
           decimals,
           diff,
+          diffAverageBoost: diffBoost,
           symbol,
           poolName: poolName[pool],
           distribution: k,
@@ -272,6 +278,7 @@ export const reportDiff = async (
           ...d,
           diff: round(d.diff, 2),
           percent: round(d.percent, 2),
+          averageBoost: round(d.diffAverageBoost, 2),
           distribution: d.distribution.slice(0, 5),
           totalCumulated,
           alreadyClaimed: alreadyClaimedValue,
@@ -286,6 +293,7 @@ export const reportDiff = async (
     'poolName',
     'distribution',
     'percent',
+    'diffAverageBoost',
     'totalCumulated',
     'alreadyClaimed',
     'issueSpotted',
