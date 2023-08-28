@@ -16,7 +16,7 @@ done
 for account in "${accounts[@]}"
 do
     echo "Login to google account of $account"
-    gcloud auth application-default login
+    gcloud auth login
 
     echo "Login to docker registry $account"
     gcloud auth configure-docker europe-west1-docker.pkg.dev
