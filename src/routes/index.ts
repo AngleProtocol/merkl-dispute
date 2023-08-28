@@ -178,6 +178,7 @@ router.get('', async (_, res) => {
     error = true;
     reason = 'Unable to run testing';
   }
+  console.log('>>> [error]:', error);
 
   const description = `Dispute Bot run on ${NETWORK_LABELS[chainId]}. Upgrade from ${onChainParams.startRoot} to ${onChainParams.endRoot}`;
 
@@ -187,7 +188,7 @@ router.get('', async (_, res) => {
   } catch (e) {
     log('merkl dispute bot', `❌ unable to create gist: ${e}`);
     error = true;
-    reason = 'Unable to create gist';
+    reason = !!reason ? reason + ' - ' : '' + 'Unable to create gist';
   }
   log('merkl dispute bot', `🔗 gist url: ${url}`);
 

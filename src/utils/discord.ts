@@ -11,7 +11,6 @@ const discordClient = new Client({
 discordClient.login(process.env.DISCORD_TOKEN as string);
 
 const getChannel = (channelName: string) => {
-  console.log(discordClient.channels.cache);
   return (discordClient.channels.cache as unknown as TextChannel[]).find((channel) => channel.name === channelName);
 };
 
