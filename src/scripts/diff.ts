@@ -17,33 +17,36 @@ import startJson from './jsons/start.json';
 
 dotenv.config();
 
+import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
 import console from 'console';
 
 import { GITHUB_URL } from '../constants';
 import { fetchPoolName, round } from '../helpers';
 import { httpProvider } from '../providers';
 import { MerklIndexType } from '../routes';
-import { retryWithExponentialBackoff } from '../utils';
+import { batchMulticallCall, multicallContractCall, retryWithExponentialBackoff } from '../utils';
+
+export type ReportDiffParams =
+  | {
+      MODE: 'LOCAL';
+    }
+  | {
+      MODE: 'LAST';
+    }
+  | {
+      MODE: 'TIMESTAMP';
+      startTimestamp: number;
+      endTimestamp: number;
+    }
+  | {
+      MODE: 'ROOTS';
+      startRoot: string;
+      endRoot: string;
+    };
 
 export const reportDiff = async (
   chainId: ChainId,
-  params:
-    | {
-        MODE: 'LOCAL';
-      }
-    | {
-        MODE: 'LAST';
-      }
-    | {
-        MODE: 'TIMESTAMP';
-        startTimestamp: number;
-        endTimestamp: number;
-      }
-    | {
-        MODE: 'ROOTS';
-        startRoot: string;
-        endRoot: string;
-      },
+  params: ReportDiffParams,
   overridenConsole: typeof console = console
 ): Promise<{ error: boolean; reason: string }> => {
   let error = false;
@@ -109,6 +112,7 @@ export const reportDiff = async (
     } catch {
       error = true;
       reason = `Couldn't find index on Github`;
+      return { error, reason };
     }
 
     const startEpoch = merklIndex[params.startRoot];
@@ -123,6 +127,7 @@ export const reportDiff = async (
     } catch {
       error = true;
       reason = `Couldn't find json corresponding to ${params.startRoot} on Github`;
+      return { error, reason };
     }
 
     try {
@@ -134,16 +139,26 @@ export const reportDiff = async (
     } catch {
       error = true;
       reason = `Couldn't find json corresponding to ${params.endRoot} on Github`;
+      return { error, reason };
     }
   } else {
     startTree = startJson as unknown as AggregatedRewardsType;
     endTree = endJson as unknown as AggregatedRewardsType;
   }
 
+  /** Roots reconciliations */
   const root = buildMerklTree(endTree.rewards).tree.getHexRoot();
   if (root !== endTree.merklRoot) {
     error = true;
     reason = `End tree merkl root is not correct`;
+    return { error, reason };
+  }
+
+  const startRoot = buildMerklTree(startTree.rewards).tree.getHexRoot();
+  if (startRoot !== startTree.merklRoot) {
+    error = true;
+    reason = `Start tree merkl root is not correct`;
+    return { error, reason };
   }
 
   const holders = [];
@@ -259,7 +274,7 @@ export const reportDiff = async (
 
   const alreadyClaimed: { [address: string]: { [symbol: string]: string } } = {};
 
-  const calls = [];
+  const calls: Multicall3.Call3Struct[] = [];
   for (const d of details) {
     if (!alreadyClaimed[d.holder]) alreadyClaimed[d.holder] = {};
     if (!alreadyClaimed[d.holder][d.tokenAddress]) {
@@ -271,11 +286,11 @@ export const reportDiff = async (
       });
     }
   }
-  const res = await multicall.callStatic.aggregate3(calls);
+  const res = await batchMulticallCall(multicallContractCall, multicall, { data: calls });
   let decodingIndex = 0;
   for (const d of details) {
     if (alreadyClaimed[d.holder][d.tokenAddress] === 'PENDING') {
-      alreadyClaimed[d.holder][d.tokenAddress] = distributorInterface.decodeFunctionResult('claimed', res[decodingIndex++].returnData)[0];
+      alreadyClaimed[d.holder][d.tokenAddress] = distributorInterface.decodeFunctionResult('claimed', res[decodingIndex++])[0];
     }
   }
 

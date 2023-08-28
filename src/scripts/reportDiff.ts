@@ -4,7 +4,7 @@ import { ChainId } from '@angleprotocol/sdk';
                                                     PARAMETERS                                                    
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-const chainId = ChainId.OPTIMISM;
+const chainId = ChainId.ARBITRUM;
 
 /**
  *  If MODE == LOCAL you need to fill `./jsons/start.json` and `./jsons/end.json`
@@ -12,23 +12,7 @@ const chainId = ChainId.OPTIMISM;
  *  If MODE == DISTANT you need to fill `startTimestamp` and `endTimestamp` and jsons will be fetch from github
  *  main branch
  */
-const params:
-  | {
-      MODE: 'LOCAL';
-    }
-  | {
-      MODE: 'LAST';
-    }
-  | {
-      MODE: 'TIMESTAMP';
-      startTimestamp: number;
-      endTimestamp: number;
-    }
-  | {
-      MODE: 'ROOTS';
-      startRoot: string;
-      endRoot: string;
-    } = {
+const params: ReportDiffParams = {
   MODE: 'LAST',
 };
 
@@ -36,6 +20,6 @@ const params:
                                               END OF PARAMETERS                                                
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-import { reportDiff } from './diff';
+import { reportDiff, ReportDiffParams } from './diff';
 
 reportDiff(chainId, params);

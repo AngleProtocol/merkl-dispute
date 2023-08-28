@@ -12,7 +12,7 @@ import { Transform } from 'stream';
 import { NULL_ADDRESS } from '../constants';
 import { httpProvider } from '../providers';
 import { reportDiff } from '../scripts/diff';
-import { createGist, getChainId, retryWithExponentialBackoff } from '../utils';
+import { batchMulticallCall, createGist, getChainId, multicallContractCall, retryWithExponentialBackoff } from '../utils';
 import { sendSummary } from '../utils/discord';
 import { log } from '../utils/merkl';
 
@@ -78,17 +78,17 @@ const fetchDataOnChain = async (provider: any, distributor: string): Promise<OnC
     },
   ];
 
-  const result = await multicall.callStatic.aggregate3(calls);
+  const result = await batchMulticallCall(multicallContractCall, multicall, { data: calls });
   let i = 0;
   return {
-    disputeToken: distributorInterface.decodeFunctionResult('disputeToken', result[i++].returnData)[0],
-    disputeAmount: distributorInterface.decodeFunctionResult('disputeAmount', result[i++].returnData)[0],
-    disputePeriod: distributorInterface.decodeFunctionResult('disputePeriod', result[i++].returnData)[0],
-    endOfDisputePeriod: distributorInterface.decodeFunctionResult('endOfDisputePeriod', result[i++].returnData)[0],
-    disputer: distributorInterface.decodeFunctionResult('disputer', result[i++].returnData)[0],
-    endRoot: distributorInterface.decodeFunctionResult('tree', result[i++].returnData)[0],
-    startRoot: distributorInterface.decodeFunctionResult('lastTree', result[i++].returnData)[0],
-    currentRoot: distributorInterface.decodeFunctionResult('getMerkleRoot', result[i].returnData)[0],
+    disputeToken: distributorInterface.decodeFunctionResult('disputeToken', result[i++])[0],
+    disputeAmount: distributorInterface.decodeFunctionResult('disputeAmount', result[i++])[0],
+    disputePeriod: distributorInterface.decodeFunctionResult('disputePeriod', result[i++])[0],
+    endOfDisputePeriod: distributorInterface.decodeFunctionResult('endOfDisputePeriod', result[i++])[0],
+    disputer: distributorInterface.decodeFunctionResult('disputer', result[i++])[0],
+    endRoot: distributorInterface.decodeFunctionResult('tree', result[i++])[0],
+    startRoot: distributorInterface.decodeFunctionResult('lastTree', result[i++])[0],
+    currentRoot: distributorInterface.decodeFunctionResult('getMerkleRoot', result[i])[0],
   };
 };
 
