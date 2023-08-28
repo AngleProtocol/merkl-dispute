@@ -29,18 +29,21 @@ export const reportDiff = async (
   chainId: ChainId,
   params:
     | {
-      MODE: 'LOCAL';
-    }
+        MODE: 'LOCAL';
+      }
     | {
-      MODE: 'TIMESTAMP';
-      startTimestamp: number;
-      endTimestamp: number;
-    }
+        MODE: 'LAST';
+      }
     | {
-      MODE: 'ROOTS';
-      startRoot: string;
-      endRoot: string;
-    },
+        MODE: 'TIMESTAMP';
+        startTimestamp: number;
+        endTimestamp: number;
+      }
+    | {
+        MODE: 'ROOTS';
+        startRoot: string;
+        endRoot: string;
+      },
   overridenConsole: typeof console = console
 ): Promise<{ error: boolean; reason: string }> => {
   let error = false;
@@ -51,6 +54,15 @@ export const reportDiff = async (
 
   let startTree: AggregatedRewardsType;
   let endTree: AggregatedRewardsType;
+
+  if (params.MODE === 'LAST') {
+    const contract = Distributor__factory.connect(registry(chainId).Merkl.Distributor, provider);
+    params = {
+      MODE: 'ROOTS',
+      startRoot: (await contract.lastTree()).merkleRoot,
+      endRoot: (await contract.tree()).merkleRoot,
+    };
+  }
 
   // ONLY THE ROOTS MODE NEEDS TO BE FULLY SAFE
   if (params.MODE === 'TIMESTAMP') {
@@ -156,7 +168,7 @@ export const reportDiff = async (
       registry(chainId).Merkl.DistributionCreator,
       provider
     ).getActiveDistributions();
-  } catch { }
+  } catch {}
 
   // The goal will be to fill this for every holder
   let details: {
@@ -207,7 +219,9 @@ export const reportDiff = async (
           0;
 
         if (!poolName[pool]) {
-          poolName[pool] = await fetchPoolName(chainId, pool, endTree?.rewards?.[k]?.amm);
+          try {
+            poolName[pool] = await fetchPoolName(chainId, pool, endTree?.rewards?.[k]?.amm);
+          } catch {}
         }
         let ratePerEpoch;
         try {

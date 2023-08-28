@@ -162,11 +162,22 @@ router.get('', async (_, res) => {
   });
   const logger = new Console({ stdout: ts });
 
-  const { error, reason } = await reportDiff(
-    chainId,
-    { MODE: 'ROOTS', endRoot: onChainParams.endRoot, startRoot: onChainParams.startRoot },
-    logger
-  );
+  let error, reason;
+  try {
+    const res = await retryWithExponentialBackoff(
+      async () => {
+        return await reportDiff(chainId, { MODE: 'ROOTS', endRoot: onChainParams.endRoot, startRoot: onChainParams.startRoot }, logger);
+      },
+      5,
+      1000
+    );
+    error = res.error;
+    reason = res.reason;
+  } catch (e) {
+    log('merkl dispute bot', `❌ Unable to run testing: ${e}`);
+    error = true;
+    reason = 'Unable to run testing';
+  }
 
   const description = `Dispute Bot run on ${NETWORK_LABELS[chainId]}. Upgrade from ${onChainParams.startRoot} to ${onChainParams.endRoot}`;
 
@@ -174,8 +185,11 @@ router.get('', async (_, res) => {
   try {
     url = await createGist(description, (ts.read() || '').toString());
   } catch (e) {
-    log('merkl dispute bot', `❌couldn't create gist: ${e}`);
+    log('merkl dispute bot', `❌ unable to create gist: ${e}`);
+    error = true;
+    reason = 'Unable to create gist';
   }
+  log('merkl dispute bot', `🔗 gist url: ${url}`);
 
   console.log('>>> [error]:', error);
   if (!!reason && reason !== '') {
@@ -185,26 +199,26 @@ router.get('', async (_, res) => {
   if (error) {
     try {
       await sendSummary('🚸 ERROR - TRYING TO DISPUTE: ' + description, false, `GIST: ${url} \n` + reason, []);
-      if (process.env.ENV === 'prod') {
-        retryWithExponentialBackoff(
-          triggerDispute,
-          5,
-          1000,
-          provider,
-          reason,
-          onChainParams.disputeToken,
-          distributor,
-          onChainParams.disputeAmount
-        );
-      }
     } catch {
-      log('merkl dispute bot', `❌couldn't send summary to discord`);
+      log('merkl dispute bot', `❌ couldn't send summary to discord`);
+    }
+    if (process.env.ENV === 'prod') {
+      retryWithExponentialBackoff(
+        triggerDispute,
+        5,
+        1000,
+        provider,
+        reason,
+        onChainParams.disputeToken,
+        distributor,
+        onChainParams.disputeAmount
+      );
     }
   } else {
     try {
       await sendSummary('🎉 SUCCESS: ' + description, true, url, []);
     } catch (e) {
-      log('merkl dispute bot', `❌couldn't send summary to discord: ${e}`);
+      log('merkl dispute bot', `❌ couldn't send summary to discord: ${e}`);
     }
   }
   console.timeEnd('>>> [execution time]: ');

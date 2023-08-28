@@ -4,7 +4,7 @@ import { ChainId } from '@angleprotocol/sdk';
                                                     PARAMETERS                                                    
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-const chainId = ChainId.POLYGON;
+const chainId = ChainId.OPTIMISM;
 
 /**
  *  If MODE == LOCAL you need to fill `./jsons/start.json` and `./jsons/end.json`
@@ -17,6 +17,9 @@ const params:
       MODE: 'LOCAL';
     }
   | {
+      MODE: 'LAST';
+    }
+  | {
       MODE: 'TIMESTAMP';
       startTimestamp: number;
       endTimestamp: number;
@@ -26,7 +29,7 @@ const params:
       startRoot: string;
       endRoot: string;
     } = {
-  MODE: 'LOCAL',
+  MODE: 'LAST',
 };
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
