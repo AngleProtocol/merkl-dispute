@@ -199,7 +199,7 @@ router.get('', async (_, res) => {
 
   if (error) {
     try {
-      await sendSummary('🚸 ERROR - TRYING TO DISPUTE: ' + description, false, `GIST: ${url} \n` + reason, []);
+      await sendSummary('🚸 ERROR - TRYING TO DISPUTE: ' + description, false, `GIST: ${url} \n` + reason, [], 'merkl dispute bot');
     } catch {
       log('merkl dispute bot', `❌ couldn't send summary to discord`);
     }
@@ -217,7 +217,7 @@ router.get('', async (_, res) => {
     }
   } else {
     try {
-      await sendSummary('🎉 SUCCESS: ' + description, true, url, []);
+      await sendSummary('🎉 SUCCESS: ' + description, true, url, [], 'merkl dispute bot');
     } catch (e) {
       log('merkl dispute bot', `❌ couldn't send summary to discord: ${e}`);
     }
