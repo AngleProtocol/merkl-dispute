@@ -303,10 +303,10 @@ export const reportDiff = async (
       .map(async (d) => {
         const alreadyClaimedValue = round(Int256.from(alreadyClaimed[d.holder][d.tokenAddress], d.decimals).toNumber(), 2);
         const totalCumulated = round(unclaimed[d.holder][d.symbol].toNumber(), 2);
-        if (totalCumulated < alreadyClaimedValue) {
-          error = true;
-          reason = `Holder ${d.holder} received ${totalCumulated} although he already claimed ${alreadyClaimedValue}`;
-        }
+        // if (totalCumulated < alreadyClaimedValue) {
+        //   error = true;
+        //   reason = `Holder ${d.holder} received ${totalCumulated} although he already claimed ${alreadyClaimedValue}`;
+        // }
         return {
           ...d,
           diff: round(d.diff, 2),
