@@ -1,6 +1,6 @@
 import { ChainId, Distributor__factory, Erc20__factory, Multicall__factory, NETWORK_LABELS, registry } from '@angleprotocol/sdk';
 import dotenv from 'dotenv';
-import { BigNumber, ContractTransaction, Wallet } from 'ethers';
+import { BigNumber, ContractTransaction, utils, Wallet } from 'ethers';
 import { Router } from 'express';
 import moment from 'moment';
 
@@ -112,7 +112,7 @@ const triggerDispute = async (
     tx = await Erc20__factory.connect(disputeToken, keeper).approve(
       distributorContract.address,
       disputeAmount,
-      chainId === ChainId.POLYGON ? { gasLimit: 500_000 } : {}
+      chainId === ChainId.POLYGON ? { maxPriorityFeePerGas: utils.parseUnits('50', 9), maxFeePerGas: utils.parseUnits('350', 9) } : {}
     );
     await tx.wait();
     log('merkl dispute bot', `✅ increased spender allowance`);
@@ -130,7 +130,12 @@ const triggerDispute = async (
 
   /** _3-c dispute the tree */
   try {
-    tx = await distributorContract.connect(keeper).disputeTree(reason, chainId === ChainId.POLYGON ? { gasLimit: 500_000 } : {});
+    tx = await distributorContract
+      .connect(keeper)
+      .disputeTree(
+        reason,
+        chainId === ChainId.POLYGON ? { maxPriorityFeePerGas: utils.parseUnits('50', 9), maxFeePerGas: utils.parseUnits('350', 9) } : {}
+      );
     await tx.wait();
     log('merkl dispute bot', `✅ dispute triggered`);
   } catch (e) {
