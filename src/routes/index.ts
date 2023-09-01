@@ -1,6 +1,6 @@
 import { Distributor__factory, Erc20__factory, Multicall__factory, NETWORK_LABELS, registry } from '@angleprotocol/sdk';
 import dotenv from 'dotenv';
-import { BigNumber, Wallet } from 'ethers';
+import { BigNumber, ContractTransaction, Wallet } from 'ethers';
 import { Router } from 'express';
 import moment from 'moment';
 
@@ -13,12 +13,12 @@ import { NULL_ADDRESS } from '../constants';
 import { httpProvider } from '../providers';
 import { reportDiff } from '../scripts/diff';
 import { batchMulticallCall, createGist, getChainId, multicallContractCall, retryWithExponentialBackoff } from '../utils';
-import { sendSummary } from '../utils/discord';
+import { sendDiscordNotification } from '../utils/discord';
 import { log } from '../utils/merkl';
 
-export type MerklIndexType = { [merklRoot: string]: number };
-
 const router = Router();
+
+export type MerklIndexType = { [merklRoot: string]: number };
 
 type OnChainParams = {
   disputeToken: string;
@@ -97,15 +97,51 @@ const triggerDispute = async (provider: any, reason: string, disputeToken: strin
 
   log('merkl dispute bot', `⚔️  triggering dispute because ${reason}`);
   const keeper = new Wallet(process.env.DISPUTE_BOT_PRIVATE_KEY, provider);
-  log('merkl dispute bot', `🤖 bot address to dispute is ${keeper.address}`);
+  log('merkl dispute bot', `🤖 bot ${keeper.address} is disputing`);
+
+  let tx: ContractTransaction;
   /** _3-b might approve the contract */
-  let tx = await Erc20__factory.connect(disputeToken, keeper).approve(distributorContract.address, disputeAmount);
-  await tx.wait();
-  log('merkl dispute bot', `✅ increased spender allowance`);
+  try {
+    tx = await Erc20__factory.connect(disputeToken, keeper).approve(distributorContract.address, disputeAmount);
+    await tx.wait();
+    log('merkl dispute bot', `✅ increased spender allowance`);
+  } catch (e) {
+    log('merkl dispute bot', `❌ couldn't approve spender`);
+    await sendDiscordNotification({
+      title: `❌ TX ERROR: "approve" transaction for token ${disputeToken} failed`,
+      description: `${e}`,
+      isAlert: true,
+      severity: 'error',
+      fields: [],
+      key: 'merkl dispute bot',
+    });
+  }
+
   /** _3-c dispute the tree */
-  tx = await distributorContract.connect(keeper).disputeTree(reason);
-  await tx.wait();
-  log('merkl dispute bot', `✅ dispute triggered`);
+  try {
+    tx = await distributorContract.connect(keeper).disputeTree(reason);
+    await tx.wait();
+    log('merkl dispute bot', `✅ dispute triggered`);
+  } catch (e) {
+    log('merkl dispute bot', `❌ couldn't trigger dispute`);
+    await sendDiscordNotification({
+      title: `❌ TX ERROR: "disputeTree" transaction failed`,
+      description: `${e}`,
+      isAlert: true,
+      severity: 'error',
+      fields: [],
+      key: 'merkl dispute bot',
+    });
+  }
+
+  await sendDiscordNotification({
+    title: `🎉 SUCCESSFULLY disputed tree`,
+    description: ``,
+    isAlert: true,
+    severity: 'warning',
+    fields: [],
+    key: 'merkl dispute bot',
+  });
 };
 
 router.get('', async (_, res) => {
@@ -115,11 +151,18 @@ router.get('', async (_, res) => {
   const provider = httpProvider(chainId);
   const distributor = registry(chainId).Merkl.Distributor;
 
-  let onChainParams;
+  let onChainParams: OnChainParams;
   try {
     onChainParams = await retryWithExponentialBackoff(fetchDataOnChain, 5, 500, provider, distributor);
   } catch (e) {
-    await sendSummary(`Dispute Bot on ${NETWORK_LABELS[chainId]}`, false, "Couldn't fetch on-chain data", [], 'merkl dispute bot');
+    await sendDiscordNotification({
+      title: `Dispute Bot - ${NETWORK_LABELS[chainId]}`,
+      description: `Couldn't fetch on-chain data because: \n ${e}`,
+      isAlert: false,
+      severity: 'warning',
+      fields: [],
+      key: 'merkl dispute bot',
+    });
     return res.status(500).json({ message: "Couldn't fetch on-chain data" });
   }
 
@@ -162,7 +205,7 @@ router.get('', async (_, res) => {
   });
   const logger = new Console({ stdout: ts });
 
-  let error, reason;
+  let error: boolean, reason: string;
   try {
     const res = await retryWithExponentialBackoff(
       async () => {
@@ -174,13 +217,13 @@ router.get('', async (_, res) => {
     error = res.error;
     reason = res.reason;
   } catch (e) {
-    log('merkl dispute bot', `❌ Unable to run testing: ${e}`);
+    log('merkl dispute bot', `❌ unable to run testing: ${e}`);
     error = true;
-    reason = 'Unable to run testing';
+    reason = 'unable to run testing';
   }
-  console.log('>>> [error]:', error);
+  log('error', `${error}`);
 
-  const description = `Dispute Bot run on ${NETWORK_LABELS[chainId]}. Upgrade from ${onChainParams.startRoot} to ${onChainParams.endRoot}`;
+  const description = `Dispute Bot - ${NETWORK_LABELS[chainId]} \n Upgrade from ${onChainParams.startRoot} to ${onChainParams.endRoot}`;
 
   let url = 'no diff checker report';
   try {
@@ -192,17 +235,19 @@ router.get('', async (_, res) => {
   }
   log('merkl dispute bot', `🔗 gist url: ${url}`);
 
-  console.log('>>> [error]:', error);
   if (!!reason && reason !== '') {
-    console.log('>>> [reason]: ', reason);
+    log('reason', reason);
   }
 
   if (error) {
-    try {
-      await sendSummary('🚸 ERROR - TRYING TO DISPUTE: ' + description, false, `GIST: ${url} \n` + reason, [], 'merkl dispute bot');
-    } catch {
-      log('merkl dispute bot', `❌ couldn't send summary to discord`);
-    }
+    await sendDiscordNotification({
+      title: `🚸 ERROR DETECTED - TRYING DISPUTE`,
+      description: `GIST: ${url} \n` + reason,
+      isAlert: true,
+      severity: 'warning',
+      fields: [],
+      key: 'merkl dispute bot',
+    });
     if (process.env.ENV === 'prod') {
       retryWithExponentialBackoff(
         triggerDispute,
@@ -216,11 +261,14 @@ router.get('', async (_, res) => {
       );
     }
   } else {
-    try {
-      await sendSummary('🎉 SUCCESS: ' + description, true, url, [], 'merkl dispute bot');
-    } catch (e) {
-      log('merkl dispute bot', `❌ couldn't send summary to discord: ${e}`);
-    }
+    await sendDiscordNotification({
+      title: '🎉 SUCCESS: ' + description,
+      description: `GIST: ${url} \n` + reason,
+      isAlert: false,
+      severity: 'info',
+      fields: [],
+      key: 'merkl dispute bot',
+    });
   }
   console.timeEnd('>>> [execution time]: ');
   res.status(200).json({ exiting: 'ok' });
