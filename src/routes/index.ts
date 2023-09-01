@@ -1,4 +1,4 @@
-import { Distributor__factory, Erc20__factory, Multicall__factory, NETWORK_LABELS, registry } from '@angleprotocol/sdk';
+import { ChainId, Distributor__factory, Erc20__factory, Multicall__factory, NETWORK_LABELS, registry } from '@angleprotocol/sdk';
 import dotenv from 'dotenv';
 import { BigNumber, ContractTransaction, Wallet } from 'ethers';
 import { Router } from 'express';
@@ -92,7 +92,14 @@ const fetchDataOnChain = async (provider: any, distributor: string): Promise<OnC
   };
 };
 
-const triggerDispute = async (provider: any, reason: string, disputeToken: string, distributor: string, disputeAmount: BigNumber) => {
+const triggerDispute = async (
+  provider: any,
+  chainId: ChainId,
+  reason: string,
+  disputeToken: string,
+  distributor: string,
+  disputeAmount: BigNumber
+) => {
   const distributorContract = Distributor__factory.connect(distributor, provider);
 
   log('merkl dispute bot', `⚔️  triggering dispute because ${reason}`);
@@ -102,7 +109,11 @@ const triggerDispute = async (provider: any, reason: string, disputeToken: strin
   let tx: ContractTransaction;
   /** _3-b might approve the contract */
   try {
-    tx = await Erc20__factory.connect(disputeToken, keeper).approve(distributorContract.address, disputeAmount);
+    tx = await Erc20__factory.connect(disputeToken, keeper).approve(
+      distributorContract.address,
+      disputeAmount,
+      chainId === ChainId.POLYGON ? { gasLimit: 500_000 } : {}
+    );
     await tx.wait();
     log('merkl dispute bot', `✅ increased spender allowance`);
   } catch (e) {
@@ -119,7 +130,7 @@ const triggerDispute = async (provider: any, reason: string, disputeToken: strin
 
   /** _3-c dispute the tree */
   try {
-    tx = await distributorContract.connect(keeper).disputeTree(reason);
+    tx = await distributorContract.connect(keeper).disputeTree(reason, chainId === ChainId.POLYGON ? { gasLimit: 500_000 } : {});
     await tx.wait();
     log('merkl dispute bot', `✅ dispute triggered`);
   } catch (e) {
@@ -254,6 +265,7 @@ router.get('', async (_, res) => {
         5,
         1000,
         provider,
+        chainId,
         reason,
         onChainParams.disputeToken,
         distributor,
