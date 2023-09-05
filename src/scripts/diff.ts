@@ -17,6 +17,7 @@ import startJson from './jsons/start.json';
 
 dotenv.config();
 
+import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/constants/types/DistributionCreator';
 import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
 import console from 'console';
 
@@ -177,7 +178,7 @@ export const reportDiff = async (
     }
   }
 
-  let activeDistributions;
+  let activeDistributions: ExtensiveDistributionParametersStructOutput[];
   try {
     activeDistributions = await DistributionCreator__factory.connect(
       registry(chainId).Merkl.DistributionCreator,
