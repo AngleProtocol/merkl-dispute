@@ -1,6 +1,5 @@
 import {
   AggregatedRewardsType,
-  buildMerklTree,
   ChainId,
   DistributionCreator__factory,
   Distributor__factory,
@@ -17,11 +16,12 @@ import startJson from './jsons/start.json';
 
 dotenv.config();
 
+import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/constants/types/DistributionCreator';
 import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
 import console from 'console';
 
 import { GITHUB_URL } from '../constants';
-import { fetchPoolName, round } from '../helpers';
+import { buildMerklTree, fetchPoolName, round } from '../helpers';
 import { httpProvider } from '../providers';
 import { MerklIndexType } from '../routes';
 import { batchMulticallCall, multicallContractCall, retryWithExponentialBackoff } from '../utils';
@@ -106,7 +106,7 @@ export const reportDiff = async (
     try {
       await retryWithExponentialBackoff(async () => {
         return await axios.get<MerklIndexType>(GITHUB_URL + `${chainId + `/index.json`}`, {
-          timeout: 5000,
+          timeout: 25_000,
         });
       }).then((r) => (merklIndex = r.data));
     } catch {
@@ -121,7 +121,7 @@ export const reportDiff = async (
     try {
       await retryWithExponentialBackoff(async () => {
         return await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${startEpoch}.json`}`, {
-          timeout: 5000,
+          timeout: 25_000,
         });
       }).then((r) => (startTree = r.data));
     } catch {
@@ -133,7 +133,7 @@ export const reportDiff = async (
     try {
       await retryWithExponentialBackoff(async () => {
         return await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${endEpoch}.json`}`, {
-          timeout: 5000,
+          timeout: 25_000,
         });
       }).then((r) => (endTree = r.data));
     } catch {
@@ -177,7 +177,7 @@ export const reportDiff = async (
     }
   }
 
-  let activeDistributions;
+  let activeDistributions: ExtensiveDistributionParametersStructOutput[];
   try {
     activeDistributions = await DistributionCreator__factory.connect(
       registry(chainId).Merkl.DistributionCreator,

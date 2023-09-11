@@ -1,4 +1,6 @@
 import {
+  AMMAlgorithmMapping,
+  AMMAlgorithmType,
   AMMType,
   ChainId,
   Erc20__factory,
@@ -15,6 +17,8 @@ import dotenv from 'dotenv';
 import { BigNumber, constants } from 'ethers';
 import { request } from 'graphql-request';
 import moment from 'moment';
+
+import { PositionType, SwapType } from '../types';
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                   PARAMETERS                                                    
@@ -36,7 +40,7 @@ const subgraphMode = 'prod';
 dotenv.config();
 
 import { BATCH_NUMBER, TVL_THRESHOLD } from '../constants';
-import { fetchPoolName, PositionType, round, SwapType } from '../helpers';
+import { fetchPoolName, round } from '../helpers';
 import { directPositionsQuery, nftPositionsQuery, swapQueryUniV3 } from '../helpers/queries';
 import { httpProvider } from '../providers';
 import { getAmountsForLiquidity } from '../utils/uniV3';
@@ -173,7 +177,8 @@ export async function fetchSwaps(
   end: number,
   amm: AMMType,
   maxSwapsToConsider = 500
-): Promise<SwapType[]> {
+): Promise<SwapType<AMMAlgorithmType>[]> {
+  const ammType = AMMAlgorithmMapping[amm];
   /**
    *  Swaps
    * @notice swaps feched from external (non Angle) subgraphs
@@ -181,7 +186,7 @@ export async function fetchSwaps(
   const swapsEndpoint = !!swapsSubgraphsEndpoint[chainId][amm]
     ? swapsSubgraphsEndpoint[chainId][amm]
     : merklFallbackTGEndpoint[chainId][amm];
-  const swapsData = await withRetry<any, { swaps: SwapType[] }>(request, [
+  const swapsData = await withRetry<any, { swaps: SwapType<typeof ammType>[] }>(request, [
     swapsEndpoint,
     swapQueryUniV3,
     {
@@ -193,7 +198,7 @@ export async function fetchSwaps(
   ]);
   const swaps = swapsData.swaps
     // .sort((a: SwapType, b: SwapType) => (a.timestamp < b.timestamp ? -1 : 1))
-    .map((swap: SwapType) => {
+    .map((swap: SwapType<typeof ammType>) => {
       return {
         ...swap,
         amount0: swap.amount0.includes('-') ? swap.amount0.substring(1) : swap.amount0,
@@ -202,7 +207,9 @@ export async function fetchSwaps(
     });
   return swaps;
 }
-
+/**
+ * @dev Not used in the merkl dispute gist
+ */
 export const reportPool = async (
   chainId: MerklSupportedChainIdsType,
   amm: AMMType,

@@ -16,10 +16,12 @@
     "publish-image": "chmod +x ./scripts/publish.sh && ./scripts/publish.sh"
   },
   "dependencies": {
-    "@angleprotocol/sdk": "^3.0.87",
+    "@angleprotocol/sdk": "^3.0.101",
     "@google-cloud/secret-manager": "^4.2.2",
     "@octokit/rest": "19.0.13",
     "axios": "^0.27.2",
+    "keccak256": "^1.0.6",
+    "merkletreejs": "^0.3.10",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.1",
     "ethers": "^5.7.2",
