@@ -39,7 +39,7 @@ export const fetchPoolName = async (chainId: number, pool: string, amm: AMMType)
             allowFailure: false,
           },
         ]
-      : null),
+      : []),
   ];
   let res = await multicall.callStatic.aggregate3(calls);
   let i = 0;
