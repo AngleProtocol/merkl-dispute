@@ -98,7 +98,8 @@ const triggerDispute = async (
   reason: string,
   disputeToken: string,
   distributor: string,
-  disputeAmount: BigNumber
+  disputeAmount: BigNumber,
+  title?: string
 ) => {
   const distributorContract = Distributor__factory.connect(distributor, provider);
 
@@ -119,7 +120,7 @@ const triggerDispute = async (
   } catch (e) {
     log('merkl dispute bot', `❌ couldn't approve spender`);
     await sendDiscordNotification({
-      title: `❌ TX ERROR: "approve" transaction for token ${disputeToken} failed`,
+      title: `❌ TX ERROR: "approve" transaction for token ${disputeToken} failed \n` + title,
       description: `${e}`,
       isAlert: true,
       severity: 'error',
@@ -141,7 +142,7 @@ const triggerDispute = async (
   } catch (e) {
     log('merkl dispute bot', `❌ couldn't trigger dispute`);
     await sendDiscordNotification({
-      title: `❌ TX ERROR: "disputeTree" transaction failed`,
+      title: `❌ TX ERROR: "disputeTree" transaction failed \n` + title,
       description: `${e}`,
       isAlert: true,
       severity: 'error',
@@ -151,7 +152,7 @@ const triggerDispute = async (
   }
 
   await sendDiscordNotification({
-    title: `🎉 SUCCESSFULLY disputed tree`,
+    title: `🎉 SUCCESSFULLY disputed tree \n` + title,
     description: ``,
     isAlert: true,
     severity: 'warning',
@@ -198,18 +199,18 @@ router.get('', async (_, res) => {
       `----------------------------`
   );
   // Check the values and continue only if the dispute period is active
-  if (!!onChainParams.disputer && onChainParams.disputer !== NULL_ADDRESS) {
-    log('merkl dispute bot', '✅ exiting because current tree is currently disputed');
-    return res.status(200).json({ message: 'Tree already disputed' });
-  } else if (onChainParams.disputeToken === NULL_ADDRESS) {
-    log('merkl dispute bot', '✅ exiting because dispute token is not set');
-    console.timeEnd('>>> [execution time]: ');
-    return res.status(200).json({ message: 'No dispute token' });
-  } else if (onChainParams.endOfDisputePeriod <= currentTimestamp) {
-    log('merkl dispute bot', `✅ exiting because dispute period is over`);
-    console.timeEnd('>>> [execution time]: ');
-    return res.status(200).json({ message: 'Dispute period is over' });
-  }
+  // if (!!onChainParams.disputer && onChainParams.disputer !== NULL_ADDRESS) {
+  //   log('merkl dispute bot', '✅ exiting because current tree is currently disputed');
+  //   return res.status(200).json({ message: 'Tree already disputed' });
+  // } else if (onChainParams.disputeToken === NULL_ADDRESS) {
+  //   log('merkl dispute bot', '✅ exiting because dispute token is not set');
+  //   console.timeEnd('>>> [execution time]: ');
+  //   return res.status(200).json({ message: 'No dispute token' });
+  // } else if (onChainParams.endOfDisputePeriod <= currentTimestamp) {
+  //   log('merkl dispute bot', `✅ exiting because dispute period is over`);
+  //   console.timeEnd('>>> [execution time]: ');
+  //   return res.status(200).json({ message: 'Dispute period is over' });
+  // }
 
   log('merkl dispute bot', `🤖 tree update coming: change ${onChainParams.startRoot} to ${onChainParams.endRoot}`);
 
@@ -257,7 +258,7 @@ router.get('', async (_, res) => {
 
   if (error) {
     await sendDiscordNotification({
-      title: `🚸 ERROR DETECTED - TRYING DISPUTE`,
+      title: `🚸 ANOMALY DETECTED - TRYING TO DISPUTE \n` + description,
       description: `GIST: ${url} \n` + reason,
       isAlert: true,
       severity: 'warning',
@@ -274,7 +275,8 @@ router.get('', async (_, res) => {
         reason,
         onChainParams.disputeToken,
         distributor,
-        onChainParams.disputeAmount
+        onChainParams.disputeAmount,
+        description
       );
     }
   } else {
