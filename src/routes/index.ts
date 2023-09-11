@@ -199,18 +199,18 @@ router.get('', async (_, res) => {
       `----------------------------`
   );
   // Check the values and continue only if the dispute period is active
-  // if (!!onChainParams.disputer && onChainParams.disputer !== NULL_ADDRESS) {
-  //   log('merkl dispute bot', '✅ exiting because current tree is currently disputed');
-  //   return res.status(200).json({ message: 'Tree already disputed' });
-  // } else if (onChainParams.disputeToken === NULL_ADDRESS) {
-  //   log('merkl dispute bot', '✅ exiting because dispute token is not set');
-  //   console.timeEnd('>>> [execution time]: ');
-  //   return res.status(200).json({ message: 'No dispute token' });
-  // } else if (onChainParams.endOfDisputePeriod <= currentTimestamp) {
-  //   log('merkl dispute bot', `✅ exiting because dispute period is over`);
-  //   console.timeEnd('>>> [execution time]: ');
-  //   return res.status(200).json({ message: 'Dispute period is over' });
-  // }
+  if (!!onChainParams.disputer && onChainParams.disputer !== NULL_ADDRESS) {
+    log('merkl dispute bot', '✅ exiting because current tree is currently disputed');
+    return res.status(200).json({ message: 'Tree already disputed' });
+  } else if (onChainParams.disputeToken === NULL_ADDRESS) {
+    log('merkl dispute bot', '✅ exiting because dispute token is not set');
+    console.timeEnd('>>> [execution time]: ');
+    return res.status(200).json({ message: 'No dispute token' });
+  } else if (onChainParams.endOfDisputePeriod <= currentTimestamp) {
+    log('merkl dispute bot', `✅ exiting because dispute period is over`);
+    console.timeEnd('>>> [execution time]: ');
+    return res.status(200).json({ message: 'Dispute period is over' });
+  }
 
   log('merkl dispute bot', `🤖 tree update coming: change ${onChainParams.startRoot} to ${onChainParams.endRoot}`);
 
