@@ -143,7 +143,7 @@ const triggerDispute = async (
     log('merkl dispute bot', `❌ couldn't trigger dispute`);
     await sendDiscordNotification({
       title: `❌ TX ERROR: "disputeTree" transaction failed \n` + title,
-      description: `${e}`,
+      description: `Error can be found in cloud run logs`,
       isAlert: true,
       severity: 'error',
       fields: [],
@@ -153,7 +153,7 @@ const triggerDispute = async (
 
   await sendDiscordNotification({
     title: `🎉 SUCCESSFULLY disputed tree \n` + title,
-    description: ``,
+    description: `tx hash: ${tx.hash}`,
     isAlert: true,
     severity: 'warning',
     fields: [],

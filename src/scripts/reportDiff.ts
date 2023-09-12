@@ -4,7 +4,7 @@ import { ChainId } from '@angleprotocol/sdk';
                                                     PARAMETERS                                                    
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-const chainId = ChainId.ARBITRUM;
+const chainId = ChainId.POLYGON;
 
 /**
  *  If MODE == LOCAL you need to fill `./jsons/start.json` and `./jsons/end.json`
