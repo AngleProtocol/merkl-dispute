@@ -2,12 +2,10 @@ import { AggregatedRewardsType, ChainId } from '@angleprotocol/sdk';
 import moment from 'moment';
 
 import { NULL_ADDRESS } from '../constants';
-import Logger from '../helpers/logger/Logger';
-import MerkleRootsProvider from '../providers/merkl-roots/MerkleRootsProvider';
-import OnChainProvider, { OnChainParams } from '../providers/on-chain/OnChainProvider';
 import { buildMerklTree } from '../helpers';
-import checkNegativeDiffs from './negative-diffs';
+import { OnChainParams } from '../providers/on-chain/OnChainProvider';
 import { DisputeContext } from './context';
+import checkHoldersDiffs from './holder-checks';
 
 export type DisputeState = {
   error: boolean;
@@ -61,7 +59,7 @@ async function checkDisputeOpportunity(context: DisputeContext): Promise<Dispute
   if (endRoot !== endTree.merklRoot)
     return { error: true, reason: `End tree merkl root is not correct (computed:${abbr(endRoot)} vs alleged:${abbr(endTree.merklRoot)})` };
 
-  const isTreeInvalid = await checkNegativeDiffs(context, startTree, endTree);
+  const isTreeInvalid = await checkHoldersDiffs(context, startTree, endTree);
   if (isTreeInvalid.error) return isTreeInvalid;
 
   return { error: false, reason: '' };

@@ -1,9 +1,8 @@
 import { AggregatedRewardsType, Int256 } from '@angleprotocol/sdk';
-import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/constants/types/DistributionCreator';
-import { DisputeState } from './run';
 import { BigNumber } from 'ethers';
-import { fetchPoolName } from '../helpers';
+
 import { DisputeContext } from './context';
+import { DisputeState } from './run';
 
 function gatherHolders(startTree: AggregatedRewardsType, endTree: AggregatedRewardsType): any[] {
   const holders = [];
@@ -26,29 +25,33 @@ function gatherHolders(startTree: AggregatedRewardsType, endTree: AggregatedRewa
   return holders;
 }
 
-export default async function checkNegativeDiffs(
+export type HolderDetail = {
+  holder: string;
+  diff: number;
+  symbol: string;
+  poolName: string;
+  distribution: string;
+  percent?: number;
+  diffAverageBoost?: number;
+  decimals?: number;
+  tokenAddress?: string;
+  issueSpotted?: boolean;
+};
+
+export type HolderClaims = { [address: string]: { [symbol: string]: string } };
+
+export default async function checkHoldersDiffs(
   context: DisputeContext,
   startTree: AggregatedRewardsType,
   endTree: AggregatedRewardsType
 ): Promise<DisputeState> {
-  const holders = gatherHolders(startTree, endTree);
   const { onChainProvider } = context;
+
+  const holders = gatherHolders(startTree, endTree);
+  const details: HolderDetail[] = [];
 
   const activeDistributions = await onChainProvider.fetchActiveDistributions(context.blockNumber);
 
-  // The goal will be to fill this for every holder
-  const details: {
-    holder: string;
-    diff: number;
-    symbol: string;
-    poolName: string;
-    distribution: string;
-    percent?: number;
-    diffAverageBoost?: number;
-    decimals?: number;
-    tokenAddress?: string;
-    issueSpotted?: boolean;
-  }[] = [];
   const changePerDistrib = {};
   const poolName = {};
   const unclaimed: { [address: string]: { [symbol: string]: Int256 } } = {};
@@ -121,6 +124,78 @@ export default async function checkNegativeDiffs(
       }
     }
   }
+
+  for (const l of details) {
+    l.percent = (l?.diff / changePerDistrib[l?.distribution]?.diff) * 100;
+  }
+
+  const alreadyClaimed: { [address: string]: { [symbol: string]: string } } = {};
+
+  const calls: Multicall3.Call3Struct[] = [];
+  for (const d of details) {
+    if (!alreadyClaimed[d.holder]) alreadyClaimed[d.holder] = {};
+    if (!alreadyClaimed[d.holder][d.tokenAddress]) {
+      alreadyClaimed[d.holder][d.tokenAddress] = 'PENDING';
+      calls.push({
+        callData: distributorInterface.encodeFunctionData('claimed', [d.holder, d.tokenAddress]),
+        target: registry(chainId).Merkl.Distributor,
+        allowFailure: false,
+      });
+    }
+  }
+  const res = await batchMulticallCall(multicallContractCall, multicall, { data: calls });
+  let decodingIndex = 0;
+  for (const d of details) {
+    if (alreadyClaimed[d.holder][d.tokenAddress] === 'PENDING') {
+      alreadyClaimed[d.holder][d.tokenAddress] = distributorInterface.decodeFunctionResult('claimed', res[decodingIndex++])[0];
+    }
+  }
+
+  // Sort details by distribution and format numbers
+  details = await Promise.all(
+    details
+      .sort((a, b) =>
+        a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : a.percent > b.percent ? -1 : b.percent > a.percent ? 1 : 0
+      )
+      .map(async (d) => {
+        const alreadyClaimedValue = round(Int256.from(alreadyClaimed[d.holder][d.tokenAddress], d.decimals).toNumber(), 2);
+        const totalCumulated = round(unclaimed[d.holder][d.symbol].toNumber(), 2);
+        // if (totalCumulated < alreadyClaimedValue) {
+        //   error = true;
+        //   reason = `Holder ${d.holder} received ${totalCumulated} although he already claimed ${alreadyClaimedValue}`;
+        // }
+        return {
+          ...d,
+          diff: round(d.diff, 2),
+          percent: round(d.percent, 2),
+          averageBoost: round(d.diffAverageBoost, 2),
+          distribution: d.distribution.slice(0, 5),
+          totalCumulated,
+          alreadyClaimed: alreadyClaimedValue,
+          issueSpotted: totalCumulated < alreadyClaimedValue,
+        };
+      })
+  );
+  overridenConsole.table(details, [
+    'holder',
+    'diff',
+    'symbol',
+    'poolName',
+    'distribution',
+    'percent',
+    'diffAverageBoost',
+    'totalCumulated',
+    'alreadyClaimed',
+    'issueSpotted',
+  ]);
+
+  overridenConsole.table(
+    Object.keys(changePerDistrib)
+      .map((k) => {
+        return { ...changePerDistrib[k], epoch: round(changePerDistrib[k].epoch, 4) };
+      })
+      .sort((a, b) => (a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : 0))
+  );
 
   return { error: false, reason: '' };
 }

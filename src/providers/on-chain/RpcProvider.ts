@@ -14,6 +14,8 @@ import { ExponentialFetchParams } from '../ExponentialBackoffProvider';
 import OnChainProvider from './OnChainProvider';
 import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/constants/types/DistributionCreator';
 import { PoolInterface } from '../../types';
+import { HolderDetail } from '../../bot/holder-checks';
+import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
 
 // type fragment =
 //   | 'disputeToken'
@@ -171,5 +173,34 @@ export default class RpcProvider extends OnChainProvider {
       startRoot: distributor.decodeFunctionResult('lastTree', result[i++])[0],
       currentRoot: distributor.decodeFunctionResult('getMerkleRoot', result[i])[0],
     };
+  };
+
+  override claimed = async (holderDetails: HolderDetail[]) => {
+    const distributor = Distributor__factory.createInterface();
+    const multicall = Multicall__factory.connect('0xcA11bde05977b3631167028862bE2a173976CA11', this.provider);
+
+    const alreadyClaimed: { [address: string]: { [symbol: string]: string } } = {};
+    const calls: Multicall3.Call3Struct[] = [];
+
+    for (const d of holderDetails) {
+      if (!alreadyClaimed[d.holder]) alreadyClaimed[d.holder] = {};
+      if (!alreadyClaimed[d.holder][d.tokenAddress]) {
+        alreadyClaimed[d.holder][d.tokenAddress] = 'PENDING';
+        calls.push({
+          callData: distributor.encodeFunctionData('claimed', [d.holder, d.tokenAddress]),
+          target: this.distributor,
+          allowFailure: false,
+        });
+      }
+    }
+    const res = await batchMulticallCall(multicallContractCall, multicall, { data: calls });
+    let decodingIndex = 0;
+    for (const d of holderDetails) {
+      if (alreadyClaimed[d.holder][d.tokenAddress] === 'PENDING') {
+        alreadyClaimed[d.holder][d.tokenAddress] = distributor.decodeFunctionResult('claimed', res[decodingIndex++])[0];
+      }
+    }
+
+    return alreadyClaimed;
   };
 }

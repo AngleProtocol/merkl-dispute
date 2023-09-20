@@ -3,6 +3,7 @@ import { BigNumber } from 'ethers';
 
 import { ExponentialBackoffProvider, ExponentialFetchParams } from '../ExponentialBackoffProvider';
 import { AMMType } from '@angleprotocol/sdk';
+import { HolderClaims, HolderDetail } from '../../bot/holder-checks';
 
 export type OnChainParams = {
   disputeToken: string;
@@ -26,6 +27,11 @@ export default abstract class OnChainProvider extends ExponentialBackoffProvider
   protected abstract timestampAt: (blockNumber: number) => Promise<number>;
   protected abstract activeDistributions: (blockNumber?: number) => Promise<ExtensiveDistributionParametersStructOutput[]>;
   protected abstract poolName: (pool: string, amm: AMMType, blockNumber?: number) => Promise<string>;
+  protected abstract claimed: (holderDetails: HolderDetail[]) => Promise<HolderClaims>;
+
+  async fetchClaimed(holderDetails: HolderDetail[]): Promise<HolderClaims> {
+    return this.retryWithExponentialBackoff(this.claimed, this.fetchParams, holderDetails);
+  }
 
   async fetchPoolName(pool: string, amm: AMMType, blockNumber?: number): Promise<string> {
     return this.retryWithExponentialBackoff(this.poolName, this.fetchParams, pool, amm, blockNumber);
