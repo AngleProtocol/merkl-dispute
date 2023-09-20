@@ -175,11 +175,12 @@ for (const c of Object.keys(ChainId)) {
 router.get('/:chain/:blockNumber', async (req, res) => {
   const { chain, blockNumber } = req.params;
   const chainId = parseInt(chain) as ChainId;
+  const merklRegistry = registry(chainId).Merkl;
 
   const context: DisputeContext = {
     chainId,
     blockNumber: !!blockNumber ? parseInt(blockNumber) : undefined,
-    onChainProvider: new RpcProvider(NETWORKS[chainId], registry(chainId).Merkl.Distributor),
+    onChainProvider: new RpcProvider(NETWORKS[chainId], merklRegistry.Distributor, merklRegistry.DistributionCreator),
     merkleRootsProvider: new GithubRootsProvider('https://raw.githubusercontent.com/AngleProtocol/merkl-rewards/main/', chainId),
     logger: new ConsoleLogger(),
   };

@@ -21,12 +21,12 @@
     "@google-cloud/secret-manager": "^4.2.2",
     "@octokit/rest": "19.0.13",
     "axios": "^0.27.2",
-    "keccak256": "^1.0.6",
-    "merkletreejs": "^0.3.10",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.1",
     "ethers": "^5.7.2",
     "express": "^4.18.1",
+    "keccak256": "^1.0.6",
+    "merkletreejs": "^0.3.10",
     "moment": "^2.29.4"
   },
   "devDependencies": {
@@ -39,6 +39,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
+    "mocha": "^10.2.0",
     "nodemon": "^2.0.22",
     "prettier": "^2.4.1",
     "ts-node": "^10.4.0",
