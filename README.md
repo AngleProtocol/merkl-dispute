@@ -41,7 +41,13 @@ yarn install
 yarn build
 ```
 
-You can run the bot once to try to dispute the latest block or check the bot against a previous block:
+Run the bot periodically (recommended interval is 1 hour):
+
+```bash
+yarn bot watch --chain <chainId> --time <timeIntervalInSeconds>
+```
+
+You can also run the bot once to try to dispute the latest block or check the bot against a previous block:
 
 ```bash
 yarn bot run --chain <chainId>
