@@ -7,14 +7,7 @@ import MerkleRootsProvider from '../providers/merkl-roots/MerkleRootsProvider';
 import OnChainProvider, { OnChainParams } from '../providers/on-chain/OnChainProvider';
 import { buildMerklTree } from '../helpers';
 import checkNegativeDiffs from './negative-diffs';
-
-export interface DisputeContext {
-  chainId: ChainId;
-  onChainProvider: OnChainProvider;
-  merkleRootsProvider: MerkleRootsProvider;
-  blockNumber?: number;
-  logger: Logger;
-}
+import { DisputeContext } from './context';
 
 export type DisputeState = {
   error: boolean;
@@ -30,11 +23,6 @@ function isDisputeUnavailable({ disputer, disputeToken, endOfDisputePeriod }: On
   else if (disputeToken === NULL_ADDRESS) return 'No dispute token set';
   else if (endOfDisputePeriod <= currentTimeStamp) return 'Not in dispute period';
   return undefined;
-}
-
-//TODO: Add holders checks
-function hasNegativeDiffs(startTree: AggregatedRewardsType, endTree: AggregatedRewardsType): boolean {
-  return true;
 }
 
 async function checkDisputeOpportunity(context: DisputeContext): Promise<DisputeState> {
@@ -83,8 +71,8 @@ export default async function run(context: DisputeContext) {
   const { error, reason }: DisputeState = await checkDisputeOpportunity(context);
 
   if (error) {
-    console.log(`⚔️  DISPUTE: ${reason}`);
+    context.logger.error(reason);
   } else {
-    console.log(`✅  Nothing to report: ${reason}`);
+    context.logger.success(reason);
   }
 }

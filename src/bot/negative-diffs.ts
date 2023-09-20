@@ -1,8 +1,9 @@
 import { AggregatedRewardsType, Int256 } from '@angleprotocol/sdk';
 import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/constants/types/DistributionCreator';
-import { DisputeContext, DisputeState } from './run';
+import { DisputeState } from './run';
 import { BigNumber } from 'ethers';
 import { fetchPoolName } from '../helpers';
+import { DisputeContext } from './context';
 
 function gatherHolders(startTree: AggregatedRewardsType, endTree: AggregatedRewardsType): any[] {
   const holders = [];

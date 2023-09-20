@@ -34,15 +34,16 @@ PROVIDER_1101= ""
 
 ## Run the bot
 
-Install the dependencies
+Install the dependencies and build the bot:
 
 ```bash
 yarn install
+yarn build
 ```
 
-Build and run the bot
+You can run the bot once to try to dispute the latest block or check the bot against a previous block:
 
 ```bash
-yarn build
-yarn start
+yarn bot run --chain <chainId>
+yarn bot run --chain <chainId> --block <blockNumber>
 ```

@@ -5,6 +5,7 @@
   "author": "picodes <picodes@angle.money>",
   "license": "MIT",
   "scripts": {
+    "bot": "node ./build/command.js",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "build": "tsc -p .",
     "report:pool": "yarn ts-node src/scripts/pool.ts",
@@ -21,6 +22,8 @@
     "@google-cloud/secret-manager": "^4.2.2",
     "@octokit/rest": "19.0.13",
     "axios": "^0.27.2",
+    "chalk": "^4.1.0",
+    "commander": "^11.0.0",
     "discord.js": "^14.7.1",
     "dotenv": "^16.0.1",
     "ethers": "^5.7.2",

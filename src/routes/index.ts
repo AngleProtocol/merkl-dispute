@@ -15,10 +15,11 @@ import { reportDiff } from '../scripts/diff';
 import { batchMulticallCall, createGist, getChainId, multicallContractCall, retryWithExponentialBackoff } from '../utils';
 import { sendDiscordNotification } from '../utils/discord';
 import { log } from '../utils/merkl';
-import run, { DisputeContext } from '../bot/run';
+import run from '../bot/run';
 import RpcProvider from '../providers/on-chain/RpcProvider';
 import GithubRootsProvider from '../providers/merkl-roots/GithubRootsProvider';
 import ConsoleLogger from '../helpers/logger/ConsoleLogger';
+import { DisputeContext } from '../bot/context';
 
 const router = Router();
 

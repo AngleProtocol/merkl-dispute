@@ -9,3 +9,4 @@ for (const c of Object.keys(ChainId)) {
 }
 
 export const httpProvider = (network: keyof typeof NETWORKS) => new providers.JsonRpcProvider(NETWORKS[network]);
+
