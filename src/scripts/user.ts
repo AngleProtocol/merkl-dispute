@@ -3,19 +3,22 @@ import {
   ALMType,
   AMMAlgorithmMapping,
   AMMAlgorithmType,
+  AMMType,
   ChainId,
   Erc20__factory,
+  formatNumber,
   getTickAtSqrtRatio,
   Int256,
   MerklAPIData,
   merklSubgraphAMMEndpoints,
   Multicall__factory,
+  NFTManagerAddress,
   UniswapV3NFTManager__factory,
   UniswapV3Pool__factory,
 } from '@angleprotocol/sdk';
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { BigNumber, utils } from 'ethers';
+import { BigNumber, BigNumberish, utils } from 'ethers';
 
 dotenv.config();
 
@@ -27,8 +30,8 @@ import request, { gql } from 'graphql-request';
 import JSBI from 'jsbi';
 import moment from 'moment';
 
-import { ANGLE_API, GITHUB_URL, HOUR } from '../constants';
-import { fetchPoolName, round } from '../helpers';
+import { ANGLE_API, GITHUB_URL, HOUR, YEAR } from '../constants';
+import { round } from '../helpers';
 import { httpProvider } from '../providers';
 import { MerklIndexType } from '../routes';
 import { PositionType } from '../types';
@@ -121,7 +124,7 @@ export const reportUser = async (
 
   const prices = {};
   promises.push(
-    axios.get<{ rate: number; token: string }[]>('https://api.angle.money/v1/prices').then((res) => {
+    axios.get<{ rate: number; token: string }[]>(ANGLE_API + `v1/prices`).then((res) => {
       res.data.forEach((p) => (prices[p.token] = p.rate));
     })
   );
@@ -134,6 +137,17 @@ export const reportUser = async (
       })
       .then((res) => {
         merklIndex = res.data;
+      })
+  );
+
+  let merklAPIData: MerklAPIData;
+  promises.push(
+    axios
+      .get<MerklAPIData>(ANGLE_API + `v1/merkl`, {
+        timeout: 5000,
+      })
+      .then((res) => {
+        merklAPIData = res.data;
       })
   );
 
@@ -153,6 +167,9 @@ export const reportUser = async (
       })
     ).data;
   };
+  const poolName = (poolApiData: MerklAPIData['pools'][string]): string => {
+    return `${AMMType[poolApiData.amm]} ${poolApiData.tokenSymbol0}-${poolApiData.tokenSymbol1} ${poolApiData.poolFee + '%' ?? ``}`;
+  };
 
   /** 2 - Rounds down timestamp to the last reward computation and fetch trees */
   const startEpoch = roundDownWhileKeyNotFound(startTimestamp);
@@ -165,44 +182,51 @@ export const reportUser = async (
       .unix(endEpoch * HOUR)
       .format('ddd DD MMM YYYY HH:00')} over ${endEpoch - startEpoch} hours`
   );
-  // Pool Name cache
-  const poolName = {};
 
-  const accumulatedRewards: { diff: number; symbol: string; poolName: string; distribution: string; amm: number; pool: string }[] = [];
+  const accumulatedRewards: {
+    earned: number;
+    symbol: string;
+    poolName: string;
+    reason: string;
+    distribution: string;
+    amm: number;
+    pool: string;
+  }[] = [];
   const accumulatedTokens = [];
 
   for (const k of Object.keys(endTree.rewards)) {
-    if (startTree?.rewards?.[k]?.holders?.[user]?.amount !== endTree?.rewards?.[k]?.holders?.[user]?.amount) {
-      const symbol = endTree?.rewards?.[k].tokenSymbol;
-      if (!accumulatedTokens.includes(symbol)) {
-        accumulatedTokens.push(symbol);
-      }
-      const decimals = endTree?.rewards?.[k].tokenDecimals;
-      const pool = endTree?.rewards?.[k]?.pool;
-      const diff = Int256.from(
-        BigNumber.from(endTree?.rewards?.[k]?.holders?.[user]?.amount ?? 0).sub(startTree?.rewards?.[k]?.holders?.[user]?.amount ?? 0),
-        decimals
-      ).toNumber();
+    const newAmount = endTree?.rewards?.[k]?.holders?.[user]?.amount;
+    const oldAmount = startTree?.rewards?.[k]?.holders?.[user]?.amount;
+    const newBreakdown = endTree?.rewards?.[k]?.holders?.[user]?.breakdown;
+    const oldBreakdown = startTree?.rewards?.[k]?.holders?.[user]?.breakdown;
 
-      if (!poolName[pool]) {
-        try {
-          poolName[pool] = await fetchPoolName(chainId, pool, endTree?.rewards?.[k]?.amm);
-        } catch {}
-      }
+    if (newAmount !== oldAmount) {
+      for (const reason of Object.keys(newBreakdown)) {
+        const symbol = endTree?.rewards?.[k].tokenSymbol;
+        if (!accumulatedTokens.includes(symbol)) {
+          accumulatedTokens.push(symbol);
+        }
+        const decimals = endTree?.rewards?.[k].tokenDecimals;
+        const pool = endTree?.rewards?.[k]?.pool;
+        const earned = Int256.from(BigNumber.from(newBreakdown?.[reason] ?? 0).sub(oldBreakdown?.[reason] ?? 0), decimals).toNumber();
 
-      accumulatedRewards.push({
-        diff,
-        symbol,
-        poolName: poolName[pool],
-        amm: endTree?.rewards?.[k]?.amm,
-        distribution: k,
-        pool,
-      });
+        const poolApiData = merklAPIData?.pools?.[getAddress(pool)];
+
+        accumulatedRewards.push({
+          earned,
+          symbol,
+          reason,
+          poolName: poolName(poolApiData),
+          amm: endTree?.rewards?.[k]?.amm,
+          distribution: k,
+          pool,
+        });
+      }
     }
   }
   console.log(`\nThe following rewards where accumulated: \n`);
 
-  console.table(accumulatedRewards, ['diff', 'symbol', 'poolName', 'distribution', 'pool']);
+  console.table(accumulatedRewards, ['earned', 'symbol', 'poolName', 'reason', 'pool']);
 
   console.log(`\nAggregated per token, it gives: \n`);
 
@@ -212,7 +236,7 @@ export const reportUser = async (
         .filter((a) => a.symbol === symbol)
         .reduce(
           (prev, curr) => {
-            return { diff: prev.diff + curr.diff, symbol };
+            return { diff: prev.diff + curr.earned, symbol };
           },
           { diff: 0, symbol }
         )
@@ -220,23 +244,36 @@ export const reportUser = async (
     ['diff', 'symbol']
   );
 
-  const poolRewards = accumulatedRewards.filter((a) => a.poolName === poolName[pool]);
+  if (!!pool) {
+    const merklAPIPoolData = merklAPIData?.pools?.[getAddress(pool)];
+    const poolRewards = accumulatedRewards.filter((a) => getAddress(a.pool) === getAddress(pool));
 
-  if (!!pool && poolRewards.length > 0) {
-    console.log(`\nNow, let's break it down for the pool ${poolName[pool]} (${pool}): \n`);
+    console.log(
+      '\n\n//////////////////////////////////////////////////////////////////////////////////////////////////////////////////\n\n'
+    );
+
+    console.log(`\nNow, let's break it down for the pool ${poolName(merklAPIPoolData)} (${pool}): \n`);
+    console.log(`Over the period this address earned the following rewards: \n`);
+    console.table(poolRewards, ['earned', 'symbol', 'reason']);
+
+    const periodReward = poolRewards.reduce((prev, curr) => prev + curr.earned * prices[curr.symbol], 0);
+    console.log(
+      `Under the current price, it is worth ~$${formatNumber(periodReward)}, which would make ~$${formatNumber(
+        (periodReward * YEAR) / (endEpoch * HOUR - startEpoch * HOUR)
+      )} over a year. \n`
+    );
+
     const amm = poolRewards[0].amm;
 
-    // TODO Extend compatibility
+    // TODO Extend compatibility to other Algo type than Uniswap V3
     if (AMMAlgorithmMapping[amm] !== AMMAlgorithmType.UniswapV3) throw new Error('Only UniswapV3 AMM Algorithm type is supported for now');
-
-    const apiData = ((await axios.get(ANGLE_API + `v1/merkl`)).data as MerklAPIData).pools[getAddress(pool)];
-    const alms = apiData.almDetails;
-    const token0 = apiData.token0;
-    const token0Decimals = apiData.decimalToken0;
-    const token0Symbol = apiData.tokenSymbol0;
-    const token1 = apiData.token1;
-    const token1Decimals = apiData.decimalToken1;
-    const token1Symbol = apiData.tokenSymbol1;
+    const alms = merklAPIPoolData.almDetails;
+    const token0 = merklAPIPoolData.token0;
+    const token0Decimals = merklAPIPoolData.decimalToken0;
+    const token0Symbol = merklAPIPoolData.tokenSymbol0;
+    const token1 = merklAPIPoolData.token1;
+    const token1Decimals = merklAPIPoolData.decimalToken1;
+    const token1Symbol = merklAPIPoolData.tokenSymbol1;
 
     const result = await request<
       {
@@ -302,7 +339,7 @@ export const reportUser = async (
       calls.push({
         allowFailure: true,
         callData: nftManagerInterface.encodeFunctionData('positions', [pos.id]),
-        target: pool,
+        target: NFTManagerAddress[chainId][amm],
       });
     }
 
@@ -343,275 +380,174 @@ export const reportUser = async (
       );
     }
 
-    const startRes = await multicall.callStatic.aggregate3(calls, { blockTag: startBlockNumber });
-    const endRes = await multicall.callStatic.aggregate3(calls, { blockTag: endBlockNumber });
+    const analyzePoolState = async (blockNumber: number) => {
+      const res = await multicall.callStatic.aggregate3(calls, { blockTag: blockNumber });
 
-    // Decoding part
-    const startPositions: Partial<{
-      lowerTick: number;
-      tick: number;
-      upperTick: number;
-      type: 'direct' | 'nft' | string;
-      amount0: number;
-      amount1: number;
-      liquidity: string;
-      inRange: boolean;
-      tvl: number;
-      propFee: number;
-      propAmount0: number;
-      propAmount1: number;
-    }>[] = [];
-    const endPositions: typeof startPositions = [];
+      // Decoding part
+      const Positions: Partial<{
+        lowerTick: number;
+        tick: number;
+        upperTick: number;
+        type: string;
+        amount0: number;
+        amount1: number;
+        liquidity: string;
+        inRange: boolean;
+        tvl: number;
+        propFee: number;
+        propAmount0: number;
+        propAmount1: number;
+        inducedAPR: number;
+      }>[] = [];
+      const positions: typeof Positions = [];
 
-    let i = 0;
-    const startSqrtPriceX96 = poolInterface.decodeFunctionResult('slot0', startRes[i]?.returnData).sqrtPriceX96?.toString();
-    const startTick = getTickAtSqrtRatio(JSBI.BigInt(startSqrtPriceX96));
-    const endSqrtPriceX96 = poolInterface.decodeFunctionResult('slot0', endRes[i++]?.returnData).sqrtPriceX96?.toString();
-    const endTick = getTickAtSqrtRatio(JSBI.BigInt(endSqrtPriceX96));
+      let i = 0;
+      const sqrtPriceX96 = poolInterface.decodeFunctionResult('slot0', res[i++]?.returnData).sqrtPriceX96?.toString();
+      const liquidityInPool = poolInterface.decodeFunctionResult('liquidity', res[i++]?.returnData)[0]?.toString();
+      const amount0InPool = BN2Number(Erc20Interface.decodeFunctionResult('balanceOf', res[i++]?.returnData)[0], token0Decimals);
+      const amount1InPool = BN2Number(Erc20Interface.decodeFunctionResult('balanceOf', res[i++]?.returnData)[0], token1Decimals);
+      const tvlInPool = amount0InPool * prices[token0Symbol] + amount1InPool * prices[token1Symbol];
 
-    const startLiquidity = poolInterface.decodeFunctionResult('liquidity', startRes[i]?.returnData)[0]?.toString();
-    const endLiquidity = poolInterface.decodeFunctionResult('liquidity', endRes[i++]?.returnData)[0]?.toString();
-
-    const startAmount0 = BN2Number(Erc20Interface.decodeFunctionResult('balanceOf', startRes[i]?.returnData)[0], token0Decimals);
-    const endAmount0 = BN2Number(Erc20Interface.decodeFunctionResult('balanceOf', endRes[i++]?.returnData)[0], token0Decimals);
-
-    const startAmount1 = BN2Number(Erc20Interface.decodeFunctionResult('balanceOf', startRes[i]?.returnData)[0], token1Decimals);
-    const endAmount1 = BN2Number(Erc20Interface.decodeFunctionResult('balanceOf', endRes[i++]?.returnData)[0], token1Decimals);
-
-    for (const pos of directPositions.filter((p) => p.owner === user.toLowerCase())) {
-      try {
-        const startPosition = poolInterface.decodeFunctionResult('positions', startRes[i]?.returnData);
+      const tick = getTickAtSqrtRatio(JSBI.BigInt(sqrtPriceX96));
+      const addPositionInArray = (pos: PositionType, type: string, liquidity: BigNumberish) => {
         const [amount0, amount1] = getAmountsForLiquidity(
-          startSqrtPriceX96,
+          sqrtPriceX96,
           Number(pos.tickLower),
           Number(pos.tickUpper),
-          BigNumber.from(startPosition.liquidity)
+          BigNumber.from(liquidity)
         );
-        const inRange = Number(pos.tickLower) <= startTick && startTick < Number(pos.tickUpper);
+        const inRange = Number(pos.tickLower) <= tick && tick < Number(pos.tickUpper);
 
-        startPositions.push({
+        const tvl = BN2Number(amount0, token0Decimals) * prices[token0Symbol] + BN2Number(amount1, token1Decimals) * prices[token1Symbol];
+        const positionRewards = poolRewards.filter((p) => p.reason === type)?.[0] ?? { earned: 0, symbol: 'ANGLE' };
+
+        positions.push({
           lowerTick: pos.tickLower,
-          tick: startTick,
+          tick,
           upperTick: pos.tickUpper,
-          type: 'direct',
+          type,
           amount0: BN2Number(amount0, token0Decimals),
-          amount1: BN2Number(amount1, token0Decimals),
-          liquidity: startPosition.liquidity,
+          amount1: BN2Number(amount1, token1Decimals),
+          liquidity: liquidity?.toString(),
           inRange,
-          tvl: BN2Number(amount0, token0Decimals) * prices[token0Symbol] + BN2Number(amount1, token1Decimals) * prices[token1Symbol],
-          propFee: inRange ? round(Int256.from(startPosition.liquidity, 0).mul(10000).div(startLiquidity).toNumber() / 100, 2) : 0,
-          propAmount0: inRange ? round((BN2Number(amount0, token0Decimals) / startAmount0) * 100, 2) : 0,
-          propAmount1: inRange ? round((BN2Number(amount1, token1Decimals) / startAmount1) * 100, 2) : 0,
+          tvl,
+          propFee: inRange ? round(Int256.from(liquidity, 0).mul(10000).div(liquidityInPool).toNumber() / 100, 2) : 0,
+          propAmount0: inRange ? round((BN2Number(amount0, token0Decimals) / amount0InPool) * 100, 2) : 0,
+          propAmount1: inRange ? round((BN2Number(amount1, token1Decimals) / amount1InPool) * 100, 2) : 0,
+          inducedAPR: round(
+            ((positionRewards.earned * prices[positionRewards.symbol] * YEAR) / (endEpoch * HOUR - startEpoch * HOUR) / tvl) * 100,
+            3
+          ),
         });
-      } catch (e) {
-        console.error(e);
-      }
-      try {
-        const endPosition = poolInterface.decodeFunctionResult('positions', endRes[i++]?.returnData);
-        const [amount0, amount1] = getAmountsForLiquidity(
-          startSqrtPriceX96,
-          Number(pos.tickLower),
-          Number(pos.tickUpper),
-          BigNumber.from(endPosition.liquidity)
-        );
-        const inRange = Number(pos.tickLower) <= endTick && endTick < Number(pos.tickUpper);
+      };
 
-        endPosition.push({
-          lowerTick: pos.tickLower,
-          tick: endTick,
-          upperTick: pos.tickUpper,
-          type: 'direct',
-          amount0: BN2Number(amount0, token0Decimals),
-          amount1: BN2Number(amount1, token0Decimals),
-          liquidity: endPosition.liquidity,
-          inRange,
-          tvl: BN2Number(amount0, token0Decimals) * prices[token0Symbol] + BN2Number(amount1, token1Decimals) * prices[token1Symbol],
-          propFee: inRange ? round(Int256.from(endPosition.liquidity, 0).mul(10000).div(endLiquidity).toNumber() / 100, 2) : 0,
-          propAmount0: inRange ? round((BN2Number(amount0, token0Decimals) / endAmount0) * 100, 2) : 0,
-          propAmount1: inRange ? round((BN2Number(amount1, token1Decimals) / endAmount1) * 100, 2) : 0,
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    for (const pos of nftPositions.filter((p) => p.owner === user.toLowerCase())) {
-      try {
-        const startPosition = nftManagerInterface.decodeFunctionResult('positions', startRes[i]?.returnData);
-        const [amount0, amount1] = getAmountsForLiquidity(
-          startSqrtPriceX96,
-          Number(pos.tickLower),
-          Number(pos.tickUpper),
-          BigNumber.from(startPosition.liquidity)
-        );
-        const inRange = Number(pos.tickLower) <= startTick && startTick < Number(pos.tickUpper);
-
-        startPositions.push({
-          lowerTick: pos.tickLower,
-          tick: startTick,
-          upperTick: pos.tickUpper,
-          type: 'nft',
-          amount0: BN2Number(amount0, token0Decimals),
-          amount1: BN2Number(amount1, token0Decimals),
-          liquidity: startPosition.liquidity,
-          inRange,
-          tvl: BN2Number(amount0, token0Decimals) * prices[token0Symbol] + BN2Number(amount1, token1Decimals) * prices[token1Symbol],
-          propFee: inRange ? round(Int256.from(startPosition.liquidity, 0).mul(10000).div(startLiquidity).toNumber() / 100, 2) : 0,
-          propAmount0: inRange ? round((BN2Number(amount0, token0Decimals) / startAmount0) * 100, 2) : 0,
-          propAmount1: inRange ? round((BN2Number(amount1, token1Decimals) / startAmount1) * 100, 2) : 0,
-        });
-      } catch (e) {
-        console.error(e);
-      }
-      try {
-        const endPosition = poolInterface.decodeFunctionResult('positions', endRes[i++]?.returnData);
-        const [amount0, amount1] = getAmountsForLiquidity(
-          startSqrtPriceX96,
-          Number(pos.tickLower),
-          Number(pos.tickUpper),
-          BigNumber.from(endPosition.liquidity)
-        );
-        const inRange = Number(pos.tickLower) <= endTick && endTick < Number(pos.tickUpper);
-
-        endPosition.push({
-          lowerTick: pos.tickLower,
-          tick: endTick,
-          upperTick: pos.tickUpper,
-          type: 'nft',
-          amount0: BN2Number(amount0, token0Decimals),
-          amount1: BN2Number(amount1, token0Decimals),
-          liquidity: endPosition.liquidity,
-          inRange,
-          tvl: BN2Number(amount0, token0Decimals) * prices[token0Symbol] + BN2Number(amount1, token1Decimals) * prices[token1Symbol],
-          propFee: inRange ? round(Int256.from(endPosition.liquidity, 0).mul(10000).div(endLiquidity).toNumber() / 100, 2) : 0,
-          propAmount0: inRange ? round((BN2Number(amount0, token0Decimals) / endAmount0) * 100, 2) : 0,
-          propAmount1: inRange ? round((BN2Number(amount1, token1Decimals) / endAmount1) * 100, 2) : 0,
-        });
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    for (const alm of alms) {
-      let startAlmAmount0 = 0;
-      let startAlmAmount1 = 0;
-      let startAlmLiquidity = BigNumber.from(0);
-      let endAlmAmount0 = 0;
-      let endAlmAmount1 = 0;
-      let endAlmLiquidity = BigNumber.from(0);
-
-      for (const pos of directPositions.filter((p) => p.owner === alm.address.toLowerCase())) {
+      for (const pos of directPositions.filter((p) => p.owner === user.toLowerCase())) {
         try {
-          const startPosition = poolInterface.decodeFunctionResult('positions', startRes[i]?.returnData);
-          const [aux0, aux1] = getAmountsForLiquidity(
-            startSqrtPriceX96,
-            Number(pos.tickLower),
-            Number(pos.tickUpper),
-            BigNumber.from(startPosition.liquidity)
-          );
-          const inRange = Number(pos.tickLower) <= endTick && endTick < Number(pos.tickUpper);
-
-          startAlmAmount0 += BN2Number(aux0, token0Decimals);
-          startAlmAmount1 += BN2Number(aux1, token1Decimals);
-          if (inRange) startAlmLiquidity = startAlmLiquidity.add(startPosition.liquidity);
+          const position = poolInterface.decodeFunctionResult('positions', res[i]?.returnData);
+          addPositionInArray(pos, AMMType[amm], position.liquidity);
         } catch (e) {
           console.error(e);
         }
-        try {
-          const endPosition = poolInterface.decodeFunctionResult('positions', endRes[i++]?.returnData);
-          const [aux0, aux1] = getAmountsForLiquidity(
-            startSqrtPriceX96,
-            Number(pos.tickLower),
-            Number(pos.tickUpper),
-            BigNumber.from(endPosition.liquidity)
-          );
-          const inRange = Number(pos.tickLower) <= endTick && endTick < Number(pos.tickUpper);
-
-          endAlmAmount0 += BN2Number(aux0, token0Decimals);
-          endAlmAmount1 += BN2Number(aux1, token1Decimals);
-          if (inRange) endAlmLiquidity = endAlmLiquidity.add(endPosition.liquidity);
-        } catch (e) {
-          console.error(e);
-        }
+        i++;
       }
 
-      // 4 - ALM NFT positions
-      for (const pos of nftPositions.filter((p) => p.owner === alm.address.toLowerCase())) {
+      for (const pos of nftPositions.filter((p) => p.owner === user.toLowerCase())) {
         try {
-          const startPosition = nftManagerInterface.decodeFunctionResult('positions', startRes[i]?.returnData);
-          const [aux0, aux1] = getAmountsForLiquidity(
-            startSqrtPriceX96,
-            Number(pos.tickLower),
-            Number(pos.tickUpper),
-            BigNumber.from(startPosition.liquidity)
-          );
-          const inRange = Number(pos.tickLower) <= endTick && endTick < Number(pos.tickUpper);
-
-          startAlmAmount0 += BN2Number(aux0, token0Decimals);
-          startAlmAmount1 += BN2Number(aux1, token1Decimals);
-          if (inRange) startAlmLiquidity += startPosition.liquidity;
+          const position = nftManagerInterface.decodeFunctionResult('positions', res[i]?.returnData);
+          addPositionInArray(pos, AMMType[amm], position.liquidity);
         } catch (e) {
           console.error(e);
         }
-        try {
-          const endPosition = nftManagerInterface.decodeFunctionResult('positions', endRes[i++]?.returnData);
-          const [aux0, aux1] = getAmountsForLiquidity(
-            startSqrtPriceX96,
-            Number(pos.tickLower),
-            Number(pos.tickUpper),
-            BigNumber.from(endPosition.liquidity)
-          );
-          const inRange = Number(pos.tickLower) <= endTick && endTick < Number(pos.tickUpper);
-
-          endAlmAmount0 += BN2Number(aux0, token0Decimals);
-          endAlmAmount1 += BN2Number(aux1, token1Decimals);
-          if (inRange) endAlmLiquidity += endPosition.liquidity;
-        } catch (e) {
-          console.error(e);
-        }
+        i++;
       }
 
-      // 5 - Balance / Total Supply
-      const startProportion =
-        BN2Number(Erc20Interface.decodeFunctionResult('balanceOf', startRes[i]?.returnData)[0]) /
-        BN2Number(Erc20Interface.decodeFunctionResult('totalSupply', startRes[i + 1]?.returnData)[0]);
-      const endProportion =
-        BN2Number(Erc20Interface.decodeFunctionResult('balanceOf', endRes[i]?.returnData)[0]) /
-        BN2Number(Erc20Interface.decodeFunctionResult('totalSupply', endRes[i + 1]?.returnData)[0]);
-      i++;
+      for (const alm of alms) {
+        try {
+          let j = i;
+          let amount0InAlm = 0;
+          let amount1InAlm = 0;
+          let liquidityInAlm = BigNumber.from(0);
 
-      startPositions.push({
-        type: ALMType[alm.origin],
-        amount0: startProportion * startAlmAmount0,
-        amount1: startProportion * startAlmAmount1,
-        liquidity: startAlmLiquidity
-          .mul(Math.round(startProportion * 1e8))
-          .div(1e8)
-          .toString(),
-        tvl: startProportion * (startAlmAmount0 * prices[token0Symbol] + startAlmAmount1 * prices[token1Symbol]),
-        propFee: round((startProportion * Int256.from(startAlmLiquidity, 0).mul(10000).div(endAlmLiquidity).toNumber()) / 100, 2),
-        propAmount0: round(((startProportion * startAlmAmount0) / startAmount0) * 100, 2),
-        propAmount1: round(((startProportion * startAlmAmount1) / startAmount1) * 100, 2),
-      });
+          for (const pos of directPositions.filter((p) => p.owner === alm.address.toLowerCase())) {
+            const position = poolInterface.decodeFunctionResult('positions', res[j++]?.returnData);
+            const [aux0, aux1] = getAmountsForLiquidity(
+              sqrtPriceX96,
+              Number(pos.tickLower),
+              Number(pos.tickUpper),
+              BigNumber.from(position.liquidity)
+            );
+            const inRange = Number(pos.tickLower) <= tick && tick < Number(pos.tickUpper);
 
-      endPositions.push({
-        type: ALMType[alm.origin],
-        amount0: endProportion * endAlmAmount0,
-        amount1: endProportion * endAlmAmount1,
-        liquidity: endAlmLiquidity
-          .mul(Math.round(endProportion * 1e8))
-          .div(1e8)
-          .toString(),
-        tvl: endProportion * (endAlmAmount0 * prices[token0Symbol] + endAlmAmount1 * prices[token1Symbol]),
-        propFee: round((endProportion * Int256.from(endAlmLiquidity, 0).mul(10000).div(endAlmLiquidity).toNumber()) / 100, 2),
-        propAmount0: round(((endProportion * endAlmAmount0) / endAmount0) * 100, 2),
-        propAmount1: round(((endProportion * endAlmAmount1) / endAmount1) * 100, 2),
-      });
-    }
+            amount0InAlm += BN2Number(aux0, token0Decimals);
+            amount1InAlm += BN2Number(aux1, token1Decimals);
+            if (inRange) liquidityInAlm = liquidityInAlm.add(position.liquidity);
+          }
 
-    console.log(`\nAt the beginning of the period the user had the following positions: \n`);
-    console.table(startPositions);
-    console.log(`\nAt the end of the period the user had the following positions: \n`);
-    console.table(endPositions);
+          // 4 - ALM NFT positions
+          for (const pos of nftPositions.filter((p) => p.owner === alm.address.toLowerCase())) {
+            const position = nftManagerInterface.decodeFunctionResult('positions', res[j++]?.returnData);
+            const [aux0, aux1] = getAmountsForLiquidity(
+              sqrtPriceX96,
+              Number(pos.tickLower),
+              Number(pos.tickUpper),
+              BigNumber.from(position.liquidity)
+            );
+            const inRange = Number(pos.tickLower) <= tick && tick < Number(pos.tickUpper);
+
+            amount0InAlm += BN2Number(aux0, token0Decimals);
+            amount1InAlm += BN2Number(aux1, token1Decimals);
+            if (inRange) liquidityInAlm = liquidityInAlm.add(position.liquidity);
+          }
+
+          // 5 - Balance / Total Supply
+          const supply = BN2Number(Erc20Interface.decodeFunctionResult('totalSupply', res[j++]?.returnData)[0]);
+          const balance = BN2Number(Erc20Interface.decodeFunctionResult('balanceOf', res[j++]?.returnData)[0]);
+          const proportion = balance / supply;
+
+          const userAmount0InAlm = proportion * amount0InAlm;
+          const userAmount1InAlm = proportion * amount1InAlm;
+
+          const type = ALMType[alm.origin];
+          const tvl = userAmount0InAlm * prices[token0Symbol] + userAmount1InAlm * prices[token1Symbol];
+          const positionRewards = poolRewards.filter((p) => p.reason === type)?.[0] ?? { earned: 0, symbol: 'ANGLE' };
+
+          if (userAmount0InAlm !== 0 || userAmount1InAlm !== 0) {
+            positions.push({
+              type,
+              amount0: userAmount0InAlm,
+              amount1: userAmount1InAlm,
+              liquidity: liquidityInAlm
+                .mul(Math.round(proportion * 1e8))
+                .div(1e8)
+                .toString(),
+              tvl,
+              propFee: round((proportion * Int256.from(liquidityInAlm, 0).mul(10000).div(liquidityInPool).toNumber()) / 100, 2),
+              propAmount0: round((userAmount0InAlm / amount0InPool) * 100, 2),
+              propAmount1: round((userAmount1InAlm / amount1InPool) * 100, 2),
+              inducedAPR: round(
+                ((positionRewards.earned * prices[positionRewards.symbol] * YEAR) / (endEpoch * HOUR - startEpoch * HOUR) / tvl) * 100,
+                3
+              ),
+            });
+          }
+        } catch (e) {
+          // console.error(e);
+        }
+        i =
+          i +
+          directPositions.filter((p) => p.owner === alm.address.toLowerCase())?.length +
+          nftPositions.filter((p) => p.owner === alm.address.toLowerCase())?.length +
+          2;
+      }
+
+      console.log(`The TVL of the pool at the time based on current prices was ${tvlInPool}`);
+      console.table(positions);
+    };
+
+    console.log(`\n\nState of the pool at the beginning of the period (block ${startBlockNumber}): \n`);
+    await analyzePoolState(startBlockNumber);
+
+    console.log(`\n\nState of the pool at the end of the period (block ${endBlockNumber}): \n`);
+    await analyzePoolState(endBlockNumber);
   }
 };

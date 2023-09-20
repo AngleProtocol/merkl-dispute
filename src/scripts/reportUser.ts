@@ -6,10 +6,10 @@ import moment from 'moment';
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 const chainId = ChainId.POLYGON;
-const user = '0xeB4a0896913f92987F61FBC2565dE4B0dA005Dc2';
+const user = '0xfdA462548Ce04282f4B6D6619823a7C64Fdc0185';
 const startTimestamp = moment().subtract(3, 'day').unix();
 const endTimestamp = moment().subtract(1, 'day').unix();
-const pool = '0x22c10e61A05a03bcd8BF61a7E648f2330ecdA270';
+const pool = '0x3Fa147D6309abeb5C1316f7d8a7d8bD023e0cd80';
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                               END OF PARAMETERS                                                

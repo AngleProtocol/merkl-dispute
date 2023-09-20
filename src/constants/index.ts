@@ -5,3 +5,4 @@ export const GITHUB_URL = `https://raw.githubusercontent.com/AngleProtocol/merkl
 export const ANGLE_API = `https://api.angle.money/`;
 export const MAX_NUM_SUBCALLS = 50;
 export const HOUR = 3600;
+export const YEAR = 3600 * 24 * 365;

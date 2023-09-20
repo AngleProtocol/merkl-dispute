@@ -1,9 +1,8 @@
 import 'dotenv/config';
 
-import { ChainId, EnvType, MerklSupportedChainIdsType, Multicall, withRetry } from '@angleprotocol/sdk';
+import { ChainId, EnvType, Multicall, withRetry } from '@angleprotocol/sdk';
 import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
 import { Octokit } from '@octokit/rest';
-import axios from 'axios';
 import { BytesLike, constants } from 'ethers';
 
 import { MAX_NUM_SUBCALLS } from '../constants';
