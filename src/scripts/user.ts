@@ -4,7 +4,6 @@ import {
   AMMAlgorithmMapping,
   AMMAlgorithmType,
   ChainId,
-  Distributor__factory,
   Erc20__factory,
   getTickAtSqrtRatio,
   Int256,
@@ -97,7 +96,6 @@ const positionsQuery = gql`
                                                   INTERFACES                                                    
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-const distributorInterface = Distributor__factory.createInterface();
 const poolInterface = UniswapV3Pool__factory.createInterface();
 const nftManagerInterface = UniswapV3NFTManager__factory.createInterface();
 const Erc20Interface = Erc20__factory.createInterface();
@@ -118,39 +116,49 @@ export const reportUser = async (
   if (startTimestamp >= endTimestamp) throw new Error('Invalid timestamps');
   if (!!pool && !getAddress(pool)) throw new Error('Invalid pool address');
 
+  /** 1 - Fetch useful data */
+  const promises = [];
+
   const prices = {};
-  axios.get<{ rate: number; token: string }[]>('https://api.angle.money/v1/prices').then((res) => {
-    res.data.forEach((p) => (prices[p.token] = p.rate));
-  });
-
-  const merklIndex = (
-    await axios.get<MerklIndexType>(GITHUB_URL + `${chainId + `/index.json`}`, {
-      timeout: 5000,
+  promises.push(
+    axios.get<{ rate: number; token: string }[]>('https://api.angle.money/v1/prices').then((res) => {
+      res.data.forEach((p) => (prices[p.token] = p.rate));
     })
-  ).data;
+  );
 
-  /**
-   * Rounds down timestamp to the last reward computation
-   */
-  let startEpoch = Math.floor(startTimestamp / HOUR);
-  while (!Object.values(merklIndex).includes(startEpoch)) {
-    startEpoch -= 1;
-  }
-  let endEpoch = Math.floor(endTimestamp / HOUR);
-  while (!Object.values(merklIndex).includes(endEpoch)) {
-    endEpoch -= 1;
-  }
-  const startTree = (
-    await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${startEpoch}.json`}`, {
-      timeout: 5000,
-    })
-  ).data;
+  let merklIndex: MerklIndexType;
+  promises.push(
+    axios
+      .get<MerklIndexType>(GITHUB_URL + `${chainId + `/index.json`}`, {
+        timeout: 5000,
+      })
+      .then((res) => {
+        merklIndex = res.data;
+      })
+  );
 
-  const endTree = (
-    await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${endEpoch}.json`}`, {
-      timeout: 5000,
-    })
-  ).data;
+  await Promise.all(promises);
+
+  const roundDownWhileKeyNotFound = (timestamp: number): number => {
+    let epoch = Math.floor(timestamp / HOUR);
+    while (!Object.values(merklIndex).includes(epoch)) {
+      epoch -= 1;
+    }
+    return epoch;
+  };
+  const fetchTree = async (epoch: number): Promise<AggregatedRewardsType> => {
+    return (
+      await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${epoch}.json`}`, {
+        timeout: 5000,
+      })
+    ).data;
+  };
+
+  /** 2 - Rounds down timestamp to the last reward computation and fetch trees */
+  const startEpoch = roundDownWhileKeyNotFound(startTimestamp);
+  const endEpoch = roundDownWhileKeyNotFound(endTimestamp);
+  let startTree, endTree;
+  await Promise.all([fetchTree(startEpoch).then((res) => (startTree = res)), fetchTree(endEpoch).then((res) => (endTree = res))]);
 
   console.log(
     `Analyzing ${user} rewards on Merkl from ${moment.unix(startEpoch * HOUR).format('ddd DD MMM YYYY HH:00')} to ${moment
