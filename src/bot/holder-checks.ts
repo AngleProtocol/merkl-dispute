@@ -41,10 +41,23 @@ export type HolderDetail = {
 
 export type HolderClaims = { [address: string]: { [symbol: string]: string } };
 
+export type DistributionChange = {
+  diff: number,
+  symbol: string,
+  poolName: string,
+  pool: any,
+  recipients: number,
+  ratePerEpoch: number,
+  epoch: number,
+};
+
+export type DistributionChanges = {[address: string]: DistributionChange};
+
 export default async function checkHoldersDiffs(
   context: DisputeContext,
   startTree: AggregatedRewardsType,
-  endTree: AggregatedRewardsType
+  endTree: AggregatedRewardsType,
+  processDetails?: (details: HolderDetail[], changePerDistrib: DistributionChanges) => void
 ): Promise<DisputeState> {
   const { onChainProvider } = context;
 
@@ -53,7 +66,7 @@ export default async function checkHoldersDiffs(
 
   const activeDistributions = await onChainProvider.fetchActiveDistributions(context.blockNumber);
 
-  const changePerDistrib = {};
+  const changePerDistrib: DistributionChanges = {};
   const poolName = {};
   const unclaimed: { [address: string]: { [symbol: string]: Int256 } } = {};
 
@@ -160,6 +173,8 @@ export default async function checkHoldersDiffs(
         };
       })
   );
+
+  processDetails && processDetails(details, changePerDistrib);
 
   // overridenConsole.table(details, [
   //   'holder',
