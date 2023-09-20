@@ -3,6 +3,7 @@ import { BigNumber } from 'ethers';
 
 import { DisputeContext } from './context';
 import { DisputeState } from './run';
+import { round } from '../helpers';
 
 function gatherHolders(startTree: AggregatedRewardsType, endTree: AggregatedRewardsType): any[] {
   const holders = [];
@@ -48,7 +49,7 @@ export default async function checkHoldersDiffs(
   const { onChainProvider } = context;
 
   const holders = gatherHolders(startTree, endTree);
-  const details: HolderDetail[] = [];
+  let details: HolderDetail[] = [];
 
   const activeDistributions = await onChainProvider.fetchActiveDistributions(context.blockNumber);
 
@@ -129,27 +130,10 @@ export default async function checkHoldersDiffs(
     l.percent = (l?.diff / changePerDistrib[l?.distribution]?.diff) * 100;
   }
 
-  const alreadyClaimed: { [address: string]: { [symbol: string]: string } } = {};
+  const alreadyClaimed: HolderClaims = await onChainProvider.fetchClaimed(details);
 
-  const calls: Multicall3.Call3Struct[] = [];
-  for (const d of details) {
-    if (!alreadyClaimed[d.holder]) alreadyClaimed[d.holder] = {};
-    if (!alreadyClaimed[d.holder][d.tokenAddress]) {
-      alreadyClaimed[d.holder][d.tokenAddress] = 'PENDING';
-      calls.push({
-        callData: distributorInterface.encodeFunctionData('claimed', [d.holder, d.tokenAddress]),
-        target: registry(chainId).Merkl.Distributor,
-        allowFailure: false,
-      });
-    }
-  }
-  const res = await batchMulticallCall(multicallContractCall, multicall, { data: calls });
-  let decodingIndex = 0;
-  for (const d of details) {
-    if (alreadyClaimed[d.holder][d.tokenAddress] === 'PENDING') {
-      alreadyClaimed[d.holder][d.tokenAddress] = distributorInterface.decodeFunctionResult('claimed', res[decodingIndex++])[0];
-    }
-  }
+  let error = false;
+  let reason = '';
 
   // Sort details by distribution and format numbers
   details = await Promise.all(
@@ -160,10 +144,10 @@ export default async function checkHoldersDiffs(
       .map(async (d) => {
         const alreadyClaimedValue = round(Int256.from(alreadyClaimed[d.holder][d.tokenAddress], d.decimals).toNumber(), 2);
         const totalCumulated = round(unclaimed[d.holder][d.symbol].toNumber(), 2);
-        // if (totalCumulated < alreadyClaimedValue) {
-        //   error = true;
-        //   reason = `Holder ${d.holder} received ${totalCumulated} although he already claimed ${alreadyClaimedValue}`;
-        // }
+        if (totalCumulated < alreadyClaimedValue) {
+          error = true;
+          reason = `Holder ${d.holder} received ${totalCumulated} although he already claimed ${alreadyClaimedValue}`;
+        }
         return {
           ...d,
           diff: round(d.diff, 2),
@@ -176,26 +160,27 @@ export default async function checkHoldersDiffs(
         };
       })
   );
-  overridenConsole.table(details, [
-    'holder',
-    'diff',
-    'symbol',
-    'poolName',
-    'distribution',
-    'percent',
-    'diffAverageBoost',
-    'totalCumulated',
-    'alreadyClaimed',
-    'issueSpotted',
-  ]);
 
-  overridenConsole.table(
-    Object.keys(changePerDistrib)
-      .map((k) => {
-        return { ...changePerDistrib[k], epoch: round(changePerDistrib[k].epoch, 4) };
-      })
-      .sort((a, b) => (a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : 0))
-  );
+  // overridenConsole.table(details, [
+  //   'holder',
+  //   'diff',
+  //   'symbol',
+  //   'poolName',
+  //   'distribution',
+  //   'percent',
+  //   'diffAverageBoost',
+  //   'totalCumulated',
+  //   'alreadyClaimed',
+  //   'issueSpotted',
+  // ]);
 
-  return { error: false, reason: '' };
+  // overridenConsole.table(
+  //   Object.keys(changePerDistrib)
+  //     .map((k) => {
+  //       return { ...changePerDistrib[k], epoch: round(changePerDistrib[k].epoch, 4) };
+  //     })
+  //     .sort((a, b) => (a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : 0))
+  // );
+
+  return { error, reason };
 }
