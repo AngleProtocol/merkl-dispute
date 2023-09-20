@@ -139,6 +139,15 @@ const triggerDispute = async (
       );
     await tx.wait();
     log('merkl dispute bot', `✅ dispute triggered`);
+
+    await sendDiscordNotification({
+      title: `🎉 SUCCESSFULLY disputed tree \n` + title,
+      description: `tx hash: ${tx.hash}`,
+      isAlert: true,
+      severity: 'warning',
+      fields: [],
+      key: 'merkl dispute bot',
+    });
   } catch (e) {
     log('merkl dispute bot', `❌ couldn't trigger dispute`);
     await sendDiscordNotification({
@@ -150,15 +159,6 @@ const triggerDispute = async (
       key: 'merkl dispute bot',
     });
   }
-
-  await sendDiscordNotification({
-    title: `🎉 SUCCESSFULLY disputed tree \n` + title,
-    description: `tx hash: ${tx.hash}`,
-    isAlert: true,
-    severity: 'warning',
-    fields: [],
-    key: 'merkl dispute bot',
-  });
 };
 
 router.get('', async (_, res) => {

@@ -225,6 +225,10 @@ export const reportDiff = async (
           decimals
         ).toNumber();
         if (diff < 0) {
+          console.log('ERROR DETECTED FOR ', poolName[pool], holder);
+          console.log('end: ', holder, endTree?.rewards?.[k]?.holders?.[holder]?.amount);
+          console.log('start: ', holder, startTree?.rewards?.[k]?.holders?.[holder]?.amount);
+          console.log('');
           error = true;
           reason = `Holder ${holder} has negative diff for ${symbol}`;
         }
