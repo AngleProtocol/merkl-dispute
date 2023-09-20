@@ -71,6 +71,7 @@ export async function multicallContractCall(
     //     true
     //   )
     // );
+    
     result = await contract.provider.call(
       {
         data: contract.interface.encodeFunctionData('aggregate3', [

@@ -15,6 +15,10 @@ import { reportDiff } from '../scripts/diff';
 import { batchMulticallCall, createGist, getChainId, multicallContractCall, retryWithExponentialBackoff } from '../utils';
 import { sendDiscordNotification } from '../utils/discord';
 import { log } from '../utils/merkl';
+import run, { DisputeContext } from '../bot/run';
+import RpcProvider from '../providers/on-chain/RpcProvider';
+import GithubRootsProvider from '../providers/merkl-roots/GithubRootsProvider';
+import ConsoleLogger from '../helpers/logger/ConsoleLogger';
 
 const router = Router();
 
@@ -161,6 +165,30 @@ const triggerDispute = async (
   });
 };
 
+const NETWORKS: { [chainId: number]: string } = [];
+for (const c of Object.keys(ChainId)) {
+  try {
+    NETWORKS[c] = process.env[`PROVIDER_${c}`];
+  } catch {}
+}
+
+router.get('/:chain/:blockNumber', async (req, res) => {
+  const { chain, blockNumber } = req.params;
+  const chainId = parseInt(chain) as ChainId;
+
+  const context: DisputeContext = {
+    chainId,
+    blockNumber: !!blockNumber ? parseInt(blockNumber) : undefined,
+    onChainProvider: new RpcProvider(NETWORKS[chainId], registry(chainId).Merkl.Distributor),
+    merkleRootsProvider: new GithubRootsProvider('https://raw.githubusercontent.com/AngleProtocol/merkl-rewards/main/', chainId),
+    logger: new ConsoleLogger(),
+  };
+
+  await run(context);
+
+  return res.status(200);
+});
+
 router.get('', async (_, res) => {
   console.time('>>> [execution time]: ');
   const currentTimestamp = moment().unix();
@@ -212,7 +240,7 @@ router.get('', async (_, res) => {
     return res.status(200).json({ message: 'Dispute period is over' });
   }
 
-  log('merkl dispute bot', `🤖 tree update coming: change ${onChainParams.startRoot} to ${onChainParams.endRoot}`);
+  log('merkl dispute bot', `🤖 tree update comi ng: change ${onChainParams.startRoot} to ${onChainParams.endRoot}`);
 
   // Save logs of `reportDiff` to then build a gist
   const ts = new Transform({

@@ -5,6 +5,7 @@
   "author": "picodes <picodes@angle.money>",
   "license": "MIT",
   "scripts": {
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
     "build": "tsc -p .",
     "report:pool": "yarn ts-node src/scripts/pool.ts",
     "report:diff": "yarn ts-node src/scripts/reportDiff.ts",
