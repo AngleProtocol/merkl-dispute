@@ -1,9 +1,10 @@
 import { AggregatedRewardsType } from '@angleprotocol/sdk';
 import axios from 'axios';
 
-import { MerklIndexType } from '../../routes';
 import { ExponentialFetchParams } from '../ExponentialBackoffProvider';
 import MerkleRootsProvider from './MerkleRootsProvider';
+
+export type MerklIndexType = { [merklRoot: string]: number };
 
 export default class GithubRootsProvider extends MerkleRootsProvider {
   url: string;

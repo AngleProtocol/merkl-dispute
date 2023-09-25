@@ -5,10 +5,7 @@ import express, { Application } from 'express';
 
 import { defaultContext, DisputeContext } from './bot/context';
 import run from './bot/run';
-import ConsoleLogger from './helpers/logger/ConsoleLogger';
 import NETWORKS from './helpers/networks';
-import GithubRootsProvider from './providers/merkl-roots/GithubRootsProvider';
-import RpcProvider from './providers/on-chain/RpcProvider';
 import { getChainId } from './utils';
 
 export default function () {
