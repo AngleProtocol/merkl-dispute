@@ -117,9 +117,9 @@ export const reportUser = async (
   await Promise.all([fetchTree(startEpoch).then((res) => (startTree = res)), fetchTree(endEpoch).then((res) => (endTree = res))]);
 
   console.log(
-    `Analyzing ${user} rewards on Merkl from ${moment.unix(startEpoch * HOUR).format('ddd DD MMM YYYY HH:00')} to ${moment
-      .unix(endEpoch * HOUR)
-      .format('ddd DD MMM YYYY HH:00')} over ${endEpoch - startEpoch} hours`
+    `Analyzing rewards earned by ${user} on Merkl over ${endEpoch - startEpoch} hours from ${moment
+      .unix(startEpoch * HOUR)
+      .format('ddd DD MMM YYYY HH:00')} to ${moment.unix(endEpoch * HOUR).format('ddd DD MMM YYYY HH:00')} `
   );
 
   const accumulatedRewards: {
@@ -165,9 +165,9 @@ export const reportUser = async (
   }
   console.log(`\nThe following rewards where accumulated: \n`);
 
-  console.table(accumulatedRewards, ['earned', 'symbol', 'poolName', 'reason', 'pool']);
+  console.table(accumulatedRewards, ['Earned', 'Token', 'Pool Name', 'Origin', 'Pool Address']);
 
-  console.log(`\nAggregated per token, it gives: \n`);
+  console.log(`\nAggregated per token, this gives: \n`);
 
   console.table(
     accumulatedTokens.map((symbol) =>
@@ -180,7 +180,7 @@ export const reportUser = async (
           { diff: 0, symbol }
         )
     ),
-    ['diff', 'symbol']
+    ['Earned', 'Token']
   );
 
   if (!!pool) {
@@ -197,17 +197,15 @@ export const reportUser = async (
     const poolStateName = PoolStateName[ammAlgo];
     const swapPriceField = SwapPriceField[ammAlgo];
 
-    console.log(
-      '\n\n//////////////////////////////////////////////////////////////////////////////////////////////////////////////////\n\n'
-    );
+    console.log('\n//////////////////////////////////////////////////////////////////////////////////////////////////////////////////\n');
 
-    console.log(`\nNow, let's break it down for the pool ${poolName(merklAPIPoolData)} (${pool}): \n`);
-    console.log(`Over the period this address earned the following rewards: \n`);
-    console.table(poolRewards, ['earned', 'symbol', 'reason']);
+    console.log(`Now, let's break down rewards for the pool ${poolName(merklAPIPoolData)} (${pool}): \n`);
+    console.log(`Over the period of interest this address earned the following: \n`);
+    console.table(poolRewards, ['Earned', 'Symbol', 'Origin']);
 
     const periodReward = poolRewards.reduce((prev, curr) => prev + curr.earned * prices[curr.symbol], 0);
     console.log(
-      `Under the current price, it is worth ~$${formatNumber(periodReward)}, which would make ~$${formatNumber(
+      `At current prices, this is worth ~$${formatNumber(periodReward)}, which would make ~$${formatNumber(
         (periodReward * YEAR) / (endEpoch * HOUR - startEpoch * HOUR)
       )} over a year. \n`
     );
@@ -485,14 +483,14 @@ export const reportUser = async (
           2;
       }
 
-      console.log(`The TVL of the pool at the time based on current prices was ${tvlInPool}`);
+      console.log(`The TVL of the pool at block ${blockNumber} based on current prices was $${tvlInPool}`);
       console.table(positions);
     };
 
-    console.log(`\n\nState of the pool at the beginning of the period (block ${startBlockNumber}): \n`);
+    console.log(`\nState of the pool at the beginning of the period (block ${startBlockNumber}): \n`);
     await analyzePoolState(startBlockNumber);
 
-    console.log(`\n\nState of the pool at the end of the period (block ${endBlockNumber}): \n`);
+    console.log(`\nState of the pool at the end of the period (block ${endBlockNumber}): \n`);
     await analyzePoolState(endBlockNumber);
   }
 };
