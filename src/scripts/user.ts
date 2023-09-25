@@ -2,7 +2,6 @@ import {
   AggregatedRewardsType,
   ALMType,
   AMMAlgorithmMapping,
-  AMMAlgorithmType,
   AMMType,
   ChainId,
   Erc20__factory,
@@ -13,8 +12,10 @@ import {
   merklSubgraphAMMEndpoints,
   Multicall__factory,
   NFTManagerAddress,
-  UniswapV3NFTManager__factory,
-  UniswapV3Pool__factory,
+  NonFungiblePositionManagerInterface,
+  PoolInterface,
+  PoolStateName,
+  SwapPriceField,
 } from '@angleprotocol/sdk';
 import axios from 'axios';
 import dotenv from 'dotenv';
@@ -26,81 +27,19 @@ import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
 import { BN2Number } from '@angleprotocol/sdk/dist/utils';
 import console from 'console';
 import { getAddress } from 'ethers/lib/utils';
-import request, { gql } from 'graphql-request';
+import request from 'graphql-request';
 import JSBI from 'jsbi';
 import moment from 'moment';
 
-import { ANGLE_API, GITHUB_URL, HOUR, YEAR } from '../constants';
+import { ANGLE_API, GITHUB_URL, HOUR, MULTICALL_ADDRESS, YEAR } from '../constants';
 import { round } from '../helpers';
+import { positionsQuery } from '../helpers/queries';
 import { httpProvider } from '../providers';
 import { MerklIndexType } from '../routes';
 import { PositionType } from '../types';
 import { getBlockAfterTimestamp } from '../utils';
 import { getAmountsForLiquidity } from '../utils/uniV3';
 
-/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                   REQUESTS                                                     
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-
-const positionsQuery = gql`
-  query Positions($owners: [String!], $timestamp: Int!, $pool: String!) {
-    nft: nftpositions(where: { owner_in: $owners, pool: $pool, endTimestamp: 0 }) {
-      id
-      pool {
-        id
-      }
-      startTimestamp
-      endTimestamp
-      tickLower
-      tickUpper
-      liquidity
-      owner
-    }
-    nftPast: nftpositions(where: { owner_in: $owners, pool: $pool, endTimestamp_gt: $timestamp }) {
-      id
-      pool {
-        id
-      }
-      startTimestamp
-      endTimestamp
-      tickLower
-      tickUpper
-      liquidity
-      owner
-    }
-    direct: directPositions(where: { owner_in: $owners, pool: $pool, endTimestamp: 0 }) {
-      id
-      pool {
-        id
-      }
-      startTimestamp
-      endTimestamp
-      tickLower
-      tickUpper
-      liquidity
-      owner
-    }
-    directPast: directPositions(where: { owner_in: $owners, pool: $pool, endTimestamp_gt: $timestamp }) {
-      id
-      pool {
-        id
-      }
-      startTimestamp
-      endTimestamp
-      tickLower
-      tickUpper
-      liquidity
-      owner
-    }
-  }
-`;
-
-/*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                  INTERFACES                                                    
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
-
-const poolInterface = UniswapV3Pool__factory.createInterface();
-const nftManagerInterface = UniswapV3NFTManager__factory.createInterface();
 const Erc20Interface = Erc20__factory.createInterface();
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -247,6 +186,16 @@ export const reportUser = async (
   if (!!pool) {
     const merklAPIPoolData = merklAPIData?.pools?.[getAddress(pool)];
     const poolRewards = accumulatedRewards.filter((a) => getAddress(a.pool) === getAddress(pool));
+    /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                  INTERFACES                                                    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+    const amm = merklAPIPoolData.amm;
+    const ammAlgo = AMMAlgorithmMapping[amm];
+
+    const poolInterface = PoolInterface(ammAlgo);
+    const nftManagerInterface = NonFungiblePositionManagerInterface(ammAlgo);
+    const poolStateName = PoolStateName[ammAlgo];
+    const swapPriceField = SwapPriceField[ammAlgo];
 
     console.log(
       '\n\n//////////////////////////////////////////////////////////////////////////////////////////////////////////////////\n\n'
@@ -263,10 +212,6 @@ export const reportUser = async (
       )} over a year. \n`
     );
 
-    const amm = poolRewards[0].amm;
-
-    // TODO Extend compatibility to other Algo type than Uniswap V3
-    if (AMMAlgorithmMapping[amm] !== AMMAlgorithmType.UniswapV3) throw new Error('Only UniswapV3 AMM Algorithm type is supported for now');
     const alms = merklAPIPoolData.almDetails;
     const token0 = merklAPIPoolData.token0;
     const token0Decimals = merklAPIPoolData.decimalToken0;
@@ -293,17 +238,17 @@ export const reportUser = async (
     const nftPositions = result.nft.concat(result.nftPast);
 
     const startBlockNumber = await getBlockAfterTimestamp(chainId, startEpoch * HOUR);
-    const endBlockNumber = await getBlockAfterTimestamp(chainId, endTimestamp * HOUR);
+    const endBlockNumber = await getBlockAfterTimestamp(chainId, endEpoch * HOUR);
 
     const provider = httpProvider(chainId);
-    const multicall = Multicall__factory.connect('0xcA11bde05977b3631167028862bE2a173976CA11', provider);
+    const multicall = Multicall__factory.connect(MULTICALL_ADDRESS, provider);
     const calls: Multicall3.Call3Struct[] = [];
 
     // 0 - Pool generic data
     calls.push(
       {
         allowFailure: true,
-        callData: poolInterface.encodeFunctionData('slot0'),
+        callData: poolInterface.encodeFunctionData(poolStateName),
         target: pool,
       },
       {
@@ -402,7 +347,7 @@ export const reportUser = async (
       const positions: typeof Positions = [];
 
       let i = 0;
-      const sqrtPriceX96 = poolInterface.decodeFunctionResult('slot0', res[i++]?.returnData).sqrtPriceX96?.toString();
+      const sqrtPriceX96 = poolInterface.decodeFunctionResult(poolStateName, res[i++]?.returnData)[swapPriceField]?.toString();
       const liquidityInPool = poolInterface.decodeFunctionResult('liquidity', res[i++]?.returnData)[0]?.toString();
       const amount0InPool = BN2Number(Erc20Interface.decodeFunctionResult('balanceOf', res[i++]?.returnData)[0], token0Decimals);
       const amount1InPool = BN2Number(Erc20Interface.decodeFunctionResult('balanceOf', res[i++]?.returnData)[0], token1Decimals);

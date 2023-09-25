@@ -20,7 +20,7 @@ import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/
 import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
 import console from 'console';
 
-import { GITHUB_URL } from '../constants';
+import { GITHUB_URL, MULTICALL_ADDRESS } from '../constants';
 import { buildMerklTree, fetchPoolName, round } from '../helpers';
 import { httpProvider } from '../providers';
 import { MerklIndexType } from '../routes';
@@ -52,7 +52,7 @@ export const reportDiff = async (
   let error = false;
   let reason = '';
   const provider = httpProvider(chainId);
-  const multicall = Multicall__factory.connect('0xcA11bde05977b3631167028862bE2a173976CA11', provider);
+  const multicall = Multicall__factory.connect(MULTICALL_ADDRESS, provider);
   const distributorInterface = Distributor__factory.createInterface();
 
   let startTree: AggregatedRewardsType;
@@ -225,10 +225,6 @@ export const reportDiff = async (
           decimals
         ).toNumber();
         if (diff < 0) {
-          console.log('ERROR DETECTED FOR ', poolName[pool], holder);
-          console.log('end: ', holder, endTree?.rewards?.[k]?.holders?.[holder]?.amount);
-          console.log('start: ', holder, startTree?.rewards?.[k]?.holders?.[holder]?.amount);
-          console.log('');
           error = true;
           reason = `Holder ${holder} has negative diff for ${symbol}`;
         }
