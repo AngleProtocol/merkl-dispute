@@ -149,6 +149,7 @@ export default async function checkHoldersDiffs(
 
   let error = false;
   let reason = '';
+  let code = -1;
 
   // Sort details by distribution and format numbers
   details = await Promise.all(
@@ -161,6 +162,7 @@ export default async function checkHoldersDiffs(
         const totalCumulated = round(unclaimed[d.holder][d.symbol].toNumber(), 2);
         if (totalCumulated < alreadyClaimedValue) {
           error = true;
+          code = ERROR_TREE_NEGATIVE_DIFF,
           reason = `Holder ${d.holder} received ${totalCumulated} although he already claimed ${alreadyClaimedValue}`;
         }
         return {
@@ -199,5 +201,5 @@ export default async function checkHoldersDiffs(
   //     .sort((a, b) => (a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : 0))
   // );
 
-  return { error, reason };
+  return { error, code, reason };
 }

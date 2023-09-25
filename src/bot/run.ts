@@ -27,7 +27,7 @@ function isDisputeUnavailable({ disputer, disputeToken, endOfDisputePeriod }: On
   return undefined;
 }
 
-async function checkDisputeOpportunity(context: DisputeContext, dumpParams?: (params: OnChainParams) => void): Promise<DisputeState> {
+export async function checkDisputeOpportunity(context: DisputeContext, dumpParams?: (params: OnChainParams) => void): Promise<DisputeState> {
   const { onChainProvider, merkleRootsProvider, blockNumber, logger } = context;
 
   //Fetch timestamp for context
