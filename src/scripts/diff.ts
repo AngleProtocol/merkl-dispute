@@ -23,8 +23,8 @@ import console from 'console';
 import { GITHUB_URL } from '../constants';
 import { buildMerklTree, fetchPoolName, round } from '../helpers';
 import { httpProvider } from '../providers';
-import { MerklIndexType } from '../routes';
 import { batchMulticallCall, multicallContractCall, retryWithExponentialBackoff } from '../utils';
+import { MerklIndexType } from '../providers/merkl-roots/GithubRootsProvider';
 
 export type ReportDiffParams =
   | {

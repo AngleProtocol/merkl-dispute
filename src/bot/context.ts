@@ -14,7 +14,7 @@ export interface DisputeContext {
   onChainProvider: OnChainProvider;
   merkleRootsProvider: MerkleRootsProvider;
   blockNumber?: number;
-  logger: Logger;
+  logger?: Logger;
 }
 
 const NETWORKS: { [chainId: number]: string } = [];

@@ -3,21 +3,12 @@ import moment from 'moment';
 
 import { NULL_ADDRESS } from '../constants';
 import { buildMerklTree, round } from '../helpers';
+import logTableToGist from '../helpers/createGist';
 import { OnChainParams } from '../providers/on-chain/OnChainProvider';
 import { DisputeContext } from './context';
-import checkHoldersDiffs from './holder-checks';
-import { Console } from 'console';
-import { Transform } from 'stream';
-import logTableToGist from '../helpers/createGist';
-import {
-  ERROR_FETCH_BLOCK_TIME,
-  ERROR_FETCH_EPOCH,
-  ERROR_FETCH_ONCHAIN,
-  ERROR_FETCH_TREE,
-  ERROR_TREE_NEGATIVE_DIFF,
-  ERROR_TREE_ROOT,
-} from './errors';
 import triggerDispute from './dispute';
+import { ERROR_FETCH_BLOCK_TIME, ERROR_FETCH_EPOCH, ERROR_FETCH_ONCHAIN, ERROR_FETCH_TREE, ERROR_TREE_ROOT } from './errors';
+import checkHoldersDiffs from './holder-checks';
 
 export type DisputeState = {
   error: boolean;
@@ -47,7 +38,7 @@ async function checkDisputeOpportunity(context: DisputeContext, dumpParams?: (pa
     return { error: true, code: ERROR_FETCH_BLOCK_TIME, reason: err };
   }
 
-  logger.context(context, timestamp);
+  logger?.context(context, timestamp);
 
   //Fetch on-chain data
   let onChainParams: OnChainParams;
@@ -58,7 +49,7 @@ async function checkDisputeOpportunity(context: DisputeContext, dumpParams?: (pa
   }
 
   dumpParams && dumpParams(onChainParams);
-  logger.onChainParams(onChainParams, timestamp);
+  logger?.onChainParams(onChainParams, timestamp);
 
   //Check if bot can dispute
   const isDisputeOff: string = isDisputeUnavailable(onChainParams, timestamp);
@@ -84,12 +75,12 @@ async function checkDisputeOpportunity(context: DisputeContext, dumpParams?: (pa
     return { error: true, code: ERROR_FETCH_TREE, reason: err };
   }
 
-  logger.trees(startEpoch, startTree, endEpoch, endTree);
+  logger?.trees(startEpoch, startTree, endEpoch, endTree);
 
   const endRoot = buildMerklTree(endTree.rewards).tree.getHexRoot();
   const startRoot = buildMerklTree(startTree.rewards).tree.getHexRoot();
 
-  logger.computedRoots(startRoot, endRoot);
+  logger?.computedRoots(startRoot, endRoot);
 
   if (startRoot !== startTree.merklRoot)
     return {
@@ -117,15 +108,15 @@ export default async function run(context: DisputeContext) {
   });
 
   if (state.error) {
-    context.logger.error(state.reason, state.code);
+    context.logger?.error(state.reason, state.code);
     const disputeState = await triggerDispute(params, context, state);
 
     if (disputeState.error) {
-      context.logger.error(disputeState.reason, disputeState.code);
+      context.logger?.error(disputeState.reason, disputeState.code);
     } else {
-      context.logger.success(state.reason);
+      context.logger?.success(state.reason);
     }
   } else {
-    context.logger.success(state.reason);
+    context.logger?.success(state.reason);
   }
 }
