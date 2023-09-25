@@ -7,7 +7,7 @@ import logTableToGist from '../helpers/createGist';
 import { OnChainParams } from '../providers/on-chain/OnChainProvider';
 import { DisputeContext } from './context';
 import triggerDispute from './dispute';
-import { ERROR_FETCH_BLOCK_TIME, ERROR_FETCH_EPOCH, ERROR_FETCH_ONCHAIN, ERROR_FETCH_TREE, ERROR_TREE_ROOT } from './errors';
+import { DisputeError } from './errors';
 import checkHoldersDiffs from './holder-checks';
 
 export type DisputeState = {
@@ -35,7 +35,7 @@ export async function checkDisputeOpportunity(context: DisputeContext, dumpParam
   try {
     timestamp = !!blockNumber ? await onChainProvider.fetchTimestampAt(blockNumber) : moment().unix();
   } catch (err) {
-    return { error: true, code: ERROR_FETCH_BLOCK_TIME, reason: err };
+    return { error: true, code: DisputeError.BlocktimeFetch, reason: err };
   }
 
   logger?.context(context, timestamp);
@@ -45,7 +45,7 @@ export async function checkDisputeOpportunity(context: DisputeContext, dumpParam
   try {
     onChainParams = await onChainProvider.fetchOnChainParams(blockNumber);
   } catch (err) {
-    return { error: true, code: ERROR_FETCH_ONCHAIN, reason: err };
+    return { error: true, code: DisputeError.OnChainFetch, reason: err };
   }
 
   dumpParams && dumpParams(onChainParams);
@@ -62,7 +62,7 @@ export async function checkDisputeOpportunity(context: DisputeContext, dumpParam
     startEpoch = await merkleRootsProvider.fetchEpochFor(onChainParams.startRoot);
     endEpoch = await merkleRootsProvider.fetchEpochFor(onChainParams.endRoot);
   } catch (err) {
-    return { error: true, code: ERROR_FETCH_EPOCH, reason: err };
+    return { error: true, code: DisputeError.EpochFetch, reason: err };
   }
 
   //Fetch trees for epochs
@@ -72,7 +72,7 @@ export async function checkDisputeOpportunity(context: DisputeContext, dumpParam
     startTree = await merkleRootsProvider.fetchTreeFor(startEpoch);
     endTree = await merkleRootsProvider.fetchTreeFor(endEpoch);
   } catch (err) {
-    return { error: true, code: ERROR_FETCH_TREE, reason: err };
+    return { error: true, code: DisputeError.TreeFetch, reason: err };
   }
 
   logger?.trees(startEpoch, startTree, endEpoch, endTree);
@@ -85,13 +85,13 @@ export async function checkDisputeOpportunity(context: DisputeContext, dumpParam
   if (startRoot !== startTree.merklRoot)
     return {
       error: true,
-      code: ERROR_TREE_ROOT,
+      code: DisputeError.TreeRoot,
       reason: `Start tree merkl root is not correct (computed:${abbr(startRoot)} vs alleged:${abbr(startTree.merklRoot)})`,
     };
   else if (endRoot !== endTree.merklRoot)
     return {
       error: true,
-      code: ERROR_TREE_ROOT,
+      code: DisputeError.TreeRoot,
       reason: `End tree merkl root is not correct (computed:${abbr(endRoot)} vs alleged:${abbr(endTree.merklRoot)})`,
     };
 

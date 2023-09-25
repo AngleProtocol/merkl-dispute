@@ -3,7 +3,7 @@ import { ContractTransaction, utils, Wallet } from 'ethers';
 
 import { OnChainParams } from '../providers/on-chain/OnChainProvider';
 import { DisputeContext } from './context';
-import { ERROR_KEEPER_APPROVE, ERROR_KEEPER_DISPUTE, ERROR_KEEPER_WALLET } from './errors';
+import { DisputeError } from './errors';
 import { DisputeState } from './run';
 
 const triggerDispute = async (params: OnChainParams, context: DisputeContext, state: DisputeState): Promise<DisputeState> => {
@@ -14,7 +14,7 @@ const triggerDispute = async (params: OnChainParams, context: DisputeContext, st
   try {
     keeper = new Wallet(process.env.DISPUTE_BOT_PRIVATE_KEY);
   } catch (err) {
-    return { error: true, code: ERROR_KEEPER_WALLET, reason: `Couldn't init keeper wallet` };
+    return { error: true, code: DisputeError.KeeperInit, reason: `Couldn't init keeper wallet` };
   }
 
   //Approve disputeToken to contract
@@ -26,7 +26,7 @@ const triggerDispute = async (params: OnChainParams, context: DisputeContext, st
   try {
     approveTxn = await onChainProvider.sendApproveTxn(keeper, params.disputeToken, params.disputeAmount, txnOverrides);
   } catch (err) {
-    return { error: true, code: ERROR_KEEPER_APPROVE, reason: `Transaction ${approveTxn} failed from ${keeper.address}` };
+    return { error: true, code: DisputeError.KeeperApprove, reason: `Transaction ${approveTxn} failed from ${keeper.address}` };
   }
 
   //Dispute tree
@@ -36,7 +36,7 @@ const triggerDispute = async (params: OnChainParams, context: DisputeContext, st
   try {
     disputeTxn = await onChainProvider.sendDisputeTxn(keeper, state.reason, txnOverrides);
   } catch (err) {
-    return { error: true, code: ERROR_KEEPER_DISPUTE, reason: `Transaction ${disputeTxn} failed from ${keeper.address}` };
+    return { error: true, code: DisputeError.KeerperDispute, reason: `Transaction ${disputeTxn} failed from ${keeper.address}` };
   }
 
   return { error: false, reason: `Transaction ${disputeTxn.hash} succeeded` };

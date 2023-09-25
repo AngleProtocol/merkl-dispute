@@ -1,10 +1,10 @@
 import { AggregatedRewardsType, Int256 } from '@angleprotocol/sdk';
 import { BigNumber } from 'ethers';
 
-import { DisputeContext } from './context';
-import { DisputeState } from './run';
 import { round } from '../helpers';
-import { ERROR_TREE_NEGATIVE_DIFF } from './errors';
+import { DisputeContext } from './context';
+import { DisputeError } from './errors';
+import { DisputeState } from './run';
 
 function gatherHolders(startTree: AggregatedRewardsType, endTree: AggregatedRewardsType): any[] {
   const holders = [];
@@ -96,7 +96,7 @@ export default async function checkHoldersDiffs(
         if (diff < 0)
           return {
             error: true,
-            code: ERROR_TREE_NEGATIVE_DIFF,
+            code: DisputeError.NegativeDiff,
             reason: `Holder ${holder} has negative diff for ${symbol}`,
           };
         const diffBoost =
@@ -162,7 +162,7 @@ export default async function checkHoldersDiffs(
         const totalCumulated = round(unclaimed[d.holder][d.symbol].toNumber(), 2);
         if (totalCumulated < alreadyClaimedValue) {
           error = true;
-          code = ERROR_TREE_NEGATIVE_DIFF,
+          code = DisputeError.AlreadyClaimed;
           reason = `Holder ${d.holder} received ${totalCumulated} although he already claimed ${alreadyClaimedValue}`;
         }
         return {
