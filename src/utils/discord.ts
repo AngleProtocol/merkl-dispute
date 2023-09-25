@@ -41,7 +41,7 @@ export async function sendDiscordNotification(params: {
       }
       const exampleEmbed = new EmbedBuilder()
         .setColor(colorBySeverity[params.severity])
-        .setTitle(params.title)
+        .setTitle(`${env !== 'prod' && '[DEV]'} ${params.title}`)
         .setDescription(params.description)
         .addFields(params.fields)
         .setTimestamp();
