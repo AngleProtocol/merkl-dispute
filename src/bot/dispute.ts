@@ -1,4 +1,4 @@
-import { ChainId, Distributor__factory } from '@angleprotocol/sdk';
+import { ChainId } from '@angleprotocol/sdk';
 import { ContractTransaction, utils, Wallet } from 'ethers';
 
 import { OnChainParams } from '../providers/on-chain/OnChainProvider';
@@ -13,9 +13,8 @@ const triggerDispute = async (params: OnChainParams, context: DisputeContext, st
   let keeper: Wallet;
   try {
     keeper = new Wallet(process.env.DISPUTE_BOT_PRIVATE_KEY);
-    console.log('merkl dispute bot', `🤖 bot ${keeper.address} is disputing`);
   } catch (err) {
-    return { error: true, code: ERROR_KEEPER_WALLET, reason: "Couldn't init keeper wallet" };
+    return { error: true, code: ERROR_KEEPER_WALLET, reason: `Couldn't init keeper wallet` };
   }
 
   //Approve disputeToken to contract
@@ -26,9 +25,8 @@ const triggerDispute = async (params: OnChainParams, context: DisputeContext, st
   /** _3-b might approve the contract */
   try {
     approveTxn = await onChainProvider.sendApproveTxn(keeper, params.disputeToken, params.disputeAmount, txnOverrides);
-    console.log('merkl dispute bot', `approved dispute token at ${approveTxn.hash}`);
   } catch (err) {
-    return { error: true, code: ERROR_KEEPER_APPROVE, reason: "Couldn't init keeper wallet" };
+    return { error: true, code: ERROR_KEEPER_APPROVE, reason: `Transaction ${approveTxn} failed from ${keeper.address}` };
   }
 
   //Dispute tree
@@ -37,13 +35,11 @@ const triggerDispute = async (params: OnChainParams, context: DisputeContext, st
   /** _3-c dispute the tree */
   try {
     disputeTxn = await onChainProvider.sendDisputeTxn(keeper, state.reason, txnOverrides);
-
-    console.log('merkl dispute bot', `✅ dispute triggered at ${disputeTxn.hash}`);
   } catch (err) {
-    return { error: true, code: ERROR_KEEPER_DISPUTE, reason: 'disputeTree transaction failed' };
+    return { error: true, code: ERROR_KEEPER_DISPUTE, reason: `Transaction ${disputeTxn} failed from ${keeper.address}` };
   }
 
-  return { error: false, reason: `tx hash: ${disputeTxn.hash}` };
+  return { error: false, reason: `Transaction ${disputeTxn.hash} succeeded` };
 };
 
 export default triggerDispute;
