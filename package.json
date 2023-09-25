@@ -14,7 +14,7 @@
     "deploy": "chmod +x ./scripts/deploy.sh && ./scripts/deploy.sh",
     "gcp-build": "yarn build",
     "merge": "git checkout staging && git pull origin staging && yarn && git checkout main && git pull origin main && git merge --ff-only staging && git push --force-with-lease origin main",
-    "start:local": "CHAINID=137 nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "start:local": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts serve",
     "publish-image": "chmod +x ./scripts/publish.sh && ./scripts/publish.sh"
   },
   "dependencies": {
