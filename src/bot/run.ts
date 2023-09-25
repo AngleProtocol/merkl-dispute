@@ -9,9 +9,19 @@ import checkHoldersDiffs from './holder-checks';
 import { Console } from 'console';
 import { Transform } from 'stream';
 import logTableToGist from '../helpers/createGist';
+import {
+  ERROR_FETCH_BLOCK_TIME,
+  ERROR_FETCH_EPOCH,
+  ERROR_FETCH_ONCHAIN,
+  ERROR_FETCH_TREE,
+  ERROR_TREE_NEGATIVE_DIFF,
+  ERROR_TREE_ROOT,
+} from './errors';
+import triggerDispute from './dispute';
 
 export type DisputeState = {
   error: boolean;
+  code?: number;
   reason: string;
 };
 
@@ -26,26 +36,53 @@ function isDisputeUnavailable({ disputer, disputeToken, endOfDisputePeriod }: On
   return undefined;
 }
 
-async function checkDisputeOpportunity(context: DisputeContext): Promise<DisputeState> {
+async function checkDisputeOpportunity(context: DisputeContext, dumpParams?: (params: OnChainParams) => void): Promise<DisputeState> {
   const { onChainProvider, merkleRootsProvider, blockNumber, logger } = context;
 
-  //TODO: check call
-  const timestamp = !!blockNumber ? await onChainProvider.fetchTimestampAt(blockNumber) : moment().unix();
+  //Fetch timestamp for context
+  let timestamp: number;
+  try {
+    timestamp = !!blockNumber ? await onChainProvider.fetchTimestampAt(blockNumber) : moment().unix();
+  } catch (err) {
+    return { error: true, code: ERROR_FETCH_BLOCK_TIME, reason: err };
+  }
 
   logger.context(context, timestamp);
 
-  const onChainParams: OnChainParams = await onChainProvider.fetchOnChainParams(blockNumber);
+  //Fetch on-chain data
+  let onChainParams: OnChainParams;
+  try {
+    onChainParams = await onChainProvider.fetchOnChainParams(blockNumber);
+  } catch (err) {
+    return { error: true, code: ERROR_FETCH_ONCHAIN, reason: err };
+  }
 
+  dumpParams && dumpParams(onChainParams);
   logger.onChainParams(onChainParams, timestamp);
 
+  //Check if bot can dispute
   const isDisputeOff: string = isDisputeUnavailable(onChainParams, timestamp);
   if (isDisputeOff !== undefined) return { error: false, reason: isDisputeOff };
 
-  const startEpoch = await merkleRootsProvider.fetchEpochFor(onChainParams.startRoot);
-  const endEpoch = await merkleRootsProvider.fetchEpochFor(onChainParams.endRoot);
+  //Fetch epochs for roots
+  let startEpoch: number;
+  let endEpoch: number;
+  try {
+    startEpoch = await merkleRootsProvider.fetchEpochFor(onChainParams.startRoot);
+    endEpoch = await merkleRootsProvider.fetchEpochFor(onChainParams.endRoot);
+  } catch (err) {
+    return { error: true, code: ERROR_FETCH_EPOCH, reason: err };
+  }
 
-  const startTree = await merkleRootsProvider.fetchTreeFor(startEpoch);
-  const endTree = await merkleRootsProvider.fetchTreeFor(endEpoch);
+  //Fetch trees for epochs
+  let startTree: AggregatedRewardsType;
+  let endTree: AggregatedRewardsType;
+  try {
+    startTree = await merkleRootsProvider.fetchTreeFor(startEpoch);
+    endTree = await merkleRootsProvider.fetchTreeFor(endEpoch);
+  } catch (err) {
+    return { error: true, code: ERROR_FETCH_TREE, reason: err };
+  }
 
   logger.trees(startEpoch, startTree, endEpoch, endTree);
 
@@ -57,10 +94,15 @@ async function checkDisputeOpportunity(context: DisputeContext): Promise<Dispute
   if (startRoot !== startTree.merklRoot)
     return {
       error: true,
+      code: ERROR_TREE_ROOT,
       reason: `Start tree merkl root is not correct (computed:${abbr(startRoot)} vs alleged:${abbr(startTree.merklRoot)})`,
     };
-  if (endRoot !== endTree.merklRoot)
-    return { error: true, reason: `End tree merkl root is not correct (computed:${abbr(endRoot)} vs alleged:${abbr(endTree.merklRoot)})` };
+  else if (endRoot !== endTree.merklRoot)
+    return {
+      error: true,
+      code: ERROR_TREE_ROOT,
+      reason: `End tree merkl root is not correct (computed:${abbr(endRoot)} vs alleged:${abbr(endTree.merklRoot)})`,
+    };
 
   const isTreeInvalid = await checkHoldersDiffs(context, startTree, endTree, logTableToGist);
   if (isTreeInvalid.error) return isTreeInvalid;
@@ -69,11 +111,15 @@ async function checkDisputeOpportunity(context: DisputeContext): Promise<Dispute
 }
 
 export default async function run(context: DisputeContext) {
-  const { error, reason }: DisputeState = await checkDisputeOpportunity(context);
+  let params: OnChainParams;
+  const state: DisputeState = await checkDisputeOpportunity(context, (p) => {
+    params = p;
+  });
 
-  if (error) {
-    context.logger.error(reason);
+  if (state.error) {
+    context.logger.error(state.reason, state.code);
+    const disputeState = await triggerDispute(params, context, state);
   } else {
-    context.logger.success(reason);
+    context.logger.success(state.reason);
   }
 }

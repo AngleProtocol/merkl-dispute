@@ -4,6 +4,7 @@ import { BigNumber } from 'ethers';
 import { DisputeContext } from './context';
 import { DisputeState } from './run';
 import { round } from '../helpers';
+import { ERROR_TREE_NEGATIVE_DIFF } from './errors';
 
 function gatherHolders(startTree: AggregatedRewardsType, endTree: AggregatedRewardsType): any[] {
   const holders = [];
@@ -42,16 +43,16 @@ export type HolderDetail = {
 export type HolderClaims = { [address: string]: { [symbol: string]: string } };
 
 export type DistributionChange = {
-  diff: number,
-  symbol: string,
-  poolName: string,
-  pool: any,
-  recipients: number,
-  ratePerEpoch: number,
-  epoch: number,
+  diff: number;
+  symbol: string;
+  poolName: string;
+  pool: any;
+  recipients: number;
+  ratePerEpoch: number;
+  epoch: number;
 };
 
-export type DistributionChanges = {[address: string]: DistributionChange};
+export type DistributionChanges = { [address: string]: DistributionChange };
 
 export default async function checkHoldersDiffs(
   context: DisputeContext,
@@ -95,6 +96,7 @@ export default async function checkHoldersDiffs(
         if (diff < 0)
           return {
             error: true,
+            code: ERROR_TREE_NEGATIVE_DIFF,
             reason: `Holder ${holder} has negative diff for ${symbol}`,
           };
         const diffBoost =

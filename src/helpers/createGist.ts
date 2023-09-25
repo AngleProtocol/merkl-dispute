@@ -48,5 +48,9 @@ export default async function logTableToGist(details: HolderDetail[], changePerD
       .sort((a, b) => (a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : 0))
   );
 
-  await createGist('A gist', (ts.read() || '').toString());
+  try {
+    await createGist('A gist', (ts.read() || '').toString());
+  } catch (err) {
+    console.log("Coulnd't upload gist");
+  }
 }

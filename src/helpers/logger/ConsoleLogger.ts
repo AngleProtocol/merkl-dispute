@@ -57,7 +57,7 @@ export default class ConsoleLogger extends Logger {
     console.log('endRoot:', end);
     console.groupEnd();
   };
-  override error = (reason: string) => {
+  override error = (reason: string, code?: number) => {
     const log = (...a) => console.log(chalk.red(...a));
 
     log('[DISPUTE]:', reason);

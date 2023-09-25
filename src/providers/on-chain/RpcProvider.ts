@@ -7,15 +7,15 @@ import {
   Erc20__factory,
   Multicall__factory,
 } from '@angleprotocol/sdk';
-import { providers } from 'ethers';
+import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/constants/types/DistributionCreator';
+import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
+import { BigNumber, Overrides, Signer, Wallet, providers } from 'ethers';
 
+import { HolderDetail } from '../../bot/holder-checks';
+import { PoolInterface } from '../../types';
 import { batchMulticallCall, multicallContractCall } from '../../utils';
 import { ExponentialFetchParams } from '../ExponentialBackoffProvider';
 import OnChainProvider from './OnChainProvider';
-import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/constants/types/DistributionCreator';
-import { PoolInterface } from '../../types';
-import { HolderDetail } from '../../bot/holder-checks';
-import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
 
 // type fragment =
 //   | 'disputeToken'
@@ -50,6 +50,24 @@ export default class RpcProvider extends OnChainProvider {
     this.distributor = distributor;
     this.distributorCreator = distributorCreator;
   }
+
+  override approve = async (keeper: Wallet, disputeToken: string, disputeAmount: BigNumber, overrides: Overrides) => {
+    const txn = await Erc20__factory.connect(disputeToken, keeper.connect(this.provider)).approve(
+      this.distributor,
+      disputeAmount,
+      overrides
+    );
+    await txn.wait();
+    return txn;
+  };
+
+  override dispute = async (keeper: Wallet, reason: string, overrides: Overrides) => {
+    const distributorContract = Distributor__factory.connect(this.distributor, keeper.connect(this.provider));
+    const txn = await distributorContract.disputeTree(reason, overrides);
+
+    await txn.wait();
+    return txn;
+  };
 
   override timestampAt = async (blockNumber: number) => {
     return (await this.provider.getBlock(blockNumber)).timestamp;
