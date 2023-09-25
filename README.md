@@ -41,15 +41,34 @@ yarn install
 yarn build
 ```
 
+### Every n seconds
+
 Run the bot periodically (recommended interval is 1 hour):
 
 ```bash
 yarn bot watch --chain <chainId> --time <timeIntervalInSeconds>
 ```
 
+### As a one-time check
+
 You can also run the bot once to try to dispute the latest block or check the bot against a previous block:
 
 ```bash
 yarn bot run --chain <chainId>
 yarn bot run --chain <chainId> --block <blockNumber>
+```
+
+### As a server
+
+Run the bot as an Express server to call a dispute check from an HTTP request:
+
+```bash
+yarn bot serve
+```
+`chain` and `blockNumber` parameters are optional, if not provided, the chain will be set bfrom the environement variable `CHAINID`, the blockNumber as the latest one.
+
+```http
+GET http://localhost:5002/ 
+GET http://localhost:5002/<chainId>/
+GET http://localhost:5002/<chainId>/<blockNumber>
 ```

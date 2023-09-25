@@ -2,10 +2,13 @@ import { Command } from 'commander';
 
 import { defaultContext } from './bot/context';
 import run from './bot/run';
+import serve from './serve';
 
 const bot = new Command();
 
 bot.name('Merkl Dispute Bot').description('Bot safeguarding merkle root update for Merkl by Angle Labs').version('0.1');
+
+bot.command('serve').description('Runs the bot as an express server, exposing /<chainId>/<blockNumber> route').action(serve);
 
 bot
   .command('run')
