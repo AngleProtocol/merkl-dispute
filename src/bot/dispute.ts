@@ -3,10 +3,10 @@ import { ContractTransaction, utils, Wallet } from 'ethers';
 
 import { OnChainParams } from '../providers/on-chain/OnChainProvider';
 import { DisputeContext } from './context';
-import { ERROR_KEEPER_WALLET } from './errors';
+import { ERROR_KEEPER_APPROVE, ERROR_KEEPER_DISPUTE, ERROR_KEEPER_WALLET } from './errors';
 import { DisputeState } from './run';
 
-const triggerDispute = async (params: OnChainParams, context: DisputeContext, state: DisputeState, title?: string) => {
+const triggerDispute = async (params: OnChainParams, context: DisputeContext, state: DisputeState): Promise<DisputeState> => {
   const { onChainProvider, chainId } = context;
 
   //Init keeper wallet
@@ -28,7 +28,7 @@ const triggerDispute = async (params: OnChainParams, context: DisputeContext, st
     approveTxn = await onChainProvider.sendApproveTxn(keeper, params.disputeToken, params.disputeAmount, txnOverrides);
     console.log('merkl dispute bot', `approved dispute token at ${approveTxn.hash}`);
   } catch (err) {
-    console.log('merkl dispute bot', `❌ couldn't approve spender`, err);
+    return { error: true, code: ERROR_KEEPER_APPROVE, reason: "Couldn't init keeper wallet" };
   }
 
   //Dispute tree
@@ -40,25 +40,10 @@ const triggerDispute = async (params: OnChainParams, context: DisputeContext, st
 
     console.log('merkl dispute bot', `✅ dispute triggered at ${disputeTxn.hash}`);
   } catch (err) {
-    console.log('merkl dispute bot', `❌ couldn't trigger dispute`, err);
-    // await sendDiscordNotification({
-    //   title: `❌ TX ERROR: "disputeTree" transaction failed \n` + title,
-    //   description: `Error can be found in cloud run logs`,
-    //   isAlert: true,
-    //   severity: 'error',
-    //   fields: [],
-    //   key: 'merkl dispute bot',
-    // });
+    return { error: true, code: ERROR_KEEPER_DISPUTE, reason: 'disputeTree transaction failed' };
   }
 
-  //   await sendDiscordNotification({
-  //     title: `🎉 SUCCESSFULLY disputed tree \n` + title,
-  //     description: `tx hash: ${txn.hash}`,
-  //     isAlert: true,
-  //     severity: 'warning',
-  //     fields: [],
-  //     key: 'merkl dispute bot',
-  //   });
+  return { error: false, reason: `tx hash: ${disputeTxn.hash}` };
 };
 
 export default triggerDispute;

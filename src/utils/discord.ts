@@ -7,7 +7,7 @@ const colorBySeverity = {
   warning: 0xffa500,
   error: 0xff0000,
 };
-type severity = 'info' | 'warning' | 'error';
+export type severity = 'info' | 'warning' | 'error';
 
 const getChannel = (discordClient: Client<boolean>, channelName: string) => {
   return (discordClient.channels.cache as unknown as TextChannel[]).find((channel) => channel.name === channelName);

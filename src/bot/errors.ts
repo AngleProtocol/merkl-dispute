@@ -9,3 +9,5 @@ export const ERROR_TREE_ALREADY_CLAIM = 7;
 
 //dispute errors
 export const ERROR_KEEPER_WALLET = 8;
+export const ERROR_KEEPER_APPROVE = 9;
+export const ERROR_KEEPER_DISPUTE = 10;

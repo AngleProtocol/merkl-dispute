@@ -119,6 +119,12 @@ export default async function run(context: DisputeContext) {
   if (state.error) {
     context.logger.error(state.reason, state.code);
     const disputeState = await triggerDispute(params, context, state);
+
+    if (disputeState.error) {
+      context.logger.error(disputeState.reason, disputeState.code);
+    } else {
+      context.logger.success(state.reason);
+    }
   } else {
     context.logger.success(state.reason);
   }
