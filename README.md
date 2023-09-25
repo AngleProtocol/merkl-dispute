@@ -16,7 +16,7 @@ This mechanism can prevent a malicious or accidental update of the new reward da
 
 ## Pre-requisites
 
-You must provide some neccesary envionrment variables:
+You must provide some neccesary environment variables:
 ```env
 PORT: 5002
 ENV: 'prod'
@@ -31,6 +31,13 @@ PROVIDER_1= ""
 PROVIDER_42161= ""
 PROVIDER_1101= ""
 ```
+
+### As Angle Labs devs
+
+You must have access to the following email addresses :
+
+merkl.dispute.1@gmail.com
+merkl.dispute.2@gmail.com
 
 ## Run the bot
 
