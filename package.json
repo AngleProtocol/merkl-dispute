@@ -5,7 +5,8 @@
   "author": "picodes <picodes@angle.money>",
   "license": "MIT",
   "scripts": {
-    "bot": "node ./build/index.js",
+    "bot": "yarn ts-node ./src/index.ts",
+    "bot:built": "node ./build/index.js ./src/index.ts",
     "start": "node ./build/index.js serve",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts serve",
     "build": "tsc -p .",
