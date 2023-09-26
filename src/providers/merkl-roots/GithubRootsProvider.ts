@@ -43,4 +43,15 @@ export default class GithubRootsProvider extends MerkleRootsProvider {
 
     return this.merklIndex[root];
   };
+
+  override epochFromTimestamp = async (timestamp: number): Promise<number> => {
+    if (!this.merklIndex) await this.cacheMerklIndex();
+
+    let epoch = Math.floor(timestamp / 3600);
+
+    while (!Object.values(this.merklIndex).includes(epoch)) {
+      epoch -= 1;
+    }
+    return epoch;
+  };
 }

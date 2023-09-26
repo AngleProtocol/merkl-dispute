@@ -2,7 +2,9 @@ import { Command } from 'commander';
 
 import { defaultContext } from './bot/context';
 import run from './bot/run';
+import diff from './diff';
 import serve from './serve';
+import GithubRootsProvider from './providers/merkl-roots/GithubRootsProvider';
 
 const bot = new Command();
 
@@ -27,7 +29,7 @@ bot
 
 bot
   .command('watch')
-  .description('Runs the bot once')
+  .description('Runs the bot for every at a time interval')
   .option('-c, --chain <chainId>', 'ChainId to run the bot on')
   .option('-t, --time <timeInterval>', 'Time (in seconds) after which to retry running the bot')
   .action(async (str, options) => {
@@ -49,4 +51,21 @@ bot
 
     setInterval(runBot, parseInt(time) * 1000);
   });
+
+bot
+  .command('diff')
+  .description('Compares two timestamps and generate difference')
+  .option('-c, --chain <chainId>', 'ChainId to run the bot on')
+  .option('-f, --from <timestamp>', 'Timestamp to compare with <to>')
+  .option('-t, --to <timestamp>', 'Timestamp to compare with <from>')
+  .action(async (str, options) => {
+    const {
+      _optionValues: { chain, from, to },
+    } = options;
+
+    const context = defaultContext(parseInt(chain));
+
+    await diff(context, from, to);
+  });
+
 bot.parse();

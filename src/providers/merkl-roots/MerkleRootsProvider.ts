@@ -9,6 +9,7 @@ export default abstract class MerkleRootsProvider extends ExponentialBackoffProv
 
   abstract epoch(root: string): Promise<number>;
   abstract tree(epoch: number): Promise<AggregatedRewardsType>;
+  abstract epochFromTimestamp(timestamp: number): Promise<number>;
 
   async fetchEpochFor(root: string): Promise<number> {
     return this.retryWithExponentialBackoff(this.epoch, this.fetchParams, root);

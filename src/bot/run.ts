@@ -28,7 +28,10 @@ function isDisputeUnavailable({ disputer, disputeToken, endOfDisputePeriod }: On
   return undefined;
 }
 
-export async function checkDisputeOpportunity(context: DisputeContext, dumpParams?: (params: OnChainParams) => void): Promise<DisputeState> {
+export async function checkDisputeOpportunity(
+  context: DisputeContext,
+  dumpParams?: (params: OnChainParams) => void
+): Promise<DisputeState> {
   const { onChainProvider, merkleRootsProvider, blockNumber, logger } = context;
 
   //Fetch timestamp for context
@@ -38,9 +41,9 @@ export async function checkDisputeOpportunity(context: DisputeContext, dumpParam
   } catch (err) {
     return { error: true, code: DisputeError.BlocktimeFetch, reason: err };
   }
-  
+
   logger?.context(context, timestamp);
-  
+
   //Fetch on-chain data
   let onChainParams: OnChainParams;
   try {

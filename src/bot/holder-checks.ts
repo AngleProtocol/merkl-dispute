@@ -184,26 +184,5 @@ export default async function checkHoldersDiffs(
 
   processDetails && processDetails(details, changePerDistrib);
 
-  // overridenConsole.table(details, [
-  //   'holder',
-  //   'diff',
-  //   'symbol',
-  //   'poolName',
-  //   'distribution',
-  //   'percent',
-  //   'diffAverageBoost',
-  //   'totalCumulated',
-  //   'alreadyClaimed',
-  //   'issueSpotted',
-  // ]);
-
-  // overridenConsole.table(
-  //   Object.keys(changePerDistrib)
-  //     .map((k) => {
-  //       return { ...changePerDistrib[k], epoch: round(changePerDistrib[k].epoch, 4) };
-  //     })
-  //     .sort((a, b) => (a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : 0))
-  // );
-
   return { error, code, reason };
 }
