@@ -4,7 +4,7 @@ import { Transform } from 'stream';
 import { DisputeContext } from './bot/context';
 import checkHoldersDiffs, { DistributionChanges, HolderDetail } from './bot/holder-checks';
 import { buildMerklTree, round } from './helpers';
-import { createGist } from './helpers/createGist';
+import logTableToGist, { createGist } from './helpers/createGist';
 import ConsoleLogger from './helpers/logger/ConsoleLogger';
 import blockFromTimestamp from './providers/blockNumberFromTimestamp';
 
@@ -31,7 +31,7 @@ async function logDiff(details: HolderDetail[], changePerDistrib: DistributionCh
   );
 }
 
-export default async function (context: DisputeContext, fromTimeStamp: number, toTimeStamp: number) {
+export default async function (context: DisputeContext, fromTimeStamp: number, toTimeStamp: number, uploadToGist: boolean) {
   const { merkleRootsProvider, onChainProvider } = context;
   const logger = new ConsoleLogger();
 
@@ -57,5 +57,5 @@ export default async function (context: DisputeContext, fromTimeStamp: number, t
 
   logger.computedRoots(startRoot, endRoot);
 
-  await checkHoldersDiffs(context, startTree, endTree, logDiff);
+  await checkHoldersDiffs(context, startTree, endTree, uploadToGist ? logTableToGist : logDiff);
 }

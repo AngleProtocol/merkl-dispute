@@ -5,6 +5,7 @@ import run from './bot/run';
 import diff from './diff';
 import serve from './serve';
 import GithubRootsProvider from './providers/merkl-roots/GithubRootsProvider';
+import { logger } from 'ethers';
 
 const bot = new Command();
 
@@ -58,14 +59,15 @@ bot
   .option('-c, --chain <chainId>', 'ChainId to run the bot on')
   .option('-f, --from <timestamp>', 'Timestamp to compare with <to>')
   .option('-t, --to <timestamp>', 'Timestamp to compare with <from>')
+  .option('-g, --gist', 'Add if the output should be uploaded to a gist')
   .action(async (str, options) => {
     const {
-      _optionValues: { chain, from, to },
+      _optionValues: { chain, from, to, gist },
     } = options;
 
     const context = defaultContext(parseInt(chain));
 
-    await diff(context, from, to);
+    await diff(context, from, to, gist);
   });
 
 bot.parse();
