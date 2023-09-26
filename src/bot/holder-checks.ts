@@ -150,7 +150,7 @@ export default async function checkHoldersDiffs(
   let error = false;
   let reason = '';
   let code = -1;
-  let alreadyClaimedCount = [];
+  let alreadyClaimedCount = 0;
 
   // Sort details by distribution and format numbers
   details = await Promise.all(
@@ -165,7 +165,7 @@ export default async function checkHoldersDiffs(
           error = true;
           code = DisputeError.AlreadyClaimed;
           reason = `Holder ${d.holder} received ${totalCumulated} although he already claimed ${alreadyClaimedValue} for ${d.symbol}`;
-          alreadyClaimedCount.push(reason);
+          alreadyClaimedCount++;
         }
         return {
           ...d,
@@ -180,8 +180,7 @@ export default async function checkHoldersDiffs(
       })
   );
 
-  console.log(alreadyClaimedCount);
-  
+  if (error && code === DisputeError.AlreadyClaimed) reason += ` and ${alreadyClaimedCount} more...`;
 
   processDetails && processDetails(details, changePerDistrib);
 

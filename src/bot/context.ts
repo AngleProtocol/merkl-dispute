@@ -28,13 +28,16 @@ export const defaultContext = (chainId: number, blockNumber?: number): DisputeCo
   const merklRegistry = registry(chainId).Merkl;
   const loggers = [new ConsoleLogger()];
   const discordAvailable = !!process.env['DISCORD_TOKEN'];
+  const onChainProvider = new RpcProvider(NETWORKS[chainId], merklRegistry.Distributor, merklRegistry.DistributionCreator);
+
+  blockNumber && onChainProvider.setBlock(blockNumber);
 
   if (discordAvailable) loggers.push(new DiscordWebhookLogger());
 
   return {
     chainId,
     blockNumber,
-    onChainProvider: new RpcProvider(NETWORKS[chainId], merklRegistry.Distributor, merklRegistry.DistributionCreator),
+    onChainProvider,
     merkleRootsProvider: new GithubRootsProvider('https://raw.githubusercontent.com/AngleProtocol/merkl-rewards/main/', chainId),
     logger: new Loggers(loggers),
   };

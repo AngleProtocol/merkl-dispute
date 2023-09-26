@@ -124,7 +124,7 @@ export default class RpcProvider extends OnChainProvider {
         allowFailure: false,
       },
     ];
-    res = await multicall.callStatic.aggregate3(calls);
+    res = await multicall.callStatic.aggregate3(calls, { blockTag: this.blockNumber });
     const token0Symbol = erc20Interface.decodeFunctionResult('symbol', res[0].returnData)[0];
     const token1Symbol = erc20Interface.decodeFunctionResult('symbol', res[1].returnData)[0];
 
