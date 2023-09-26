@@ -1,4 +1,6 @@
+import { DisputeContext } from '../../bot/context';
 import { DisputeError } from '../../bot/errors';
+import { MerklReport } from '../../bot/runner';
 import { sendDiscordNotification } from '../../utils/discord';
 import Logger from './Logger';
 
@@ -7,8 +9,36 @@ const chains = {
   1: 'Ethereum',
   10: 'Optimism',
   42161: 'Arbitrum',
-  pho: 'Polygon zvEVM',
+  1101: 'Polygon zvEVM',
 };
+
+function fieldsFromReport(report?: MerklReport) {
+  return [
+    {
+      name: 'gist',
+      value: `${report?.diffTableUrl ?? 'unavailable'}`,
+    },
+    {
+      name: 'roots',
+      value: `${report?.startRoot ?? 'unavailable'}\n${report?.endRoot ?? 'unavailable'}`,
+    },
+    {
+      name: 'block',
+      inline: true,
+      value: report?.blockNumber?.toString() ?? 'unavailable',
+    },
+    {
+      name: 'startEpoch',
+      value: report?.startEpoch?.toString() ?? 'unavailable',
+      inline: true,
+    },
+    {
+      name: 'endEpoch',
+      value: report?.endEpoch?.toString() ?? 'unavailable',
+      inline: true,
+    },
+  ];
+}
 
 export default class DiscordWebhookLogger extends Logger {
   override context = () => {
@@ -24,7 +54,7 @@ export default class DiscordWebhookLogger extends Logger {
     return;
   };
 
-  override error = async (reason: string, code?: number) => {
+  override error = async (context: DisputeContext, reason: string, code?: number, report?: MerklReport) => {
     const errorTitles = {};
     errorTitles[DisputeError.KeeperApprove] = '❌ TX ERROR on approve';
     errorTitles[DisputeError.KeerperDispute] = '❌ TX ERROR on disputeTree';
@@ -37,24 +67,34 @@ export default class DiscordWebhookLogger extends Logger {
     errorTitles[DisputeError.NegativeDiff] = '🚸 Negative diff detected';
     errorTitles[DisputeError.AlreadyClaimed] = '🚸 Already claimed detected';
 
-    await sendDiscordNotification({
-      title: errorTitles[code],
-      description: reason,
-      isAlert: true,
-      severity: 'error',
-      fields: [],
-      key: 'merkl dispute bot',
-    });
+    try {
+      await sendDiscordNotification({
+        title: errorTitles[code],
+        description: reason,
+        isAlert: true,
+        severity: 'error',
+        fields: fieldsFromReport(report),
+        key: 'merkl dispute bot',
+        chain: context.chainId,
+      });
+    } catch (err) {
+      console.log('Failed to send error discord notification:', err);
+    }
   };
 
-  override success = async (reason: string) => {
-    await sendDiscordNotification({
-      title: `🎉 SUCCESSFULLY disputed tree \n`,
-      description: reason,
-      isAlert: true,
-      severity: 'warning',
-      fields: [],
-      key: 'merkl dispute bot',
-    });
+  override success = async (context: DisputeContext, reason: string, report?: MerklReport) => {
+    try {
+      await sendDiscordNotification({
+        title: `🎉 Nothing to report \n`,
+        description: 'I checked the merkle root update and found no anomalies',
+        isAlert: false,
+        severity: 'success',
+        fields: fieldsFromReport(report),
+        key: 'merkl dispute bot',
+        chain: context.chainId,
+      });
+    } catch (err) {
+      console.log('Failed to send success discord notification:', err);
+    }
   };
 }

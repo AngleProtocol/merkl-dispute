@@ -5,6 +5,7 @@ import { round } from '../helpers';
 import { DisputeContext } from './context';
 import { DisputeError } from './errors';
 import { DisputeState } from './run';
+import OnChainProvider from '../providers/on-chain/OnChainProvider';
 
 function gatherHolders(startTree: AggregatedRewardsType, endTree: AggregatedRewardsType): any[] {
   const holders = [];
@@ -53,23 +54,28 @@ export type DistributionChange = {
 };
 
 export type DistributionChanges = { [address: string]: DistributionChange };
+export type UnclaimedRewards = { [address: string]: { [symbol: string]: Int256 } };
+export type HoldersReport = {
+  details: HolderDetail[];
+  changePerDistrib: DistributionChanges;
+  unclaimed: UnclaimedRewards;
+  negativeDiffs: string[];
+  overclaimed?: string[];
+};
 
-export default async function checkHoldersDiffs(
-  context: DisputeContext,
+export async function validateHolders(
+  onChainProvider: OnChainProvider,
   startTree: AggregatedRewardsType,
-  endTree: AggregatedRewardsType,
-  processDetails?: (details: HolderDetail[], changePerDistrib: DistributionChanges) => void
-): Promise<DisputeState> {
-  const { onChainProvider } = context;
-
+  endTree: AggregatedRewardsType
+): Promise<HoldersReport> {
   const holders = gatherHolders(startTree, endTree);
-  let details: HolderDetail[] = [];
-
   const activeDistributions = await onChainProvider.fetchActiveDistributions();
-
-  const changePerDistrib: DistributionChanges = {};
   const poolName = {};
-  const unclaimed: { [address: string]: { [symbol: string]: Int256 } } = {};
+
+  const details: HolderDetail[] = [];
+  const changePerDistrib: DistributionChanges = {};
+  const unclaimed: UnclaimedRewards = {};
+  const negativeDiffs: string[] = [];
 
   for (const holder of holders) {
     unclaimed[holder] = {};
@@ -93,12 +99,7 @@ export default async function checkHoldersDiffs(
           ),
           decimals
         ).toNumber();
-        if (diff < 0)
-          return {
-            error: true,
-            code: DisputeError.NegativeDiff,
-            reason: `Holder ${holder} has negative diff for ${symbol}`,
-          };
+        if (diff < 0) negativeDiffs.push(`${holder}: ${diff.toFixed(2)} ${symbol}`);
         const diffBoost =
           Number(endTree?.rewards?.[k]?.holders?.[holder]?.averageBoost) ??
           0 - Number(startTree?.rewards?.[k]?.holders?.[holder]?.averageBoost) ??
@@ -145,15 +146,17 @@ export default async function checkHoldersDiffs(
     l.percent = (l?.diff / changePerDistrib[l?.distribution]?.diff) * 100;
   }
 
+  return { details, changePerDistrib, unclaimed, negativeDiffs };
+}
+
+export async function validateClaims(onChainProvider: OnChainProvider, holdersReport: HoldersReport): Promise<HoldersReport> {
+  const { details, unclaimed } = holdersReport;
   const alreadyClaimed: HolderClaims = await onChainProvider.fetchClaimed(details);
 
-  let error = false;
-  let reason = '';
-  let code = -1;
-  let alreadyClaimedCount = 0;
+  const overclaimed: string[] = [];
 
   // Sort details by distribution and format numbers
-  details = await Promise.all(
+  const expandedDetails = await Promise.all(
     details
       .sort((a, b) =>
         a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : a.percent > b.percent ? -1 : b.percent > a.percent ? 1 : 0
@@ -162,10 +165,7 @@ export default async function checkHoldersDiffs(
         const alreadyClaimedValue = round(Int256.from(alreadyClaimed[d.holder][d.tokenAddress], d.decimals).toNumber(), 2);
         const totalCumulated = round(unclaimed[d.holder][d.symbol].toNumber(), 2);
         if (totalCumulated < alreadyClaimedValue) {
-          error = true;
-          code = DisputeError.AlreadyClaimed;
-          reason = `Holder ${d.holder} received ${totalCumulated} although he already claimed ${alreadyClaimedValue} for ${d.symbol}`;
-          alreadyClaimedCount++;
+          overclaimed.push(`${d.holder}: ${alreadyClaimedValue} / ${totalCumulated} ${d.symbol}`);
         }
         return {
           ...d,
@@ -180,9 +180,5 @@ export default async function checkHoldersDiffs(
       })
   );
 
-  if (error && code === DisputeError.AlreadyClaimed) reason += ` and ${alreadyClaimedCount} more...`;
-
-  processDetails && processDetails(details, changePerDistrib);
-
-  return { error, code, reason };
+  return { ...holdersReport, details: expandedDetails, overclaimed };
 }

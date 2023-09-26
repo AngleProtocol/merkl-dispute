@@ -38,9 +38,14 @@ export default abstract class OnChainProvider extends ExponentialBackoffProvider
   ) => Promise<ContractTransaction>;
 
   protected abstract dispute: (keeper: Wallet, reason: string, overrides: Overrides) => Promise<ContractTransaction>;
+  protected abstract mountBlock: () => Promise<number>;
 
   setBlock(blockNumber: number) {
     this.blockNumber = blockNumber;
+  }
+
+  async mountLastBlock() {
+    return this.retryWithExponentialBackoff(this.mountBlock, this.fetchParams);
   }
 
   async sendApproveTxn(keeper: Wallet, disputeToken: string, disputeAmount: BigNumber, overrides: Overrides) {

@@ -1,11 +1,10 @@
 import { Command } from 'commander';
+import { logger } from 'ethers';
 
 import { defaultContext } from './bot/context';
-import run from './bot/run';
+import run from './bot/runner';
 import diff from './diff';
 import serve from './serve';
-import GithubRootsProvider from './providers/merkl-roots/GithubRootsProvider';
-import { logger } from 'ethers';
 
 const bot = new Command();
 

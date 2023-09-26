@@ -15,6 +15,16 @@ export type DisputeState = {
   error: boolean;
   code?: number;
   reason: string;
+  report?: CheckUpReport;
+};
+
+export type CheckUpReport = {
+  blockNumber?: number;
+  startEpoch?: number;
+  startRoot?: string;
+  endEpoch?: number;
+  endRoot?: string;
+  chainId?: ChainId;
 };
 
 function abbr(hash: string | number) {
@@ -33,11 +43,13 @@ export async function checkDisputeOpportunity(
   dumpParams?: (params: OnChainParams) => void
 ): Promise<DisputeState> {
   const { onChainProvider, merkleRootsProvider, blockNumber, logger } = context;
+  const report: CheckUpReport = {};
 
   //Fetch timestamp for context
   let timestamp: number;
   try {
     timestamp = !!blockNumber ? await onChainProvider.fetchTimestampAt(blockNumber) : moment().unix();
+    report.blockNumber = blockNumber ?? (await onChainProvider.mountLastBlock());
   } catch (err) {
     return { error: true, code: DisputeError.BlocktimeFetch, reason: err };
   }
@@ -60,12 +72,9 @@ export async function checkDisputeOpportunity(
   const isDisputeOff: string = isDisputeUnavailable(onChainParams, timestamp);
   if (isDisputeOff !== undefined) return { error: false, reason: isDisputeOff };
 
-  //Fetch epochs for roots
-  let startEpoch: number;
-  let endEpoch: number;
   try {
-    startEpoch = await merkleRootsProvider.fetchEpochFor(onChainParams.startRoot);
-    endEpoch = await merkleRootsProvider.fetchEpochFor(onChainParams.endRoot);
+    report.startEpoch = await merkleRootsProvider.fetchEpochFor(onChainParams.startRoot);
+    report.endEpoch = await merkleRootsProvider.fetchEpochFor(onChainParams.endRoot);
   } catch (err) {
     return { error: true, code: DisputeError.EpochFetch, reason: err };
   }
@@ -74,34 +83,36 @@ export async function checkDisputeOpportunity(
   let startTree: AggregatedRewardsType;
   let endTree: AggregatedRewardsType;
   try {
-    startTree = await merkleRootsProvider.fetchTreeFor(startEpoch);
-    endTree = await merkleRootsProvider.fetchTreeFor(endEpoch);
+    startTree = await merkleRootsProvider.fetchTreeFor(report.startEpoch);
+    endTree = await merkleRootsProvider.fetchTreeFor(report.endEpoch);
   } catch (err) {
     return { error: true, code: DisputeError.TreeFetch, reason: err };
   }
 
-  logger?.trees(startEpoch, startTree, endEpoch, endTree);
+  logger?.trees(report.startEpoch, startTree, report.endEpoch, endTree);
 
-  const endRoot = buildMerklTree(endTree.rewards).tree.getHexRoot();
-  const startRoot = buildMerklTree(startTree.rewards).tree.getHexRoot();
+  report.endRoot = buildMerklTree(endTree.rewards).tree.getHexRoot();
+  report.startRoot = buildMerklTree(startTree.rewards).tree.getHexRoot();
 
-  logger?.computedRoots(startRoot, endRoot);
+  logger?.computedRoots(report.startRoot, report.endRoot);
 
-  if (startRoot !== startTree.merklRoot)
+  if (report.startRoot !== startTree.merklRoot)
     return {
       error: true,
       code: DisputeError.TreeRoot,
-      reason: `Start tree merkl root is not correct (computed:${abbr(startRoot)} vs alleged:${abbr(startTree.merklRoot)})`,
+      reason: `Start tree merkl root is not correct (computed:${abbr(report.startRoot)} vs alleged:${abbr(startTree.merklRoot)})`,
     };
-  else if (endRoot !== endTree.merklRoot)
+  else if (report.endRoot !== endTree.merklRoot)
     return {
       error: true,
       code: DisputeError.TreeRoot,
-      reason: `End tree merkl root is not correct (computed:${abbr(endRoot)} vs alleged:${abbr(endTree.merklRoot)})`,
+      reason: `End tree merkl root is not correct (computed:${abbr(report.endRoot)} vs alleged:${abbr(endTree.merklRoot)})`,
     };
 
   const isTreeInvalid = await checkHoldersDiffs(context, startTree, endTree, logTableToGist);
   if (isTreeInvalid.error) return isTreeInvalid;
+
+  console.log('report', report);
 
   return { error: false, reason: '' };
 }
@@ -113,15 +124,15 @@ export default async function run(context: DisputeContext) {
   });
 
   if (state.error) {
-    context.logger?.error(state.reason, state.code);
+    context.logger?.error(context, state.reason, state.code);
     const disputeState = await triggerDispute(params, context, state);
 
     if (disputeState.error) {
-      context.logger?.error(disputeState.reason, disputeState.code);
+      context.logger?.error(context, disputeState.reason, disputeState.code);
     } else {
-      context.logger?.success(state.reason);
+      context.logger?.success(context, state.reason);
     }
   } else {
-    context.logger?.success(state.reason);
+    context.logger?.success(context, state.reason ?? 'Nothing to report');
   }
 }

@@ -5,6 +5,7 @@ import { BigNumber } from 'ethers';
 import { DisputeContext } from '../../bot/context';
 import { OnChainParams } from '../../providers/on-chain/OnChainProvider';
 import Logger from './Logger';
+import { MerklReport } from '../../bot/runner';
 
 const chains = {
   137: 'Polygon',
@@ -57,13 +58,13 @@ export default class ConsoleLogger extends Logger {
     console.log('endRoot:', end);
     console.groupEnd();
   };
-  override error = (reason: string, code?: number) => {
+  override error = (context, reason: string, code?: number, report?: MerklReport) => {
     const log = (...a) => console.log(chalk.red(...a));
 
     log('[DISPUTE]:', reason);
   };
 
-  override success = (reason: string) => {
+  override success = (context, reason: string, report?: MerklReport) => {
     const log = (...a) => console.log(chalk.green(...a));
 
     log('[OK]:', reason);

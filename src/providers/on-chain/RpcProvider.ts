@@ -68,6 +68,13 @@ export default class RpcProvider extends OnChainProvider {
     return txn;
   };
 
+  override mountBlock = async (): Promise<number> => {
+    const block = await this.provider.getBlockNumber();
+
+    this.blockNumber = block;
+    return block;
+  };
+
   override timestampAt = async (blockNumber: number) => {
     return (await this.provider.getBlock(blockNumber)).timestamp;
   };

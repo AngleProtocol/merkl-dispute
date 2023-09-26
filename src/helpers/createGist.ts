@@ -49,7 +49,7 @@ export default async function logTableToGist(details: HolderDetail[], changePerD
   );
 
   try {
-    await createGist('A gist', (ts.read() || '').toString());
+    console.log('gist URL:', await createGist('A gist', (ts.read() || '').toString()));
   } catch (err) {
     console.log("Coulnd't upload gist");
   }
