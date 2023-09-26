@@ -7,9 +7,8 @@ import {
   Erc20__factory,
   Multicall__factory,
 } from '@angleprotocol/sdk';
-import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/constants/types/DistributionCreator';
 import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
-import { BigNumber, Overrides, Signer, Wallet, providers } from 'ethers';
+import { BigNumber, Overrides, providers, Wallet } from 'ethers';
 
 import { HolderDetail } from '../../bot/holder-checks';
 import { PoolInterface } from '../../types';
@@ -73,13 +72,13 @@ export default class RpcProvider extends OnChainProvider {
     return (await this.provider.getBlock(blockNumber)).timestamp;
   };
 
-  override activeDistributions = async (blockNumber?: number) => {
+  override activeDistributions = async () => {
     const instance = DistributionCreator__factory.connect(this.distributorCreator, this.provider);
 
-    return instance.getActiveDistributions({ blockTag: blockNumber });
+    return instance.getActiveDistributions({ blockTag: this.blockNumber });
   };
 
-  override poolName = async (pool: string, amm: AMMType, blockNumber?: number) => {
+  override poolName = async (pool: string, amm: AMMType) => {
     const multicall = Multicall__factory.connect('0xcA11bde05977b3631167028862bE2a173976CA11', this.provider);
     const poolInterface = PoolInterface(AMMAlgorithmMapping[amm]);
     const erc20Interface = Erc20__factory.createInterface();
@@ -105,7 +104,7 @@ export default class RpcProvider extends OnChainProvider {
           ]
         : []),
     ];
-    let res = await multicall.callStatic.aggregate3(calls, { blockTag: blockNumber });
+    let res = await multicall.callStatic.aggregate3(calls, { blockTag: this.blockNumber });
     let i = 0;
     const token0 = poolInterface.decodeFunctionResult('token0', res[i++].returnData)[0];
     const token1 = poolInterface.decodeFunctionResult('token1', res[i++].returnData)[0];
@@ -132,7 +131,7 @@ export default class RpcProvider extends OnChainProvider {
     return `${AMMType[amm]} ${token0Symbol}-${token1Symbol}-${fee ?? ``}`;
   };
 
-  override onChainParams = async (blockNumber: number | undefined) => {
+  override onChainParams = async () => {
     const multicall = Multicall__factory.connect('0xcA11bde05977b3631167028862bE2a173976CA11', this.provider);
     const distributor = Distributor__factory.createInterface();
 
@@ -179,7 +178,7 @@ export default class RpcProvider extends OnChainProvider {
       },
     ];
 
-    const result = await batchMulticallCall(multicallContractCall, multicall, { data: calls, blockNumber });
+    const result = await batchMulticallCall(multicallContractCall, multicall, { data: calls, blockNumber: this.blockNumber });
     let i = 0;
     return {
       disputeToken: distributor.decodeFunctionResult('disputeToken', result[i++])[0],
@@ -211,7 +210,7 @@ export default class RpcProvider extends OnChainProvider {
         });
       }
     }
-    const res = await batchMulticallCall(multicallContractCall, multicall, { data: calls });
+    const res = await batchMulticallCall(multicallContractCall, multicall, { data: calls, blockNumber: this.blockNumber });
     let decodingIndex = 0;
     for (const d of holderDetails) {
       if (alreadyClaimed[d.holder][d.tokenAddress] === 'PENDING') {

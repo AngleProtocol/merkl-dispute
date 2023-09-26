@@ -65,7 +65,7 @@ export default async function checkHoldersDiffs(
   const holders = gatherHolders(startTree, endTree);
   let details: HolderDetail[] = [];
 
-  const activeDistributions = await onChainProvider.fetchActiveDistributions(context.blockNumber);
+  const activeDistributions = await onChainProvider.fetchActiveDistributions();
 
   const changePerDistrib: DistributionChanges = {};
   const poolName = {};
@@ -106,7 +106,7 @@ export default async function checkHoldersDiffs(
 
         if (!poolName[pool]) {
           try {
-            poolName[pool] = await onChainProvider.fetchPoolName(pool, endTree?.rewards?.[k]?.amm, context.blockNumber);
+            poolName[pool] = await onChainProvider.fetchPoolName(pool, endTree?.rewards?.[k]?.amm);
           } catch (err) {
             console.log('err fetching poolName', err);
           }
@@ -150,6 +150,7 @@ export default async function checkHoldersDiffs(
   let error = false;
   let reason = '';
   let code = -1;
+  let alreadyClaimedCount = [];
 
   // Sort details by distribution and format numbers
   details = await Promise.all(
@@ -163,7 +164,8 @@ export default async function checkHoldersDiffs(
         if (totalCumulated < alreadyClaimedValue) {
           error = true;
           code = DisputeError.AlreadyClaimed;
-          reason = `Holder ${d.holder} received ${totalCumulated} although he already claimed ${alreadyClaimedValue}`;
+          reason = `Holder ${d.holder} received ${totalCumulated} although he already claimed ${alreadyClaimedValue} for ${d.symbol}`;
+          alreadyClaimedCount.push(reason);
         }
         return {
           ...d,
@@ -177,6 +179,9 @@ export default async function checkHoldersDiffs(
         };
       })
   );
+
+  console.log(alreadyClaimedCount);
+  
 
   processDetails && processDetails(details, changePerDistrib);
 

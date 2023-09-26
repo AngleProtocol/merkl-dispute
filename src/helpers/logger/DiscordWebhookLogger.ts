@@ -7,7 +7,7 @@ const chains = {
   1: 'Ethereum',
   10: 'Optimism',
   42161: 'Arbitrum',
-  1101: 'Polygon zvEVM',
+  pho: 'Polygon zvEVM',
 };
 
 export default class DiscordWebhookLogger extends Logger {

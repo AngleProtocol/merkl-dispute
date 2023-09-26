@@ -9,6 +9,7 @@ import { DisputeContext } from './context';
 import triggerDispute from './dispute';
 import { DisputeError } from './errors';
 import checkHoldersDiffs from './holder-checks';
+import { on } from 'events';
 
 export type DisputeState = {
   error: boolean;
@@ -37,13 +38,14 @@ export async function checkDisputeOpportunity(context: DisputeContext, dumpParam
   } catch (err) {
     return { error: true, code: DisputeError.BlocktimeFetch, reason: err };
   }
-
+  
   logger?.context(context, timestamp);
-
+  
   //Fetch on-chain data
   let onChainParams: OnChainParams;
   try {
-    onChainParams = await onChainProvider.fetchOnChainParams(blockNumber);
+    onChainProvider.setBlock(blockNumber);
+    onChainParams = await onChainProvider.fetchOnChainParams();
   } catch (err) {
     return { error: true, code: DisputeError.OnChainFetch, reason: err };
   }
