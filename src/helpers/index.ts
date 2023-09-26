@@ -11,12 +11,13 @@ import { BigNumber, ethers, utils } from 'ethers';
 import keccak256 from 'keccak256';
 import MerkleTree from 'merkletreejs';
 
+import { MULTICALL_ADDRESS } from '../constants';
 import { httpProvider } from '../providers';
 import { PoolInterface } from '../types';
 
 export const fetchPoolName = async (chainId: number, pool: string, amm: AMMType) => {
   const provider = httpProvider(chainId);
-  const multicall = Multicall__factory.connect('0xcA11bde05977b3631167028862bE2a173976CA11', provider);
+  const multicall = Multicall__factory.connect(MULTICALL_ADDRESS, provider);
   const poolInterface = PoolInterface(AMMAlgorithmMapping[amm]);
   const erc20Interface = Erc20__factory.createInterface();
 

@@ -9,7 +9,7 @@ dotenv.config();
 import { Console } from 'console';
 import { Transform } from 'stream';
 
-import { NULL_ADDRESS } from '../constants';
+import { MULTICALL_ADDRESS, NULL_ADDRESS } from '../constants';
 import { httpProvider } from '../providers';
 import { reportDiff } from '../scripts/diff';
 import { batchMulticallCall, createGist, getChainId, multicallContractCall, retryWithExponentialBackoff } from '../utils';
@@ -32,7 +32,7 @@ type OnChainParams = {
 };
 
 const fetchDataOnChain = async (provider: any, distributor: string): Promise<OnChainParams> => {
-  const multicall = Multicall__factory.connect('0xcA11bde05977b3631167028862bE2a173976CA11', provider);
+  const multicall = Multicall__factory.connect(MULTICALL_ADDRESS, provider);
   const distributorInterface = Distributor__factory.createInterface();
 
   const calls = [
@@ -139,6 +139,15 @@ const triggerDispute = async (
       );
     await tx.wait();
     log('merkl dispute bot', `✅ dispute triggered`);
+
+    await sendDiscordNotification({
+      title: `🎉 SUCCESSFULLY disputed tree \n` + title,
+      description: `tx hash: ${tx.hash}`,
+      isAlert: true,
+      severity: 'warning',
+      fields: [],
+      key: 'merkl dispute bot',
+    });
   } catch (e) {
     log('merkl dispute bot', `❌ couldn't trigger dispute`);
     await sendDiscordNotification({
@@ -150,15 +159,6 @@ const triggerDispute = async (
       key: 'merkl dispute bot',
     });
   }
-
-  await sendDiscordNotification({
-    title: `🎉 SUCCESSFULLY disputed tree \n` + title,
-    description: `tx hash: ${tx.hash}`,
-    isAlert: true,
-    severity: 'warning',
-    fields: [],
-    key: 'merkl dispute bot',
-  });
 };
 
 router.get('', async (_, res) => {

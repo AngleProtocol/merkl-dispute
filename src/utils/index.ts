@@ -6,6 +6,7 @@ import { Octokit } from '@octokit/rest';
 import { BytesLike, constants } from 'ethers';
 
 import { MAX_NUM_SUBCALLS } from '../constants';
+import { httpProvider } from '../providers';
 
 export function getEnv(): EnvType {
   const value = process.env['ENV'] as EnvType;
@@ -129,4 +130,29 @@ export async function batchMulticallCall(
     }
   }
   return fetchedData;
+}
+
+/** @dev Any block between the timestamp and 1 min after is suitable  */
+export async function getBlockAfterTimestamp(chainId: ChainId, timestamp: number): Promise<number> {
+  const provider = httpProvider(chainId);
+  let lowerBound = 0;
+  let upperBound = await provider.getBlockNumber();
+
+  while (lowerBound <= upperBound) {
+    const mid = Math.floor((upperBound + lowerBound) / 2);
+    const block = await provider.getBlock(mid);
+
+    if (block.timestamp <= timestamp) {
+      lowerBound = mid + 1;
+    } else {
+      upperBound = mid - 1;
+    }
+
+    if (timestamp <= block.timestamp && timestamp + 60 >= block.timestamp) {
+      return block.number;
+    }
+  }
+
+  // Once the loop finishes, lowerBound points to the nearest block after the timestamp.
+  return (await provider.getBlock(lowerBound)).number;
 }

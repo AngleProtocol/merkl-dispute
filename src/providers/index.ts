@@ -8,4 +8,4 @@ for (const c of Object.keys(ChainId)) {
   } catch {}
 }
 
-export const httpProvider = (network: keyof typeof NETWORKS) => new providers.JsonRpcProvider(NETWORKS[network]);
+export const httpProvider = (network: keyof typeof NETWORKS) => new providers.StaticJsonRpcProvider(NETWORKS[network]);

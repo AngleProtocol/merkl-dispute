@@ -1,6 +1,7 @@
 import { AMMAlgorithmType } from '@angleprotocol/sdk';
 
 export declare type PositionType = {
+  id: string;
   endTimestamp: number;
   owner: string;
   startTimestamp: number;
