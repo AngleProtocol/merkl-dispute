@@ -123,13 +123,13 @@ export const reportUser = async (
   );
 
   const accumulatedRewards: {
-    earned: number;
-    symbol: string;
-    poolName: string;
-    reason: string;
-    distribution: string;
-    amm: number;
-    pool: string;
+    Earned: number;
+    Token: string;
+    PoolName: string;
+    Origin: string;
+    Distribution: string;
+    Amm: number;
+    PoolAddress: string;
   }[] = [];
   const accumulatedTokens = [];
 
@@ -152,32 +152,32 @@ export const reportUser = async (
         const poolApiData = merklAPIData?.pools?.[getAddress(pool)];
 
         accumulatedRewards.push({
-          earned,
-          symbol,
-          reason,
-          poolName: poolName(poolApiData),
-          amm: endTree?.rewards?.[k]?.amm,
-          distribution: k,
-          pool,
+          Earned: earned,
+          Token: symbol,
+          Origin: reason,
+          PoolName: poolName(poolApiData),
+          Amm: endTree?.rewards?.[k]?.amm,
+          Distribution: k,
+          PoolAddress: pool,
         });
       }
     }
   }
   console.log(`\nThe following rewards where accumulated: \n`);
 
-  console.table(accumulatedRewards, ['Earned', 'Token', 'Pool Name', 'Origin', 'Pool Address']);
+  console.table(accumulatedRewards, ['Earned', 'Token', 'PoolName', 'Origin', 'PoolAddress']);
 
   console.log(`\nAggregated per token, this gives: \n`);
 
   console.table(
     accumulatedTokens.map((symbol) =>
       accumulatedRewards
-        .filter((a) => a.symbol === symbol)
+        .filter((a) => a.Token === symbol)
         .reduce(
           (prev, curr) => {
-            return { diff: prev.diff + curr.earned, symbol };
+            return { Earned: prev.Earned + curr.Earned, Token: symbol };
           },
-          { diff: 0, symbol }
+          { Earned: 0, Token: symbol }
         )
     ),
     ['Earned', 'Token']
@@ -185,7 +185,8 @@ export const reportUser = async (
 
   if (!!pool) {
     const merklAPIPoolData = merklAPIData?.pools?.[getAddress(pool)];
-    const poolRewards = accumulatedRewards.filter((a) => getAddress(a.pool) === getAddress(pool));
+    const poolRewards = accumulatedRewards.filter((a) => getAddress(a.PoolAddress) === getAddress(pool));
+    console.log(poolRewards);
     /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                   INTERFACES                                                    
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -201,9 +202,9 @@ export const reportUser = async (
 
     console.log(`Now, let's break down rewards for the pool ${poolName(merklAPIPoolData)} (${pool}): \n`);
     console.log(`Over the period of interest this address earned the following: \n`);
-    console.table(poolRewards, ['Earned', 'Symbol', 'Origin']);
+    console.table(poolRewards, ['Earned', 'Token', 'Origin']);
 
-    const periodReward = poolRewards.reduce((prev, curr) => prev + curr.earned * prices[curr.symbol], 0);
+    const periodReward = poolRewards.reduce((prev, curr) => prev + curr.Earned * prices[curr.Token], 0);
     console.log(
       `At current prices, this is worth ~$${formatNumber(periodReward)}, which would make ~$${formatNumber(
         (periodReward * YEAR) / (endEpoch * HOUR - startEpoch * HOUR)
@@ -362,7 +363,7 @@ export const reportUser = async (
         const inRange = Number(pos.tickLower) <= tick && tick < Number(pos.tickUpper);
 
         const tvl = BN2Number(amount0, token0Decimals) * prices[token0Symbol] + BN2Number(amount1, token1Decimals) * prices[token1Symbol];
-        const positionRewards = poolRewards.filter((p) => p.reason === type)?.[0] ?? { earned: 0, symbol: 'ANGLE' };
+        const positionRewards = poolRewards.filter((p) => p.Origin === type)?.[0] ?? { Earned: 0, Token: 'ANGLE' };
 
         positions.push({
           lowerTick: pos.tickLower,
@@ -378,7 +379,7 @@ export const reportUser = async (
           propAmount0: inRange ? round((BN2Number(amount0, token0Decimals) / amount0InPool) * 100, 2) : 0,
           propAmount1: inRange ? round((BN2Number(amount1, token1Decimals) / amount1InPool) * 100, 2) : 0,
           inducedAPR: round(
-            ((positionRewards.earned * prices[positionRewards.symbol] * YEAR) / (endEpoch * HOUR - startEpoch * HOUR) / tvl) * 100,
+            ((positionRewards.Earned * prices[positionRewards.Token] * YEAR) / (endEpoch * HOUR - startEpoch * HOUR) / tvl) * 100,
             3
           ),
         });
@@ -452,7 +453,7 @@ export const reportUser = async (
 
           const type = ALMType[alm.origin];
           const tvl = userAmount0InAlm * prices[token0Symbol] + userAmount1InAlm * prices[token1Symbol];
-          const positionRewards = poolRewards.filter((p) => p.reason === type)?.[0] ?? { earned: 0, symbol: 'ANGLE' };
+          const positionRewards = poolRewards.filter((p) => p.Origin === type)?.[0] ?? { Earned: 0, Token: 'ANGLE' };
 
           if (userAmount0InAlm !== 0 || userAmount1InAlm !== 0) {
             positions.push({
@@ -468,7 +469,7 @@ export const reportUser = async (
               propAmount0: round((userAmount0InAlm / amount0InPool) * 100, 2),
               propAmount1: round((userAmount1InAlm / amount1InPool) * 100, 2),
               inducedAPR: round(
-                ((positionRewards.earned * prices[positionRewards.symbol] * YEAR) / (endEpoch * HOUR - startEpoch * HOUR) / tvl) * 100,
+                ((positionRewards.Earned * prices[positionRewards.Token] * YEAR) / (endEpoch * HOUR - startEpoch * HOUR) / tvl) * 100,
                 3
               ),
             });
