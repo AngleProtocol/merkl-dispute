@@ -65,6 +65,14 @@ yarn bot run --chain <chainId>
 yarn bot run --chain <chainId> --block <blockNumber>
 ```
 
+### Compare two points in time
+
+You can compare two points in time and generate a diff table with:
+
+```bash
+yarn bot run --chain <chainId> --from <timestamp1> --to <timestamp1>
+```
+
 ### As a server
 
 Run the bot as an Express server to call a dispute check from an HTTP request:
