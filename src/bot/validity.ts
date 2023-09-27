@@ -33,6 +33,7 @@ export async function validateHolders(
 ): Promise<HoldersReport> {
   const holders = gatherHolders(startTree, endTree);
   const activeDistributions = await onChainProvider.fetchActiveDistributions();
+
   const poolName = {};
 
   const details: HolderDetail[] = [];
