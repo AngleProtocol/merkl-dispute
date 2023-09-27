@@ -65,7 +65,8 @@ export async function sendDiscordNotification(params: {
           .setFooter(chainFooter[params.chain] ?? { text: `${params.chain}` });
 
         await channel.send({ embeds: [exampleEmbed] });
-        discordClient.removeAllListeners();
+
+        discordClient.destroy();
         resolve({});
       });
     } catch (e) {
