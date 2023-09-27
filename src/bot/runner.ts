@@ -130,15 +130,21 @@ export const checkOverclaimedRewards: Step = async ({ onChainProvider }, report,
 export async function checkUpOnMerkl(context: DisputeContext): Promise<StepResult> {
   return new Promise(async function (resolve: Resolver) {
     let report: MerklReport = {};
+    let resolved = false;
 
-    report = await checkBlockTime(context, report, resolve);
-    report = await checkOnChainParams(context, report, resolve);
-    report = await checkDisputeWindow(context, report, resolve);
-    report = await checkEpochs(context, report, resolve);
-    report = await checkTrees(context, report, resolve);
-    report = await checkRoots(context, report, resolve);
-    report = await checkHolderValidity(context, report, resolve);
-    report = await checkOverclaimedRewards(context, report, resolve);
+    const res = (a) => {
+      resolved = true;
+      resolve(a);
+    };
+
+    if (!resolved) report = await checkBlockTime(context, report, res);
+    if (!resolved) report = await checkOnChainParams(context, report, res);
+    if (!resolved) report = await checkDisputeWindow(context, report, res);
+    if (!resolved) report = await checkEpochs(context, report, res);
+    if (!resolved) report = await checkTrees(context, report, res);
+    if (!resolved) report = await checkRoots(context, report, res);
+    if (!resolved) report = await checkHolderValidity(context, report, res);
+    if (!resolved) report = await checkOverclaimedRewards(context, report, res);
 
     resolve(Result.Exit({ reason: 'No problemo', report }));
   });
@@ -148,13 +154,18 @@ export default async function run(context: DisputeContext) {
   const { logger } = context;
   const checkUpResult = await checkUpOnMerkl(context);
 
-  const { details, changePerDistrib } = checkUpResult?.res?.report?.holdersReport;
-  const diffTableUrl = await createDiffTable(details, changePerDistrib, !context.uploadDiffTable);
+  const holdersReport = checkUpResult?.res?.report?.holdersReport;
 
-  checkUpResult.res.report.diffTableUrl = diffTableUrl;
+  if (holdersReport) {
+    checkUpResult.res.report.diffTableUrl = await createDiffTable(
+      holdersReport.details,
+      holdersReport.changePerDistrib,
+      !context.uploadDiffTable
+    );
+  }
 
   if (!checkUpResult.err) {
-    logger?.success(context, checkUpResult.res.reason, checkUpResult.res.report);
+    await logger?.success(context, checkUpResult.res.reason, checkUpResult.res.report);
     return;
   }
 

@@ -18,12 +18,13 @@ export default class Loggers extends Logger {
   override trees = (startEpoch: number, startTree: AggregatedRewardsType, endEpoch: number, endTree: AggregatedRewardsType) =>
     this.loggers.forEach((l) => l.trees(startEpoch, startTree, endEpoch, endTree));
   override computedRoots = (start: string, end: string) => this.loggers.forEach((l) => l.computedRoots(start, end));
-  override error = (context: DisputeContext, reason: string, code?: number, report?: MerklReport) =>
+  override error = async (context: DisputeContext, reason: string, code?: number, report?: MerklReport) =>
     this.loggers.forEach((l) => l.error(context, reason, code, report));
-  override success = (context: DisputeContext, reason: string, report?: MerklReport) =>
-    this.loggers.forEach((l) => l.success(context, reason, report));
-  override disputeError = (context: DisputeContext, reason: string, code?: number, report?: MerklReport) =>
+  override success = async (context: DisputeContext, reason: string, report?: MerklReport) => {
+    await Promise.all(this.loggers.map((l) => l.success(context, reason, report)));
+  };
+  override disputeError = async (context: DisputeContext, reason: string, code?: number, report?: MerklReport) =>
     this.loggers.forEach((l) => l.disputeError(context, reason, code, report));
-  override disputeSuccess = (context: DisputeContext, reason: string, report?: MerklReport) =>
+  override disputeSuccess = async (context: DisputeContext, reason: string, report?: MerklReport) =>
     this.loggers.forEach((l) => l.disputeSuccess(context, reason, report));
 }

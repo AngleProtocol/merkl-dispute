@@ -32,40 +32,45 @@ export async function sendDiscordNotification(params: {
   key: string;
   chain?: ChainId;
 }) {
-  try {
-    const discordClient = new Client({
-      intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages],
-      partials: [Partials.Channel],
-    });
+  return new Promise(async function (resolve, reject) {
+    try {
+      const discordClient = new Client({
+        intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.DirectMessages],
+        partials: [Partials.Channel],
+      });
 
-    discordClient.login(process.env.DISCORD_TOKEN);
+      discordClient.login(process.env.DISCORD_TOKEN);
 
-    const env = process.env.ENV;
+      const env = process.env.ENV;
 
-    let channel: TextChannel;
+      let channel: TextChannel;
 
-    discordClient.on('ready', async () => {
-      channel = getChannel(discordClient, !params.isAlert || env !== 'prod' ? 'dispute-bot-logs' : 'dispute-bot');
-      if (!channel) {
-        console.log(params.key, '❌ discord channel not found');
-        return;
-      }
+      discordClient.on('ready', async () => {
+        channel = getChannel(discordClient, !params.isAlert || env !== 'prod' ? 'dispute-bot-logs' : 'dispute-bot');
+        if (!channel) {
+          console.log(params.key, '❌ discord channel not found');
+          return;
+        }
 
-      const exampleEmbed = new EmbedBuilder()
-        .setAuthor({
-          name: `Merkle Dispute Bot ${env !== 'prod' ? '[DEV]' : ''}`,
-          iconURL: 'https://merkl.angle.money/images/merkl-apple-touch-icon.png',
-          url: 'https://github.com/AngleProtocol/merkl-dispute',
-        })
-        .setColor(colorBySeverity[params.severity])
-        .setTitle(`${params.title}`)
-        .setDescription(params.description ?? 'nodesc')
-        .addFields(params.fields)
-        .setFooter(chainFooter[params.chain] ?? { text: `${params.chain}` });
+        const exampleEmbed = new EmbedBuilder()
+          .setAuthor({
+            name: `Merkle Dispute Bot ${env !== 'prod' ? '[DEV]' : ''}`,
+            iconURL: 'https://merkl.angle.money/images/merkl-apple-touch-icon.png',
+            url: 'https://github.com/AngleProtocol/merkl-dispute',
+          })
+          .setColor(colorBySeverity[params.severity])
+          .setTitle(`${params.title}`)
+          .setDescription(params.description ?? 'nodesc')
+          .addFields(params.fields)
+          .setFooter(chainFooter[params.chain] ?? { text: `${params.chain}` });
 
-      await channel.send({ embeds: [exampleEmbed] });
-    });
-  } catch (e) {
-    console.log('merkl dispute bot', `❌ couldn't send summary to discord with reason: \n ${e}`);
-  }
+        await channel.send({ embeds: [exampleEmbed] });
+        discordClient.removeAllListeners();
+        resolve({});
+      });
+    } catch (e) {
+      console.log('merkl dispute bot', `❌ couldn't send summary to discord with reason: \n ${e}`);
+      reject();
+    }
+  });
 }

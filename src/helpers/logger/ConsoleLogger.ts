@@ -59,25 +59,25 @@ export default class ConsoleLogger extends Logger {
     console.groupEnd();
   };
 
-  override error = (context, reason: string, code?: number, report?: MerklReport) => {
+  override error = async (context, reason: string, code?: number, report?: MerklReport) => {
     const log = (...a) => console.log(chalk.red(...a));
 
     log('[CHECKS ERROR]:', reason);
   };
 
-  override success = (context, reason: string, report?: MerklReport) => {
+  override success = async (context, reason: string, report?: MerklReport) => {
     const log = (...a) => console.log(chalk.green(...a));
 
     log('[CHECKS OK]:', reason);
   };
 
-  override disputeError = (context, reason: string, code?: number, report?: MerklReport) => {
+  override disputeError = async (context, reason: string, code?: number, report?: MerklReport) => {
     const log = (...a) => console.log(chalk.red(...a));
 
     log('[DISPUTE ERROR]:', reason);
   };
 
-  override disputeSuccess = (context, reason: string, report?: MerklReport) => {
+  override disputeSuccess = async (context, reason: string, report?: MerklReport) => {
     const log = (...a) => console.log(chalk.green(...a));
 
     log('[DISPUTE SUCCESS ]:', reason);

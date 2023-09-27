@@ -9,8 +9,8 @@ export default abstract class Logger {
   onChainParams: (params: OnChainParams, timestamp?: number) => void;
   trees: (startEpoch: number, startTree: AggregatedRewardsType, endEpoch: number, endTree: AggregatedRewardsType) => void;
   computedRoots: (start: string, end: string) => void;
-  error: (context: DisputeContext, reason: string, code?: number, report?: MerklReport) => void;
-  success: (context: DisputeContext, reason: string, report?: MerklReport) => void;
-  disputeError: (context: DisputeContext, reason: string, code?: number, report?: MerklReport) => void;
-  disputeSuccess: (context: DisputeContext, reason: string, report?: MerklReport) => void;
+  error: (context: DisputeContext, reason: string, code?: number, report?: MerklReport) => Promise<void>;
+  success: (context: DisputeContext, reason: string, report?: MerklReport) => Promise<void>;
+  disputeError: (context: DisputeContext, reason: string, code?: number, report?: MerklReport) => Promise<void>;
+  disputeSuccess: (context: DisputeContext, reason: string, report?: MerklReport) => Promise<void>;
 }
