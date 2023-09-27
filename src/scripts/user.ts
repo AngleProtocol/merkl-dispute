@@ -1,5 +1,4 @@
 import {
-  AggregatedRewardsType,
   ALMType,
   AMMAlgorithmMapping,
   AMMType,
@@ -8,7 +7,6 @@ import {
   formatNumber,
   getTickAtSqrtRatio,
   Int256,
-  MerklAPIData,
   merklSubgraphAMMEndpoints,
   Multicall__factory,
   NFTManagerAddress,
@@ -17,7 +15,6 @@ import {
   PoolStateName,
   SwapPriceField,
 } from '@angleprotocol/sdk';
-import axios from 'axios';
 import dotenv from 'dotenv';
 import { BigNumber, BigNumberish, utils } from 'ethers';
 
@@ -31,17 +28,16 @@ import request from 'graphql-request';
 import JSBI from 'jsbi';
 import moment from 'moment';
 
-import { ANGLE_API, GITHUB_URL, HOUR, MULTICALL_ADDRESS, YEAR } from '../constants';
+import { HOUR, MULTICALL_ADDRESS, YEAR } from '../constants';
 import { round } from '../helpers';
 import { positionsQuery } from '../helpers/queries';
 import { httpProvider } from '../providers';
-import { MerklIndexType } from '../routes';
-import { PositionType } from '../types';
+import { AccumulatedRewards, PositionType } from '../types';
 import { getBlockAfterTimestamp } from '../utils';
+import { fetchReportData, fetchRewardJson, paramsCheck, poolName } from '../utils/report';
 import { getAmountsForLiquidity } from '../utils/uniV3';
 
 const Erc20Interface = Erc20__factory.createInterface();
-
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                  MAIN FUNCTION                                                  
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -54,83 +50,21 @@ export const reportUser = async (
   endTimestamp: number,
   pool?: string
 ): Promise<void> => {
-  if (!getAddress(user)) throw new Error('Invalid user address');
-  if (startTimestamp >= endTimestamp) throw new Error('Invalid timestamps');
-  if (!!pool && !getAddress(pool)) throw new Error('Invalid pool address');
-
+  paramsCheck(user, pool, startTimestamp, endTimestamp);
   /** 1 - Fetch useful data */
-  const promises = [];
-
-  const prices = {};
-  promises.push(
-    axios.get<{ rate: number; token: string }[]>(ANGLE_API + `v1/prices`).then((res) => {
-      res.data.forEach((p) => (prices[p.token] = p.rate));
-    })
-  );
-
-  let merklIndex: MerklIndexType;
-  promises.push(
-    axios
-      .get<MerklIndexType>(GITHUB_URL + `${chainId + `/index.json`}`, {
-        timeout: 5000,
-      })
-      .then((res) => {
-        merklIndex = res.data;
-      })
-  );
-
-  let merklAPIData: MerklAPIData;
-  promises.push(
-    axios
-      .get<MerklAPIData>(ANGLE_API + `v1/merkl`, {
-        timeout: 5000,
-      })
-      .then((res) => {
-        merklAPIData = res.data;
-      })
-  );
-
-  await Promise.all(promises);
-
-  const roundDownWhileKeyNotFound = (timestamp: number): number => {
-    let epoch = Math.floor(timestamp / HOUR);
-    while (!Object.values(merklIndex).includes(epoch)) {
-      epoch -= 1;
-    }
-    return epoch;
-  };
-  const fetchTree = async (epoch: number): Promise<AggregatedRewardsType> => {
-    return (
-      await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${epoch}.json`}`, {
-        timeout: 5000,
-      })
-    ).data;
-  };
-  const poolName = (poolApiData: MerklAPIData['pools'][string]): string => {
-    return `${AMMType[poolApiData.amm]} ${poolApiData.tokenSymbol0}-${poolApiData.tokenSymbol1} ${poolApiData.poolFee + '%' ?? ``}`;
-  };
+  const { prices, merklIndex, merklAPIData } = await fetchReportData(chainId);
+  console.log(prices, merklIndex, merklAPIData);
 
   /** 2 - Rounds down timestamp to the last reward computation and fetch trees */
-  const startEpoch = roundDownWhileKeyNotFound(startTimestamp);
-  const endEpoch = roundDownWhileKeyNotFound(endTimestamp);
-  let startTree, endTree;
-  await Promise.all([fetchTree(startEpoch).then((res) => (startTree = res)), fetchTree(endEpoch).then((res) => (endTree = res))]);
+  const { startEpoch, endEpoch, startTree, endTree } = await fetchRewardJson(chainId, merklIndex, startTimestamp, endTimestamp);
+
+  const accumulatedRewards: AccumulatedRewards[] = [];
 
   console.log(
     `Analyzing rewards earned by ${user} on Merkl over ${endEpoch - startEpoch} hours from ${moment
       .unix(startEpoch * HOUR)
       .format('ddd DD MMM YYYY HH:00')} to ${moment.unix(endEpoch * HOUR).format('ddd DD MMM YYYY HH:00')} `
   );
-
-  const accumulatedRewards: {
-    Earned: number;
-    Token: string;
-    PoolName: string;
-    Origin: string;
-    Distribution: string;
-    Amm: number;
-    PoolAddress: string;
-  }[] = [];
   const accumulatedTokens = [];
 
   for (const k of Object.keys(endTree.rewards)) {
@@ -186,7 +120,6 @@ export const reportUser = async (
   if (!!pool) {
     const merklAPIPoolData = merklAPIData?.pools?.[getAddress(pool)];
     const poolRewards = accumulatedRewards.filter((a) => getAddress(a.PoolAddress) === getAddress(pool));
-    console.log(poolRewards);
     /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                   INTERFACES                                                    
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/

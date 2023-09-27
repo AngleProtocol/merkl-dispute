@@ -9,6 +9,7 @@
     "report:pool": "yarn ts-node src/scripts/pool.ts",
     "report:diff": "yarn ts-node src/scripts/reportDiff.ts",
     "report:user": "yarn ts-node src/scripts/reportUser.ts",
+    "report:alm": "yarn ts-node src/scripts/reportAlm.ts",
     "deploy": "chmod +x ./scripts/deploy.sh && ./scripts/deploy.sh",
     "gcp-build": "yarn build",
     "merge": "git checkout staging && git pull origin staging && yarn && git checkout main && git pull origin main && git merge --ff-only staging && git push --force-with-lease origin main",
