@@ -1,12 +1,12 @@
 import { AggregatedRewardsType, ChainId } from '@angleprotocol/sdk';
+import { ContractReceipt, Wallet } from 'ethers';
 
-import { HoldersReport } from '../bot/validity';
-import { OnChainParams } from '../providers/on-chain/OnChainProvider';
 import { DisputeContext } from '../bot/context';
-import { ContractReceipt, ContractTransaction, Wallet } from 'ethers';
+import { OnChainParams } from '../providers/on-chain/OnChainProvider';
+import { HoldersReport } from './holders';
 
 export type StepError = {
-  code: CheckError;
+  code: BotError;
   reason: string;
   report: MerklReport;
 };

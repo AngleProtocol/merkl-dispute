@@ -65,8 +65,9 @@ bot
     } = options;
 
     const context = defaultContext(parseInt(chain));
+    context.uploadDiffTable = gist;
 
-    await diff(context, from, to, gist);
+    await diff(context, from, to);
   });
 
 bot.parse();

@@ -1,10 +1,10 @@
 import 'dotenv/config';
 
-import { ChainId, registry } from '@angleprotocol/sdk';
+import { ChainId } from '@angleprotocol/sdk';
 import express, { Application } from 'express';
 
 import { defaultContext, DisputeContext } from './bot/context';
-import run from './bot/run';
+import run from './bot/runner';
 import NETWORKS from './helpers/networks';
 import { getChainId } from './utils';
 
@@ -16,11 +16,9 @@ export default function () {
 
   const PORT = process.env.PORT || 5002;
 
-  // =================================== ROUTES ==================================
-
   app.get('/:chain?/:blockNumber?', async (req, res) => {
     const { chain, blockNumber } = req.params;
-    const chainProvided: boolean = !!(chain && NETWORKS[chain]);
+    const chainProvided = !!(chain && NETWORKS[chain]);
     const blockProvided: boolean = blockNumber && blockNumber !== '';
 
     console.log('chain', chain, chainProvided, NETWORKS[chain], 'block', blockProvided);

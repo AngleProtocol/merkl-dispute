@@ -1,17 +1,15 @@
-import { Console } from 'console';
 import moment from 'moment';
-import { Transform } from 'stream';
 
 import { NULL_ADDRESS } from '../constants';
-import { buildMerklTree, round } from '../helpers';
-import { createGist } from '../helpers/createGist';
+import { buildMerklTree } from '../helpers';
+import createDiffTable from '../helpers/diffTable';
 import { BotError, MerklReport, Resolver, Result, Step, StepResult } from '../types/bot';
 import { HoldersReport } from '../types/holders';
 import { DisputeContext } from './context';
 import dispute from './dispute';
 import { validateClaims, validateHolders } from './validity';
 
-const checkBlockTime: Step = async (context, report, resolve) => {
+export const checkBlockTime: Step = async (context, report, resolve) => {
   try {
     const { onChainProvider, blockNumber, logger } = context;
     const timestamp = !!blockNumber ? await onChainProvider.fetchTimestampAt(blockNumber) : moment().unix();
@@ -25,7 +23,7 @@ const checkBlockTime: Step = async (context, report, resolve) => {
   }
 };
 
-const checkOnChainParams: Step = async ({ onChainProvider, logger }, report, resolve) => {
+export const checkOnChainParams: Step = async ({ onChainProvider, logger }, report, resolve) => {
   try {
     onChainProvider.setBlock(report.blockNumber);
     const params = await onChainProvider.fetchOnChainParams();
@@ -38,7 +36,7 @@ const checkOnChainParams: Step = async ({ onChainProvider, logger }, report, res
   }
 };
 
-const checkDisputeWindow: Step = async (context, report, resolve) => {
+export const checkDisputeWindow: Step = async (context, report, resolve) => {
   try {
     const { startTime } = report;
     const { disputer, disputeToken, endOfDisputePeriod } = report?.params;
@@ -52,7 +50,7 @@ const checkDisputeWindow: Step = async (context, report, resolve) => {
   }
 };
 
-const checkEpochs: Step = async ({ merkleRootsProvider }, report, resolve) => {
+export const checkEpochs: Step = async ({ merkleRootsProvider }, report, resolve) => {
   try {
     const { startRoot, endRoot } = report.params;
 
@@ -65,7 +63,7 @@ const checkEpochs: Step = async ({ merkleRootsProvider }, report, resolve) => {
   }
 };
 
-const checkTrees: Step = async ({ merkleRootsProvider, logger }, report, resolve) => {
+export const checkTrees: Step = async ({ merkleRootsProvider, logger }, report, resolve) => {
   try {
     const { startEpoch, endEpoch } = report;
 
@@ -80,7 +78,7 @@ const checkTrees: Step = async ({ merkleRootsProvider, logger }, report, resolve
   }
 };
 
-const checkRoots: Step = async ({ logger }, report, resolve) => {
+export const checkRoots: Step = async ({ logger }, report, resolve) => {
   try {
     const { startTree, endTree } = report;
 
@@ -97,7 +95,7 @@ const checkRoots: Step = async ({ logger }, report, resolve) => {
   }
 };
 
-const checkHolderValidity: Step = async ({ onChainProvider }, report, resolve) => {
+export const checkHolderValidity: Step = async ({ onChainProvider }, report, resolve) => {
   let holdersReport: HoldersReport;
 
   try {
@@ -113,7 +111,7 @@ const checkHolderValidity: Step = async ({ onChainProvider }, report, resolve) =
   }
 };
 
-const checkOverclaimedRewards: Step = async ({ onChainProvider }, report, resolve) => {
+export const checkOverclaimedRewards: Step = async ({ onChainProvider }, report, resolve) => {
   let expandedHoldersReport: HoldersReport;
 
   try {
@@ -126,44 +124,6 @@ const checkOverclaimedRewards: Step = async ({ onChainProvider }, report, resolv
     return { ...report, holdersReport: expandedHoldersReport };
   } catch (reason) {
     resolve(Result.Error({ code: BotError.AlreadyClaimed, reason, report: { ...report, holdersReport: expandedHoldersReport } }));
-  }
-};
-
-const createDiffTable = async (report) => {
-  try {
-    const ts = new Transform({
-      transform(chunk, _, cb) {
-        cb(null, chunk);
-      },
-    });
-    const output = new Console({ stdout: ts });
-    const details = report.holdersReport.details;
-    const changePerDistrib = report.holdersReport.changePerDistrib;
-
-    output.table(details, [
-      'holder',
-      'diff',
-      'symbol',
-      'poolName',
-      'distribution',
-      'percent',
-      'diffAverageBoost',
-      'totalCumulated',
-      'alreadyClaimed',
-      'issueSpotted',
-    ]);
-
-    output.table(
-      Object.keys(changePerDistrib)
-        .map((k) => {
-          return { ...changePerDistrib[k], epoch: round(changePerDistrib[k].epoch, 4) };
-        })
-        .sort((a, b) => (a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : 0))
-    );
-
-    return await createGist('A gist', (ts.read() || '').toString());
-  } catch (err) {
-    return undefined;
   }
 };
 
@@ -187,7 +147,9 @@ export async function checkUpOnMerkl(context: DisputeContext): Promise<StepResul
 export default async function run(context: DisputeContext) {
   const { logger } = context;
   const checkUpResult = await checkUpOnMerkl(context);
-  const diffTableUrl = await createDiffTable(checkUpResult.res.report);
+
+  const { details, changePerDistrib } = checkUpResult?.res?.report?.holdersReport;
+  const diffTableUrl = await createDiffTable(details, changePerDistrib, !context.uploadDiffTable);
 
   checkUpResult.res.report.diffTableUrl = diffTableUrl;
 
@@ -201,9 +163,9 @@ export default async function run(context: DisputeContext) {
   const disputeResult = await dispute(context, checkUpResult.res.report);
 
   if (!disputeResult.err) {
-    logger?.success(context, disputeResult.res.reason, disputeResult.res.report);
+    logger?.disputeSuccess(context, disputeResult.res.reason, disputeResult.res.report);
     return;
   }
 
-  logger?.error(context, disputeResult.res.reason, disputeResult.res.code, disputeResult.res.report);
+  logger?.disputeError(context, disputeResult.res.reason, disputeResult.res.code, disputeResult.res.report);
 }

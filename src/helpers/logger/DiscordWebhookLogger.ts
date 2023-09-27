@@ -1,6 +1,5 @@
 import { DisputeContext } from '../../bot/context';
-import { DisputeError } from '../../bot/errors';
-import { MerklReport } from '../../types/bot';
+import { BotError, MerklReport } from '../../types/bot';
 import { sendDiscordNotification } from '../../utils/discord';
 import Logger from './Logger';
 
@@ -44,13 +43,13 @@ export default class DiscordWebhookLogger extends Logger {
 
   override error = async (context: DisputeContext, reason: string, code?: number, report?: MerklReport) => {
     const errorTitles = {};
-    errorTitles[DisputeError.TreeRoot] = '❌ Roots do not match';
-    errorTitles[DisputeError.OnChainFetch] = '🔴 On-chain data unavailable';
-    errorTitles[DisputeError.BlocktimeFetch] = '🔴 Block data unavailable';
-    errorTitles[DisputeError.EpochFetch] = '🔴 Merkle root data unavailable';
-    errorTitles[DisputeError.TreeFetch] = '🔴 Merkle tree data unavailable';
-    errorTitles[DisputeError.NegativeDiff] = '🚸 Negative diff detected';
-    errorTitles[DisputeError.AlreadyClaimed] = '🚸 Already claimed detected';
+    errorTitles[BotError.TreeRoot] = '❌ Roots do not match';
+    errorTitles[BotError.OnChainFetch] = '🔴 On-chain data unavailable';
+    errorTitles[BotError.BlocktimeFetch] = '🔴 Block data unavailable';
+    errorTitles[BotError.EpochFetch] = '🔴 Merkle root data unavailable';
+    errorTitles[BotError.TreeFetch] = '🔴 Merkle tree data unavailable';
+    errorTitles[BotError.NegativeDiff] = '🚸 Negative diff detected';
+    errorTitles[BotError.AlreadyClaimed] = '🚸 Already claimed detected';
 
     try {
       await sendDiscordNotification({
@@ -69,14 +68,16 @@ export default class DiscordWebhookLogger extends Logger {
 
   override disputeError = async (context: DisputeContext, reason: string, code?: number, report?: MerklReport) => {
     const errorTitles = {};
-    errorTitles[DisputeError.KeeperApprove] = '❌ Transaction failed (approve)';
-    errorTitles[DisputeError.KeerperDispute] = '❌ Transaction failed (disputeTree)';
-    errorTitles[DisputeError.KeeperInit] = '❌ Signer creation failed';
+    errorTitles[BotError.KeeperApprove] = '❌ Transaction failed (approve)';
+    errorTitles[BotError.KeeperDispute] = '❌ Transaction failed (disputeTree)';
+    errorTitles[BotError.KeeperCreate] = '❌ Signer creation failed';
+
+    console.log('??', reason, errorTitles[code]);
 
     try {
       await sendDiscordNotification({
         title: errorTitles[code],
-        description: reason,
+        description: reason ?? '',
         isAlert: true,
         severity: 'error',
         fields: fieldsFromReport(report),
@@ -108,7 +109,7 @@ export default class DiscordWebhookLogger extends Logger {
     try {
       await sendDiscordNotification({
         title: `⚔️ Dispute Successful \n`,
-        description: 'I checked the merkle root update and found no anomalies',
+        description: 'Anomalies found, a dispute has been triggered',
         isAlert: true,
         severity: 'success',
         fields: fieldsFromReport(report),

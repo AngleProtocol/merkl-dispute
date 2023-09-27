@@ -34,11 +34,11 @@ const approveDisputeStake: Step = async ({ onChainProvider, chainId }, report, r
     const approveReceipt = await onChainProvider.sendApproveTxn(signer, disputeToken, disputeAmount, txnOverrides);
 
     return { ...report, disputeReport: { ...report.disputeReport, approveReceipt } };
-  } catch (reason) {
+  } catch (err) {
     resolve(
       Result.Error({
         code: BotError.KeeperApprove,
-        reason,
+        reason: err?.reason ?? "Couldn't send transaction",
         report,
       })
     );
@@ -61,11 +61,11 @@ const disputeTree: Step = async ({ onChainProvider, chainId }, report, resolve) 
     const disputeReceipt = await onChainProvider.sendApproveTxn(signer, disputeToken, disputeAmount, txnOverrides);
 
     return { ...report, disputeReport: { ...report.disputeReport, disputeReceipt } };
-  } catch (reason) {
+  } catch (err) {
     resolve(
       Result.Error({
         code: BotError.KeeperApprove,
-        reason,
+        reason: err?.reason ?? "Couldn't send transaction",
         report,
       })
     );

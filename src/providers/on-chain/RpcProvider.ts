@@ -10,11 +10,11 @@ import {
 import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
 import { BigNumber, Overrides, providers, Wallet } from 'ethers';
 
-import { HolderDetail } from '../../bot/holder-checks';
 import { PoolInterface } from '../../types';
 import { batchMulticallCall, multicallContractCall } from '../../utils';
 import { ExponentialFetchParams } from '../ExponentialBackoffProvider';
 import OnChainProvider from './OnChainProvider';
+import { HolderDetail } from '../../types/holders';
 
 // type fragment =
 //   | 'disputeToken'

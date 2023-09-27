@@ -1,37 +1,11 @@
-import { Console } from 'console';
-import { Transform } from 'stream';
-
 import { DisputeContext } from './bot/context';
-import checkHoldersDiffs, { DistributionChanges, HolderDetail } from './bot/holder-checks';
+import { validateHolders } from './bot/validity';
 import { buildMerklTree, round } from './helpers';
-import logTableToGist, { createGist } from './helpers/createGist';
+import createDiffTable from './helpers/diffTable';
 import ConsoleLogger from './helpers/logger/ConsoleLogger';
 import blockFromTimestamp from './providers/blockNumberFromTimestamp';
 
-async function logDiff(details: HolderDetail[], changePerDistrib: DistributionChanges) {
-  console.table(details, [
-    'holder',
-    'diff',
-    'symbol',
-    'poolName',
-    'distribution',
-    'percent',
-    'diffAverageBoost',
-    'totalCumulated',
-    'alreadyClaimed',
-    'issueSpotted',
-  ]);
-
-  console.table(
-    Object.keys(changePerDistrib)
-      .map((k) => {
-        return { ...changePerDistrib[k], epoch: round(changePerDistrib[k].epoch, 4) };
-      })
-      .sort((a, b) => (a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : 0))
-  );
-}
-
-export default async function (context: DisputeContext, fromTimeStamp: number, toTimeStamp: number, uploadToGist: boolean) {
+export default async function (context: DisputeContext, fromTimeStamp: number, toTimeStamp: number) {
   const { merkleRootsProvider, onChainProvider } = context;
   const logger = new ConsoleLogger();
 
@@ -57,5 +31,6 @@ export default async function (context: DisputeContext, fromTimeStamp: number, t
 
   logger.computedRoots(startRoot, endRoot);
 
-  await checkHoldersDiffs(context, startTree, endTree, uploadToGist ? logTableToGist : logDiff);
+  const holdersReport = await validateHolders(onChainProvider, startTree, endTree);
+  await createDiffTable(holdersReport.details, holdersReport.changePerDistrib, !context.uploadDiffTable);
 }

@@ -1,9 +1,9 @@
+import { AMMType } from '@angleprotocol/sdk';
 import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/constants/types/DistributionCreator';
-import { BigNumber, ContractReceipt, ContractTransaction, Overrides, Signer, Wallet, providers } from 'ethers';
+import { BigNumber, ContractReceipt, Overrides, Wallet } from 'ethers';
 
 import { ExponentialBackoffProvider, ExponentialFetchParams } from '../ExponentialBackoffProvider';
-import { AMMType } from '@angleprotocol/sdk';
-import { HolderClaims, HolderDetail } from '../../bot/holder-checks';
+import { HolderClaims, HolderDetail } from '../../types/holders';
 
 export type OnChainParams = {
   disputeToken: string;
