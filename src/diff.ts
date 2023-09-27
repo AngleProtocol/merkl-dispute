@@ -32,5 +32,6 @@ export default async function (context: DisputeContext, fromTimeStamp: number, t
   logger.computedRoots(startRoot, endRoot);
 
   const holdersReport = await validateHolders(onChainProvider, startTree, endTree);
-  await createDiffTable(holdersReport.details, holdersReport.changePerDistrib, !context.uploadDiffTable);
+  const res = await createDiffTable(holdersReport.details, holdersReport.changePerDistrib, !context.uploadDiffTable);
+  context.uploadDiffTable && console.log("output:", res);
 }

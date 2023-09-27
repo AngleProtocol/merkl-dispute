@@ -48,6 +48,8 @@ yarn install
 yarn build
 ```
 
+yarn bot diff --chain 1 --from 1695734659 --to 1695821059 --gist
+
 ### Every n seconds
 
 Run the bot periodically (recommended interval is 1 hour):
@@ -67,10 +69,11 @@ yarn bot run --chain <chainId> --block <blockNumber>
 
 ### Compare two points in time
 
-You can compare two points in time and generate a diff table with:
+You can compare two points in time and generate a diff table, using `--gist` requires `KEEPER_GITHUB_AUTH_TOKEN` env variable.
 
 ```bash
-yarn bot run --chain <chainId> --from <timestamp1> --to <timestamp1>
+yarn bot diff --chain <chainId> --from <timestamp1> --to <timestamp1>
+yarn bot diff --chain <chainId> --from <timestamp1> --to <timestamp1> --gist
 ```
 
 ### As a server

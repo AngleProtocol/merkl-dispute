@@ -52,7 +52,7 @@ export default async function createDiffTable(details: HolderDetail[], changePer
 
     if (local) return undefined;
 
-    return await createGist('A gist', (ts.read() || '').toString());
+    return await createGist('Merkl Dispute Bot diff', (ts.read() || '').toString());
   } catch (err) {
     return undefined;
   }
