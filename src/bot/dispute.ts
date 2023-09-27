@@ -1,45 +1,83 @@
 import { ChainId } from '@angleprotocol/sdk';
-import { ContractTransaction, utils, Wallet } from 'ethers';
+import { utils, Wallet } from 'ethers';
 
-import { OnChainParams } from '../providers/on-chain/OnChainProvider';
+import { BotError, MerklReport, Resolver, Result, Step, StepResult } from '../types/bot';
 import { DisputeContext } from './context';
-import { DisputeError } from './errors';
-import { DisputeState } from './run';
 
-const triggerDispute = async (params: OnChainParams, context: DisputeContext, state: DisputeState): Promise<DisputeState> => {
-  const { onChainProvider, chainId } = context;
-
-  //Init keeper wallet
-  let keeper: Wallet;
+const createSigner: Step = async (context, report, resolve) => {
   try {
-    keeper = new Wallet(process.env.DISPUTE_BOT_PRIVATE_KEY);
-  } catch (err) {
-    return { error: true, code: DisputeError.KeeperInit, reason: `Couldn't init keeper wallet` };
+    const privateKey = process.env.DISPUTE_BOT_PRIVATE_KEY;
+
+    if (!privateKey || privateKey === '') throw 'Signer not provided';
+
+    const signer = new Wallet(privateKey);
+
+    return { ...report, disputeReport: { signer } };
+  } catch (reason) {
+    resolve(Result.Error({ code: BotError.KeeperCreate, reason, report }));
   }
-
-  //Approve disputeToken to contract
-  let approveTxn: ContractTransaction;
-  const txnOverrides =
-    chainId === ChainId.POLYGON ? { maxPriorityFeePerGas: utils.parseUnits('50', 9), maxFeePerGas: utils.parseUnits('350', 9) } : {};
-
-  /** _3-b might approve the contract */
-  try {
-    approveTxn = await onChainProvider.sendApproveTxn(keeper, params.disputeToken, params.disputeAmount, txnOverrides);
-  } catch (err) {
-    return { error: true, code: DisputeError.KeeperApprove, reason: `Transaction ${approveTxn} failed from ${keeper.address}` };
-  }
-
-  //Dispute tree
-  let disputeTxn: ContractTransaction;
-
-  /** _3-c dispute the tree */
-  try {
-    disputeTxn = await onChainProvider.sendDisputeTxn(keeper, state.reason, txnOverrides);
-  } catch (err) {
-    return { error: true, code: DisputeError.KeerperDispute, reason: `Transaction ${disputeTxn} failed from ${keeper.address}` };
-  }
-
-  return { error: false, reason: `Transaction ${disputeTxn.hash} succeeded` };
 };
 
-export default triggerDispute;
+const approveDisputeStake: Step = async ({ onChainProvider, chainId }, report, resolve) => {
+  try {
+    const { disputeToken, disputeAmount } = report?.params;
+    const { signer } = report?.disputeReport;
+
+    const txnOverrides =
+      chainId === ChainId.POLYGON
+        ? {
+            maxPriorityFeePerGas: utils.parseUnits('50', 9),
+            maxFeePerGas: utils.parseUnits('350', 9),
+          }
+        : {};
+
+    const approveReceipt = await onChainProvider.sendApproveTxn(signer, disputeToken, disputeAmount, txnOverrides);
+
+    return { ...report, disputeReport: { ...report.disputeReport, approveReceipt } };
+  } catch (reason) {
+    resolve(
+      Result.Error({
+        code: BotError.KeeperApprove,
+        reason,
+        report,
+      })
+    );
+  }
+};
+
+const disputeTree: Step = async ({ onChainProvider, chainId }, report, resolve) => {
+  try {
+    const { disputeToken, disputeAmount } = report?.params;
+    const { signer } = report?.disputeReport;
+
+    const txnOverrides =
+      chainId === ChainId.POLYGON
+        ? {
+            maxPriorityFeePerGas: utils.parseUnits('50', 9),
+            maxFeePerGas: utils.parseUnits('350', 9),
+          }
+        : {};
+
+    const disputeReceipt = await onChainProvider.sendApproveTxn(signer, disputeToken, disputeAmount, txnOverrides);
+
+    return { ...report, disputeReport: { ...report.disputeReport, disputeReceipt } };
+  } catch (reason) {
+    resolve(
+      Result.Error({
+        code: BotError.KeeperApprove,
+        reason,
+        report,
+      })
+    );
+  }
+};
+
+export default async function dispute(context: DisputeContext, report: MerklReport): Promise<StepResult> {
+  return new Promise(async function (resolve: Resolver) {
+    report = await createSigner(context, report, resolve);
+    report = await approveDisputeStake(context, report, resolve);
+    report = await disputeTree(context, report, resolve);
+
+    resolve(Result.Exit({ reason: 'No problemo', report }));
+  });
+}

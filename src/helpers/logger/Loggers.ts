@@ -3,7 +3,7 @@ import { AggregatedRewardsType } from '@angleprotocol/sdk';
 import { DisputeContext } from '../../bot/context';
 import { OnChainParams } from '../../providers/on-chain/OnChainProvider';
 import Logger from './Logger';
-import { MerklReport } from '../../bot/runner';
+import { MerklReport } from '../../types/bot';
 
 export default class Loggers extends Logger {
   loggers: Logger[];

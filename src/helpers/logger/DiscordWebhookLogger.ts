@@ -1,16 +1,8 @@
 import { DisputeContext } from '../../bot/context';
 import { DisputeError } from '../../bot/errors';
-import { MerklReport } from '../../bot/runner';
+import { MerklReport } from '../../types/bot';
 import { sendDiscordNotification } from '../../utils/discord';
 import Logger from './Logger';
-
-const chains = {
-  137: 'Polygon',
-  1: 'Ethereum',
-  10: 'Optimism',
-  42161: 'Arbitrum',
-  1101: 'Polygon zvEVM',
-};
 
 function fieldsFromReport(report?: MerklReport) {
   return [

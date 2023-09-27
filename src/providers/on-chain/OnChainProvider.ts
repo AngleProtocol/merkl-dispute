@@ -1,5 +1,5 @@
 import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/constants/types/DistributionCreator';
-import { BigNumber, ContractTransaction, Overrides, Signer, Wallet, providers } from 'ethers';
+import { BigNumber, ContractReceipt, ContractTransaction, Overrides, Signer, Wallet, providers } from 'ethers';
 
 import { ExponentialBackoffProvider, ExponentialFetchParams } from '../ExponentialBackoffProvider';
 import { AMMType } from '@angleprotocol/sdk';
@@ -35,9 +35,9 @@ export default abstract class OnChainProvider extends ExponentialBackoffProvider
     disputeToken: string,
     disputeAmount: BigNumber,
     overrides: Overrides
-  ) => Promise<ContractTransaction>;
+  ) => Promise<ContractReceipt>;
 
-  protected abstract dispute: (keeper: Wallet, reason: string, overrides: Overrides) => Promise<ContractTransaction>;
+  protected abstract dispute: (keeper: Wallet, reason: string, overrides: Overrides) => Promise<ContractReceipt>;
   protected abstract mountBlock: () => Promise<number>;
 
   setBlock(blockNumber: number) {

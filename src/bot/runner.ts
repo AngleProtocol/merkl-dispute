@@ -1,64 +1,17 @@
-import { AggregatedRewardsType, ChainId } from '@angleprotocol/sdk';
+import { Console } from 'console';
 import moment from 'moment';
+import { Transform } from 'stream';
 
 import { NULL_ADDRESS } from '../constants';
 import { buildMerklTree, round } from '../helpers';
-import { OnChainParams } from '../providers/on-chain/OnChainProvider';
-import { DisputeContext } from './context';
-import { HoldersReport, validateClaims, validateHolders } from './validity';
-import { Transform } from 'stream';
-import { Console } from 'console';
 import { createGist } from '../helpers/createGist';
+import { BotError, MerklReport, Resolver, Result, Step, StepResult } from '../types/bot';
+import { HoldersReport } from '../types/holders';
+import { DisputeContext } from './context';
+import dispute from './dispute';
+import { validateClaims, validateHolders } from './validity';
 
-export type CheckUpError = {
-  code: CheckError;
-  reason: string;
-  report: MerklReport;
-};
-
-export type CheckUpExit = {
-  reason: string;
-  report: MerklReport;
-};
-
-export type MerklReport = {
-  startTime?: number;
-  blockNumber?: number;
-  startEpoch?: number;
-  startRoot?: string;
-  startTree?: AggregatedRewardsType;
-  endEpoch?: number;
-  endRoot?: string;
-  endTree?: AggregatedRewardsType;
-  params?: OnChainParams;
-  chainId?: ChainId;
-  holdersReport?: HoldersReport;
-  diffTableUrl?: string;
-};
-
-export enum CheckError {
-  None = -1,
-  OnChainFetch,
-  BlocktimeFetch,
-  EpochFetch,
-  TreeFetch,
-  TreeRoot,
-  NegativeDiff,
-  AlreadyClaimed,
-}
-
-type Exit = { err: false; res: CheckUpExit };
-type Error = { err: true; res: CheckUpError };
-type CheckUpResult = Exit | Error;
-
-export const Result = Object.freeze({
-  Exit: (exit: CheckUpExit): CheckUpResult => ({ err: false, res: exit }),
-  Error: (error: CheckUpError): CheckUpResult => ({ err: true, res: error }),
-});
-type Resolver = (res: CheckUpResult | PromiseLike<CheckUpResult>) => void;
-type CheckUpStep = ({ onChainProvider, blockNumber }: DisputeContext, report: MerklReport, resolve: Resolver) => Promise<MerklReport>;
-
-const checkBlockTime: CheckUpStep = async (context, report, resolve) => {
+const checkBlockTime: Step = async (context, report, resolve) => {
   try {
     const { onChainProvider, blockNumber, logger } = context;
     const timestamp = !!blockNumber ? await onChainProvider.fetchTimestampAt(blockNumber) : moment().unix();
@@ -68,11 +21,11 @@ const checkBlockTime: CheckUpStep = async (context, report, resolve) => {
 
     return { ...report, blockNumber: block, startTime: timestamp };
   } catch (err) {
-    resolve(Result.Error({ code: CheckError.BlocktimeFetch, reason: 'No check', report }));
+    resolve(Result.Error({ code: BotError.BlocktimeFetch, reason: 'No check', report }));
   }
 };
 
-const checkOnChainParams: CheckUpStep = async ({ onChainProvider, logger }, report, resolve) => {
+const checkOnChainParams: Step = async ({ onChainProvider, logger }, report, resolve) => {
   try {
     onChainProvider.setBlock(report.blockNumber);
     const params = await onChainProvider.fetchOnChainParams();
@@ -81,11 +34,11 @@ const checkOnChainParams: CheckUpStep = async ({ onChainProvider, logger }, repo
 
     return { ...report, params };
   } catch (err) {
-    resolve(Result.Error({ code: CheckError.OnChainFetch, reason: 'No check', report }));
+    resolve(Result.Error({ code: BotError.OnChainFetch, reason: 'No check', report }));
   }
 };
 
-const checkDisputeWindow: CheckUpStep = async (context, report, resolve) => {
+const checkDisputeWindow: Step = async (context, report, resolve) => {
   try {
     const { startTime } = report;
     const { disputer, disputeToken, endOfDisputePeriod } = report?.params;
@@ -95,11 +48,11 @@ const checkDisputeWindow: CheckUpStep = async (context, report, resolve) => {
     else if (endOfDisputePeriod <= startTime) resolve(Result.Exit({ reason: 'Not in dispute period', report }));
     return report;
   } catch (err) {
-    resolve(Result.Error({ code: CheckError.OnChainFetch, reason: 'No check', report }));
+    resolve(Result.Error({ code: BotError.OnChainFetch, reason: 'No check', report }));
   }
 };
 
-const checkEpochs: CheckUpStep = async ({ merkleRootsProvider }, report, resolve) => {
+const checkEpochs: Step = async ({ merkleRootsProvider }, report, resolve) => {
   try {
     const { startRoot, endRoot } = report.params;
 
@@ -108,11 +61,11 @@ const checkEpochs: CheckUpStep = async ({ merkleRootsProvider }, report, resolve
 
     return { ...report, startEpoch, endEpoch };
   } catch (err) {
-    resolve(Result.Error({ code: CheckError.EpochFetch, reason: 'No check', report }));
+    resolve(Result.Error({ code: BotError.EpochFetch, reason: 'No check', report }));
   }
 };
 
-const checkTrees: CheckUpStep = async ({ merkleRootsProvider, logger }, report, resolve) => {
+const checkTrees: Step = async ({ merkleRootsProvider, logger }, report, resolve) => {
   try {
     const { startEpoch, endEpoch } = report;
 
@@ -123,11 +76,11 @@ const checkTrees: CheckUpStep = async ({ merkleRootsProvider, logger }, report, 
 
     return { ...report, startTree, endTree };
   } catch (err) {
-    resolve(Result.Error({ code: CheckError.TreeFetch, reason: 'No check', report }));
+    resolve(Result.Error({ code: BotError.TreeFetch, reason: 'No check', report }));
   }
 };
 
-const checkRoots: CheckUpStep = async ({ logger }, report, resolve) => {
+const checkRoots: Step = async ({ logger }, report, resolve) => {
   try {
     const { startTree, endTree } = report;
 
@@ -140,11 +93,11 @@ const checkRoots: CheckUpStep = async ({ logger }, report, resolve) => {
     if (endRoot !== endTree.merklRoot) throw 'End merkle root is not correct';
     else return { ...report, startRoot, endRoot };
   } catch (reason) {
-    resolve(Result.Error({ code: CheckError.TreeRoot, reason, report }));
+    resolve(Result.Error({ code: BotError.TreeRoot, reason, report }));
   }
 };
 
-const checkHolderValidity: CheckUpStep = async ({ onChainProvider }, report, resolve) => {
+const checkHolderValidity: Step = async ({ onChainProvider }, report, resolve) => {
   let holdersReport: HoldersReport;
 
   try {
@@ -156,11 +109,11 @@ const checkHolderValidity: CheckUpStep = async ({ onChainProvider }, report, res
 
     return { ...report, holdersReport };
   } catch (reason) {
-    resolve(Result.Error({ code: CheckError.NegativeDiff, reason, report: { ...report, holdersReport } }));
+    resolve(Result.Error({ code: BotError.NegativeDiff, reason, report: { ...report, holdersReport } }));
   }
 };
 
-const checkOverclaimedRewards: CheckUpStep = async ({ onChainProvider }, report, resolve) => {
+const checkOverclaimedRewards: Step = async ({ onChainProvider }, report, resolve) => {
   let expandedHoldersReport: HoldersReport;
 
   try {
@@ -172,7 +125,7 @@ const checkOverclaimedRewards: CheckUpStep = async ({ onChainProvider }, report,
 
     return { ...report, holdersReport: expandedHoldersReport };
   } catch (reason) {
-    resolve(Result.Error({ code: CheckError.AlreadyClaimed, reason, report: { ...report, holdersReport: expandedHoldersReport } }));
+    resolve(Result.Error({ code: BotError.AlreadyClaimed, reason, report: { ...report, holdersReport: expandedHoldersReport } }));
   }
 };
 
@@ -214,7 +167,7 @@ const createDiffTable = async (report) => {
   }
 };
 
-export async function checkUpOnMerkl(context: DisputeContext): Promise<CheckUpResult> {
+export async function checkUpOnMerkl(context: DisputeContext): Promise<StepResult> {
   return new Promise(async function (resolve: Resolver) {
     let report: MerklReport = {};
 
@@ -238,9 +191,19 @@ export default async function run(context: DisputeContext) {
 
   checkUpResult.res.report.diffTableUrl = diffTableUrl;
 
-  if (checkUpResult.err) {
-    logger?.error(context, checkUpResult.res.reason, checkUpResult.res.code, checkUpResult.res.report);
-  } else {
+  if (!checkUpResult.err) {
     logger?.success(context, checkUpResult.res.reason, checkUpResult.res.report);
+    return;
   }
+
+  logger?.error(context, checkUpResult.res.reason, checkUpResult.res.code, checkUpResult.res.report);
+
+  const disputeResult = await dispute(context, checkUpResult.res.report);
+
+  if (!disputeResult.err) {
+    logger?.success(context, disputeResult.res.reason, disputeResult.res.report);
+    return;
+  }
+
+  logger?.error(context, disputeResult.res.reason, disputeResult.res.code, disputeResult.res.report);
 }

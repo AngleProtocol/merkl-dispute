@@ -11,7 +11,7 @@ type ProblematicBlock = {
   errorCode?: number;
 };
 
-const tryAtBlock = async ({chainId, blockNumber, errorCode}: ProblematicBlock) => {
+const tryAtBlock = async ({ chainId, blockNumber, errorCode }: ProblematicBlock) => {
   const testContext: DisputeContext = defaultContext(chainId, blockNumber);
   testContext.logger = undefined;
   const { error, code, reason } = await checkDisputeOpportunity(testContext);

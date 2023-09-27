@@ -4,8 +4,8 @@ import { BigNumber } from 'ethers';
 
 import { DisputeContext } from '../../bot/context';
 import { OnChainParams } from '../../providers/on-chain/OnChainProvider';
+import { MerklReport } from '../../types/bot';
 import Logger from './Logger';
-import { MerklReport } from '../../bot/runner';
 
 const chains = {
   137: 'Polygon',

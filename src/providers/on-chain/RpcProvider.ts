@@ -56,16 +56,15 @@ export default class RpcProvider extends OnChainProvider {
       disputeAmount,
       overrides
     );
-    await txn.wait();
-    return txn;
+
+    return await txn.wait();
   };
 
   override dispute = async (keeper: Wallet, reason: string, overrides: Overrides) => {
     const distributorContract = Distributor__factory.connect(this.distributor, keeper.connect(this.provider));
     const txn = await distributorContract.disputeTree(reason, overrides);
 
-    await txn.wait();
-    return txn;
+    return await txn.wait();
   };
 
   override mountBlock = async (): Promise<number> => {

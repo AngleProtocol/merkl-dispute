@@ -2,10 +2,8 @@ import { AggregatedRewardsType, Int256 } from '@angleprotocol/sdk';
 import { BigNumber } from 'ethers';
 
 import { round } from '../helpers';
-import { DisputeContext } from './context';
-import { DisputeError } from './errors';
-import { DisputeState } from './run';
 import OnChainProvider from '../providers/on-chain/OnChainProvider';
+import { DistributionChanges, HolderClaims, HolderDetail, HoldersReport, UnclaimedRewards } from '../types/holders';
 
 function gatherHolders(startTree: AggregatedRewardsType, endTree: AggregatedRewardsType): any[] {
   const holders = [];
@@ -27,41 +25,6 @@ function gatherHolders(startTree: AggregatedRewardsType, endTree: AggregatedRewa
 
   return holders;
 }
-
-export type HolderDetail = {
-  holder: string;
-  diff: number;
-  symbol: string;
-  poolName: string;
-  distribution: string;
-  percent?: number;
-  diffAverageBoost?: number;
-  decimals?: number;
-  tokenAddress?: string;
-  issueSpotted?: boolean;
-};
-
-export type HolderClaims = { [address: string]: { [symbol: string]: string } };
-
-export type DistributionChange = {
-  diff: number;
-  symbol: string;
-  poolName: string;
-  pool: any;
-  recipients: number;
-  ratePerEpoch: number;
-  epoch: number;
-};
-
-export type DistributionChanges = { [address: string]: DistributionChange };
-export type UnclaimedRewards = { [address: string]: { [symbol: string]: Int256 } };
-export type HoldersReport = {
-  details: HolderDetail[];
-  changePerDistrib: DistributionChanges;
-  unclaimed: UnclaimedRewards;
-  negativeDiffs: string[];
-  overclaimed?: string[];
-};
 
 export async function validateHolders(
   onChainProvider: OnChainProvider,
