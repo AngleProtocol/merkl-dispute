@@ -74,9 +74,16 @@ const disputeTree: Step = async ({ onChainProvider, chainId }, report, resolve) 
 
 export default async function dispute(context: DisputeContext, report: MerklReport): Promise<StepResult> {
   return new Promise(async function (resolve: Resolver) {
-    report = await createSigner(context, report, resolve);
-    report = await approveDisputeStake(context, report, resolve);
-    report = await disputeTree(context, report, resolve);
+    let resolved = false;
+
+    const res = (a) => {
+      resolved = true;
+      resolve(a);
+    };
+
+    if (!resolved) report = await createSigner(context, report, res);
+    if (!resolved) report = await approveDisputeStake(context, report, res);
+    if (!resolved) report = await disputeTree(context, report, res);
 
     resolve(Result.Exit({ reason: 'No problemo', report }));
   });

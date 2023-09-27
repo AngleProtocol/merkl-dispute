@@ -4,31 +4,43 @@ import { sendDiscordNotification } from '../../utils/discord';
 import Logger from './Logger';
 
 function fieldsFromReport(report?: MerklReport) {
-  return [
-    {
+  const fields = [];
+
+  report?.diffTableUrl &&
+    fields.push({
       name: 'gist',
-      value: `${report?.diffTableUrl ?? 'unavailable'}`,
-    },
-    {
+      value: `${report?.diffTableUrl}`,
+    });
+
+  report?.startRoot &&
+    report?.startRoot &&
+    fields.push({
       name: 'roots',
-      value: `${report?.startRoot ?? 'unavailable'}\n${report?.endRoot ?? 'unavailable'}`,
-    },
-    {
+      value: `${report?.startRoot}\n${report?.startRoot}`,
+    });
+
+  report?.blockNumber?.toString() &&
+    fields.push({
       name: 'block',
       inline: true,
-      value: report?.blockNumber?.toString() ?? 'unavailable',
-    },
-    {
+      value: `${report?.blockNumber?.toString()}`,
+    });
+
+  report?.startEpoch?.toString() &&
+    fields.push({
       name: 'startEpoch',
-      value: report?.startEpoch?.toString() ?? 'unavailable',
       inline: true,
-    },
-    {
+      value: `${report?.startEpoch?.toString()}`,
+    });
+
+  report?.endEpoch?.toString() &&
+    fields.push({
       name: 'endEpoch',
-      value: report?.endEpoch?.toString() ?? 'unavailable',
       inline: true,
-    },
-  ];
+      value: `${report?.endEpoch?.toString()}`,
+    });
+
+  return fields;
 }
 
 const noLog = () => {
@@ -93,7 +105,7 @@ export default class DiscordWebhookLogger extends Logger {
     try {
       await sendDiscordNotification({
         title: `✅ Nothing to report \n`,
-        description: 'I checked the merkle root update and found no anomalies',
+        description: reason,
         isAlert: false,
         severity: 'success',
         fields: fieldsFromReport(report),
