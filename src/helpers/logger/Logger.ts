@@ -11,4 +11,6 @@ export default abstract class Logger {
   computedRoots: (start: string, end: string) => void;
   error: (context: DisputeContext, reason: string, code?: number, report?: MerklReport) => void;
   success: (context: DisputeContext, reason: string, report?: MerklReport) => void;
+  disputeError: (context: DisputeContext, reason: string, code?: number, report?: MerklReport) => void;
+  disputeSuccess: (context: DisputeContext, reason: string, report?: MerklReport) => void;
 }
