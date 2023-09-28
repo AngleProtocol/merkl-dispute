@@ -307,7 +307,8 @@ export const statsUserPool = async (
       const inRange = Number(pos.tickLower) <= tick && tick < Number(pos.tickUpper);
 
       const tvl = BN2Number(amount0, token0Decimals) * prices[token0Symbol] + BN2Number(amount1, token1Decimals) * prices[token1Symbol];
-      const positionRewards = poolRewards.filter((p) => p.Origin === type)?.[0] ?? { Earned: 0, Token: 'ANGLE' };
+      const positionRewards =
+        poolRewards.filter((p) => p.Origin === type)?.reduce((prev, curr) => prev + curr.Earned * prices[curr.Token], 0) ?? 0;
 
       if (BN2Number(amount0, token0Decimals) > 0 || BN2Number(amount1, token1Decimals) > 0) {
         stats.push({
@@ -320,14 +321,11 @@ export const statsUserPool = async (
           liquidity: liquidity?.toString(),
           inRange,
           tvl,
-          earned: positionRewards.Earned * prices[positionRewards.Token],
+          earned: positionRewards,
           propFee: inRange ? round(Int256.from(liquidity, 0).mul(10000).div(liquidityInPool).toNumber() / 100, 2) : 0,
           propAmount0: inRange ? round((BN2Number(amount0, token0Decimals) / amount0InPool) * 100, 2) : 0,
           propAmount1: inRange ? round((BN2Number(amount1, token1Decimals) / amount1InPool) * 100, 2) : 0,
-          inducedAPR: round(
-            ((positionRewards.Earned * prices[positionRewards.Token] * YEAR) / (endEpoch * HOUR - startEpoch * HOUR) / tvl) * 100,
-            3
-          ),
+          inducedAPR: round(((positionRewards * YEAR) / (endEpoch * HOUR - startEpoch * HOUR) / tvl) * 100, 3),
         });
       }
     };
@@ -401,7 +399,8 @@ export const statsUserPool = async (
 
           const type = ALMType[alm.origin];
           const tvl = userAmount0InAlm * prices[token0Symbol] + userAmount1InAlm * prices[token1Symbol];
-          const positionRewards = poolRewards.filter((p) => p.Origin === type)?.[0] ?? { Earned: 0, Token: 'ANGLE' };
+          const positionRewards =
+            poolRewards.filter((p) => p.Origin === type)?.reduce((prev, curr) => prev + curr.Earned * prices[curr.Token], 0) ?? 0;
 
           if (userAmount0InAlm !== 0 || userAmount1InAlm !== 0) {
             stats.push({
@@ -413,14 +412,11 @@ export const statsUserPool = async (
                 .div(1e8)
                 .toString(),
               tvl,
-              earned: positionRewards.Earned * prices[positionRewards.Token],
+              earned: positionRewards,
               propFee: round((proportion * Int256.from(liquidityInAlm, 0).mul(10000).div(liquidityInPool).toNumber()) / 100, 2),
               propAmount0: round((userAmount0InAlm / amount0InPool) * 100, 2),
               propAmount1: round((userAmount1InAlm / amount1InPool) * 100, 2),
-              inducedAPR: round(
-                ((positionRewards.Earned * prices[positionRewards.Token] * YEAR) / (endEpoch * HOUR - startEpoch * HOUR) / tvl) * 100,
-                3
-              ),
+              inducedAPR: round(((positionRewards * YEAR) / (endEpoch * HOUR - startEpoch * HOUR) / tvl) * 100, 3),
             });
           }
         } catch (e) {
