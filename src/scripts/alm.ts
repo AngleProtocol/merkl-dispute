@@ -27,7 +27,12 @@ async function getALMChainRewards(
 ): Promise<{ startEpoch: number; endEpoch: number; accumulatedRewards: AccumulatedRewards[]; accumulatedTokens: string[] }> {
   const ALMname = ALMType[almType];
 
-  const { startEpoch, endEpoch, startTree, endTree } = await fetchRewardJson(chainId, merklIndex, startTimestamp, endTimestamp);
+  const { startEpoch, endEpoch, startAccumulatedRewards, endAccumulatedRewards } = await fetchRewardJson(
+    chainId,
+    merklIndex,
+    startTimestamp,
+    endTimestamp
+  );
 
   const accumulatedRewards: AccumulatedRewards[] = [];
   const accumulatedTokens = [];
@@ -39,23 +44,23 @@ async function getALMChainRewards(
         .format('ddd DD MMM YYYY HH:00')} to ${moment.unix(endEpoch * HOUR).format('ddd DD MMM YYYY HH:00')} `
     );
 
-  for (const k of Object.keys(endTree.rewards)) {
-    const pool = endTree?.rewards?.[k]?.pool;
+  for (const k of Object.keys(endAccumulatedRewards.rewards)) {
+    const pool = endAccumulatedRewards?.rewards?.[k]?.pool;
     const poolApiData = merklAPIData?.pools?.[getAddress(pool)];
     // Sometimes api fails to return the pool data
     if (!poolApiData) continue;
-    const symbol = endTree?.rewards?.[k].tokenSymbol;
-    const decimals = endTree?.rewards?.[k].tokenDecimals;
+    const symbol = endAccumulatedRewards?.rewards?.[k].tokenSymbol;
+    const decimals = endAccumulatedRewards?.rewards?.[k].tokenDecimals;
     const name = poolName(poolApiData);
-    const amm = endTree?.rewards?.[k]?.amm;
+    const amm = endAccumulatedRewards?.rewards?.[k]?.amm;
     const origin = AMMType[poolApiData?.amm];
 
-    const holders = Object.keys(endTree?.rewards?.[k]?.holders);
+    const holders = Object.keys(endAccumulatedRewards?.rewards?.[k]?.holders);
     const rewards = holders.reduce((res, user) => {
-      const newAmount = endTree?.rewards?.[k]?.holders?.[user]?.amount;
-      const oldAmount = startTree?.rewards?.[k]?.holders?.[user]?.amount;
-      const newBreakdown = endTree?.rewards?.[k]?.holders?.[user]?.breakdown;
-      const oldBreakdown = startTree?.rewards?.[k]?.holders?.[user]?.breakdown;
+      const newAmount = endAccumulatedRewards?.rewards?.[k]?.holders?.[user]?.amount;
+      const oldAmount = startAccumulatedRewards?.rewards?.[k]?.holders?.[user]?.amount;
+      const newBreakdown = endAccumulatedRewards?.rewards?.[k]?.holders?.[user]?.breakdown;
+      const oldBreakdown = startAccumulatedRewards?.rewards?.[k]?.holders?.[user]?.breakdown;
 
       if (newAmount !== oldAmount && Object.keys(newBreakdown).includes(ALMname)) {
         const earned = Int256.from(BigNumber.from(newBreakdown?.[ALMname] ?? 0).sub(oldBreakdown?.[ALMname] ?? 0), decimals).toNumber();

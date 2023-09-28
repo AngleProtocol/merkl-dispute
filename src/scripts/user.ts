@@ -29,7 +29,12 @@ export const reportUser = async (
   const { prices, merklIndex, merklAPIData } = await fetchReportData(chainId);
 
   /** 2 - Rounds down timestamp to the last reward computation and fetch trees */
-  const { startEpoch, endEpoch, startTree, endTree } = await fetchRewardJson(chainId, merklIndex, startTimestamp, endTimestamp);
+  const { startEpoch, endEpoch, startAccumulatedRewards, endAccumulatedRewards } = await fetchRewardJson(
+    chainId,
+    merklIndex,
+    startTimestamp,
+    endTimestamp
+  );
 
   const accumulatedRewards: AccumulatedRewards[] = [];
 
@@ -40,20 +45,20 @@ export const reportUser = async (
   );
   const accumulatedTokens = [];
 
-  for (const k of Object.keys(endTree.rewards)) {
-    const newAmount = endTree?.rewards?.[k]?.holders?.[user]?.amount;
-    const oldAmount = startTree?.rewards?.[k]?.holders?.[user]?.amount;
-    const newBreakdown = endTree?.rewards?.[k]?.holders?.[user]?.breakdown;
-    const oldBreakdown = startTree?.rewards?.[k]?.holders?.[user]?.breakdown;
+  for (const k of Object.keys(endAccumulatedRewards.rewards)) {
+    const newAmount = endAccumulatedRewards?.rewards?.[k]?.holders?.[user]?.amount;
+    const oldAmount = startAccumulatedRewards?.rewards?.[k]?.holders?.[user]?.amount;
+    const newBreakdown = endAccumulatedRewards?.rewards?.[k]?.holders?.[user]?.breakdown;
+    const oldBreakdown = startAccumulatedRewards?.rewards?.[k]?.holders?.[user]?.breakdown;
 
     if (newAmount !== oldAmount) {
       for (const reason of Object.keys(newBreakdown)) {
-        const symbol = endTree?.rewards?.[k].tokenSymbol;
+        const symbol = endAccumulatedRewards?.rewards?.[k].tokenSymbol;
         if (!accumulatedTokens.includes(symbol)) {
           accumulatedTokens.push(symbol);
         }
-        const decimals = endTree?.rewards?.[k].tokenDecimals;
-        const pool = endTree?.rewards?.[k]?.pool;
+        const decimals = endAccumulatedRewards?.rewards?.[k].tokenDecimals;
+        const pool = endAccumulatedRewards?.rewards?.[k]?.pool;
         const earned = Int256.from(BigNumber.from(newBreakdown?.[reason] ?? 0).sub(oldBreakdown?.[reason] ?? 0), decimals).toNumber();
 
         const poolApiData = merklAPIData?.pools?.[getAddress(pool)];
@@ -63,7 +68,7 @@ export const reportUser = async (
           Token: symbol,
           Origin: reason,
           PoolName: poolName(poolApiData),
-          Amm: endTree?.rewards?.[k]?.amm,
+          Amm: endAccumulatedRewards?.rewards?.[k]?.amm,
           Distribution: k,
           PoolAddress: pool,
         });

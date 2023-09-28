@@ -63,7 +63,7 @@ export const roundDownWhileKeyNotFound = (merklIndex: MerklIndexType, timestamp:
   return epoch;
 };
 
-export const fetchTree = async (chainId: number, epoch: number): Promise<AggregatedRewardsType> => {
+export const fetchAccumulatedRewards = async (chainId: number, epoch: number): Promise<AggregatedRewardsType> => {
   return (
     await axios.get<AggregatedRewardsType>(GITHUB_URL + `${chainId + `/backup/rewards_${epoch}.json`}`, {
       timeout: 5000,
@@ -119,15 +119,20 @@ export const fetchRewardJson = async (
   merklIndex: MerklIndexType,
   startTimestamp: number,
   endTimestamp: number
-): Promise<{ startEpoch: number; endEpoch: number; startTree: AggregatedRewardsType; endTree: AggregatedRewardsType }> => {
+): Promise<{
+  startEpoch: number;
+  endEpoch: number;
+  startAccumulatedRewards: AggregatedRewardsType;
+  endAccumulatedRewards: AggregatedRewardsType;
+}> => {
   const startEpoch = roundDownWhileKeyNotFound(merklIndex, startTimestamp);
   const endEpoch = roundDownWhileKeyNotFound(merklIndex, endTimestamp);
-  let startTree: AggregatedRewardsType, endTree: AggregatedRewardsType;
+  let startAccumulatedRewards: AggregatedRewardsType, endAccumulatedRewards: AggregatedRewardsType;
   await Promise.all([
-    fetchTree(chainId, startEpoch).then((res) => (startTree = res)),
-    fetchTree(chainId, endEpoch).then((res) => (endTree = res)),
+    fetchAccumulatedRewards(chainId, startEpoch).then((res) => (startAccumulatedRewards = res)),
+    fetchAccumulatedRewards(chainId, endEpoch).then((res) => (endAccumulatedRewards = res)),
   ]);
-  return { startEpoch, endEpoch, startTree, endTree };
+  return { startEpoch, endEpoch, startAccumulatedRewards, endAccumulatedRewards };
 };
 
 export const statsUserPool = async (
