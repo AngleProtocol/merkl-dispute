@@ -23,6 +23,10 @@ const approveDisputeStake: Step = async ({ onChainProvider, chainId }, report, r
     const { disputeToken, disputeAmount } = report?.params;
     const { signer } = report?.disputeReport;
 
+    const approval = await onChainProvider.fetchApproval(signer.address, disputeToken);
+
+    if (approval >= disputeAmount) return report;
+
     const txnOverrides =
       chainId === ChainId.POLYGON
         ? {

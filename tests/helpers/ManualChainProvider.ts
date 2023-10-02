@@ -1,5 +1,5 @@
 import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/constants/types/DistributionCreator';
-import { ContractReceipt } from 'ethers';
+import { BigNumber, ContractReceipt } from 'ethers';
 
 import OnChainProvider, { OnChainParams } from '../../src/providers/on-chain/OnChainProvider';
 import { HolderClaims } from '../../src/types/holders';
@@ -36,6 +36,7 @@ export default class ManualChainProvider extends OnChainProvider {
   override timestampAt = async () => new Promise<number>((_, reject) => reject());
   override approve = async () => new Promise<ContractReceipt>((_, reject) => reject());
   override dispute = async () => new Promise<ContractReceipt>((_, reject) => reject());
+  override approval = async () => new Promise<BigNumber>((_, reject) => reject());
 
   override mountBlock = async () => new Promise<number>((_, reject) => reject());
 }

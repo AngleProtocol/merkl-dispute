@@ -39,6 +39,7 @@ export default abstract class OnChainProvider extends ExponentialBackoffProvider
 
   protected abstract dispute: (keeper: Wallet, reason: string, overrides: Overrides) => Promise<ContractReceipt>;
   protected abstract mountBlock: () => Promise<number>;
+  protected abstract approval: (address: string, token: string) => Promise<BigNumber>;
 
   setBlock(blockNumber: number) {
     this.blockNumber = blockNumber;
@@ -62,6 +63,10 @@ export default abstract class OnChainProvider extends ExponentialBackoffProvider
 
   async fetchPoolName(pool: string, amm: AMMType): Promise<string> {
     return this.retryWithExponentialBackoff(this.poolName, this.fetchParams, pool, amm);
+  }
+
+  async fetchApproval(address: string, token: string): Promise<BigNumber> {
+    return this.retryWithExponentialBackoff(this.approval, this.fetchParams, address, token);
   }
 
   async fetchActiveDistributions(): Promise<ExtensiveDistributionParametersStructOutput[]> {

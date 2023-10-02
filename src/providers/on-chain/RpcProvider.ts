@@ -50,6 +50,10 @@ export default class RpcProvider extends OnChainProvider {
     this.distributorCreator = distributorCreator;
   }
 
+  override approval = async (address: string, token: string) => {
+    return await Erc20__factory.connect(token, this.provider).allowance(address, this.distributor);
+  };
+
   override approve = async (keeper: Wallet, disputeToken: string, disputeAmount: BigNumber, overrides: Overrides) => {
     const txn = await Erc20__factory.connect(disputeToken, keeper.connect(this.provider)).approve(
       this.distributor,
