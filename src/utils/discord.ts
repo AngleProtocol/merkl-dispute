@@ -17,6 +17,7 @@ const chainFooter = {
   10: { text: 'Optimism', iconURL: 'https://cdn.jsdelivr.net/gh/webThreeBuilder/CryptoLogos/logos/10.png' },
   42161: { text: 'Arbitrum', iconURL: 'https://cdn.jsdelivr.net/gh/webThreeBuilder/CryptoLogos/logos/42161.png' },
   1101: { text: 'Polygon zvEVM', iconURL: 'https://cdn.jsdelivr.net/gh/webThreeBuilder/CryptoLogos/logos/matic.png' },
+  8453: { text: 'Base', iconURL: 'https://icons.llamao.fi/icons/chains/rsz_base.jpg' },
 };
 
 const getChannel = (discordClient: Client<boolean>, channelName: string) => {

@@ -35,7 +35,7 @@ import { ANGLE_API, GITHUB_URL, HOUR, MULTICALL_ADDRESS, YEAR } from '../constan
 import { round } from '../helpers';
 import { positionsQuery } from '../helpers/queries';
 import { httpProvider } from '../providers';
-import { MerklIndexType } from '../routes';
+import { MerklIndexType } from '../providers/merkl-roots/GithubRootsProvider';
 import { AccumulatedRewards, PositionType, Price, UserStats } from '../types';
 import { getBlockAfterTimestamp } from '.';
 
