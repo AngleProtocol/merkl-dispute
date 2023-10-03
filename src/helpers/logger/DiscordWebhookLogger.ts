@@ -16,7 +16,7 @@ function fieldsFromReport(report?: MerklReport) {
     report?.startRoot &&
     fields.push({
       name: 'roots',
-      value: `${report?.startRoot}\n${report?.startRoot}`,
+      value: `${report?.startRoot}\n${report?.endRoot}`,
     });
 
   report?.blockNumber?.toString() &&
