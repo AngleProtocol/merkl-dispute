@@ -8,7 +8,7 @@ import { getAddress } from 'ethers/lib/utils';
 import moment from 'moment';
 
 import { HOUR } from '../constants';
-import { MerklIndexType } from '../routes';
+import { MerklIndexType } from '../providers/merkl-roots/GithubRootsProvider';
 import { AccumulatedRewards, UserStats } from '../types';
 import { linespace } from '../utils/merkl';
 import { aggregatedStats, almCheck, fetchReportData, fetchRewardJson, paramsCheck, poolName, statsUserPool } from '../utils/report';
