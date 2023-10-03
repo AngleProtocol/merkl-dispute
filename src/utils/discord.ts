@@ -70,6 +70,7 @@ export async function sendDiscordNotification(params: {
         discordClient.destroy();
         resolve({});
       });
+      resolve({});
     } catch (e) {
       console.log('merkl dispute bot', `❌ couldn't send summary to discord with reason: \n ${e}`);
       reject();

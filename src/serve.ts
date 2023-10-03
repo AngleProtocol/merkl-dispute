@@ -28,11 +28,10 @@ export default function () {
 
     try {
       await run(context);
+      return res.status(200).send('OK');
     } catch (err) {
-      return res.status(500);
+      return res.status(500).send('KO');
     }
-
-    return res.status(200);
   });
 
   app.listen(PORT, () => {

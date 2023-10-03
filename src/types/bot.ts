@@ -16,6 +16,11 @@ export type StepExit = {
   report: MerklReport;
 };
 
+export type StepSuccess = {
+  reason: string;
+  report: MerklReport;
+};
+
 export type DisputeReport = {
   signer?: Wallet;
   approveReceipt?: ContractReceipt;
@@ -52,16 +57,18 @@ export enum BotError {
   KeeperDispute,
 }
 
-export type Exit<T> = { err: false; res: T };
-export type Error<E> = { err: true; res: E };
-export type Result<T, E> = Exit<T> | Error<E>;
+export type Exit<T> = { err: false; exit: true; res: T };
+export type Success<S> = { err: false; exit: false; res: S };
+export type Error<E> = { err: true; exit: true; res: E };
+export type Result<T, E, S> = Exit<T> | Error<E> | Success<S>;
 
 export const Result = Object.freeze({
-  Exit: <T, E>(exit: T): Result<T, E> => ({ err: false, res: exit }),
-  Error: <T, E>(err: E): Result<T, E> => ({ err: true, res: err }),
+  Success: (report: MerklReport): StepResult => ({ err: false, exit: false, res: { reason: '', report } }),
+  Exit: (exit: StepExit): StepResult => ({ err: false, exit: true, res: exit }),
+  Error: (err: StepError): StepResult => ({ err: true, exit: true, res: err }),
 });
 
-export type StepResult = Result<StepExit, StepError>;
+export type StepResult = Result<StepExit, StepError, StepSuccess>;
 
 export type Resolver = (res: StepResult | PromiseLike<StepResult>) => void;
-export type Step = ({ onChainProvider, blockNumber }: DisputeContext, report: MerklReport, resolve: Resolver) => Promise<MerklReport>;
+export type Step = ({ onChainProvider, blockNumber }: DisputeContext, report: MerklReport) => Promise<StepResult>;

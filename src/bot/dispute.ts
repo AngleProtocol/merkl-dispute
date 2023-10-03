@@ -4,7 +4,7 @@ import { utils, Wallet } from 'ethers';
 import { BotError, MerklReport, Resolver, Result, Step, StepResult } from '../types/bot';
 import { DisputeContext } from './context';
 
-const createSigner: Step = async (context, report, resolve) => {
+export const createSigner: Step = async (context, report) => {
   try {
     const privateKey = process.env.DISPUTE_BOT_PRIVATE_KEY;
 
@@ -12,20 +12,20 @@ const createSigner: Step = async (context, report, resolve) => {
 
     const signer = new Wallet(privateKey);
 
-    return { ...report, disputeReport: { signer } };
+    return Result.Success({ ...report, disputeReport: { signer } });
   } catch (reason) {
-    resolve(Result.Error({ code: BotError.KeeperCreate, reason, report }));
+    return Result.Error({ code: BotError.KeeperCreate, reason, report });
   }
 };
 
-const approveDisputeStake: Step = async ({ onChainProvider, chainId }, report, resolve) => {
+export const approveDisputeStake: Step = async ({ onChainProvider, chainId }, report) => {
   try {
     const { disputeToken, disputeAmount } = report?.params;
     const { signer } = report?.disputeReport;
 
     const approval = await onChainProvider.fetchApproval(signer.address, disputeToken);
 
-    if (approval >= disputeAmount) return report;
+    if (approval >= disputeAmount) return Result.Success(report);
 
     const txnOverrides =
       chainId === ChainId.POLYGON
@@ -37,19 +37,17 @@ const approveDisputeStake: Step = async ({ onChainProvider, chainId }, report, r
 
     const approveReceipt = await onChainProvider.sendApproveTxn(signer, disputeToken, disputeAmount, txnOverrides);
 
-    return { ...report, disputeReport: { ...report.disputeReport, approveReceipt } };
+    return Result.Success({ ...report, disputeReport: { ...report.disputeReport, approveReceipt } });
   } catch (err) {
-    resolve(
-      Result.Error({
-        code: BotError.KeeperApprove,
-        reason: err?.reason ?? "Couldn't send transaction",
-        report,
-      })
-    );
+    return Result.Error({
+      code: BotError.KeeperApprove,
+      reason: err?.reason ?? "Couldn't send transaction",
+      report,
+    });
   }
 };
 
-const disputeTree: Step = async ({ onChainProvider, chainId }, report, resolve) => {
+export const disputeTree: Step = async ({ onChainProvider, chainId }, report) => {
   try {
     const { disputeToken, disputeAmount } = report?.params;
     const { signer } = report?.disputeReport;
@@ -64,31 +62,12 @@ const disputeTree: Step = async ({ onChainProvider, chainId }, report, resolve) 
 
     const disputeReceipt = await onChainProvider.sendApproveTxn(signer, disputeToken, disputeAmount, txnOverrides);
 
-    return { ...report, disputeReport: { ...report.disputeReport, disputeReceipt } };
+    return Result.Success({ ...report, disputeReport: { ...report.disputeReport, disputeReceipt } });
   } catch (err) {
-    resolve(
-      Result.Error({
-        code: BotError.KeeperApprove,
-        reason: err?.reason ?? "Couldn't send transaction",
-        report,
-      })
-    );
+    return Result.Error({
+      code: BotError.KeeperApprove,
+      reason: err?.reason ?? "Couldn't send transaction",
+      report,
+    });
   }
 };
-
-export default async function dispute(context: DisputeContext, report: MerklReport): Promise<StepResult> {
-  return new Promise(async function (resolve: Resolver) {
-    let resolved = false;
-
-    const res = (a) => {
-      resolved = true;
-      resolve(a);
-    };
-
-    if (!resolved) report = await createSigner(context, report, res);
-    if (!resolved) report = await approveDisputeStake(context, report, res);
-    if (!resolved) report = await disputeTree(context, report, res);
-
-    resolve(Result.Exit({ reason: 'No problemo', report }));
-  });
-}
