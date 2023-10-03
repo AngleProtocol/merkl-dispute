@@ -145,6 +145,7 @@ export async function fetchPositions(
       .concat(directPositionsData.closedPositions)
       .map((position) => {
         return {
+          id: position.id,
           endTimestamp: position.endTimestamp,
           owner: position.owner,
           startTimestamp: position.startTimestamp,
