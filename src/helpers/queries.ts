@@ -131,3 +131,56 @@ export const holdersQuery = gql`
       }
     }
   `;
+
+export const positionsQuery = gql`
+  query Positions($owners: [String!], $timestamp: Int!, $pool: String!) {
+    nft: nftpositions(where: { owner_in: $owners, pool: $pool, endTimestamp: 0 }) {
+      id
+      pool {
+        id
+      }
+      startTimestamp
+      endTimestamp
+      tickLower
+      tickUpper
+      liquidity
+      owner
+    }
+    nftPast: nftpositions(where: { owner_in: $owners, pool: $pool, endTimestamp_gt: $timestamp }) {
+      id
+      pool {
+        id
+      }
+      startTimestamp
+      endTimestamp
+      tickLower
+      tickUpper
+      liquidity
+      owner
+    }
+    direct: directPositions(where: { owner_in: $owners, pool: $pool, endTimestamp: 0 }) {
+      id
+      pool {
+        id
+      }
+      startTimestamp
+      endTimestamp
+      tickLower
+      tickUpper
+      liquidity
+      owner
+    }
+    directPast: directPositions(where: { owner_in: $owners, pool: $pool, endTimestamp_gt: $timestamp }) {
+      id
+      pool {
+        id
+      }
+      startTimestamp
+      endTimestamp
+      tickLower
+      tickUpper
+      liquidity
+      owner
+    }
+  }
+`;

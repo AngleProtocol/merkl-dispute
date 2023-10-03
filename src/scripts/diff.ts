@@ -20,7 +20,7 @@ import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/
 import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
 import console from 'console';
 
-import { GITHUB_URL } from '../constants';
+import { GITHUB_URL, MULTICALL_ADDRESS } from '../constants';
 import { buildMerklTree, fetchPoolName, round } from '../helpers';
 import { httpProvider } from '../providers';
 import { batchMulticallCall, multicallContractCall, retryWithExponentialBackoff } from '../utils';
@@ -52,7 +52,7 @@ export const reportDiff = async (
   let error = false;
   let reason = '';
   const provider = httpProvider(chainId);
-  const multicall = Multicall__factory.connect('0xcA11bde05977b3631167028862bE2a173976CA11', provider);
+  const multicall = Multicall__factory.connect(MULTICALL_ADDRESS, provider);
   const distributorInterface = Distributor__factory.createInterface();
 
   let startTree: AggregatedRewardsType;

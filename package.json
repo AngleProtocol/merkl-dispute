@@ -1,5 +1,5 @@
 {
-  "name": "merkl-calculator",
+  "name": "merkl-dispute",
   "version": "1.0.0",
   "main": "index.js",
   "author": "picodes <picodes@angle.money>",
@@ -13,14 +13,17 @@
     "test": "mocha --require ts-node/register tests/**/*.test.ts",
     "report:pool": "yarn ts-node src/scripts/pool.ts",
     "report:diff": "yarn ts-node src/scripts/reportDiff.ts",
-    "deploy": "chmod +x ./scripts/deploy.sh && ./scripts/deploy.sh",
+    "report:user": "yarn ts-node src/scripts/reportUser.ts",
+    "report:alm": "yarn ts-node src/scripts/reportAlm.ts",
+    "update": "chmod +x ./scripts/deploy.sh && ./scripts/deploy.sh",
+    "deploy": "chmod +x ./scripts/publishAndDeploy.sh && ./scripts/publishAndDeploy.sh",
     "gcp-build": "yarn build",
     "merge": "git checkout staging && git pull origin staging && yarn && git checkout main && git pull origin main && git merge --ff-only staging && git push --force-with-lease origin main",
     "start:local": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts serve",
     "publish-image": "chmod +x ./scripts/publish.sh && ./scripts/publish.sh"
   },
   "dependencies": {
-    "@angleprotocol/sdk": "^3.0.101",
+    "@angleprotocol/sdk": "^3.0.115",
     "@google-cloud/secret-manager": "^4.2.2",
     "@octokit/rest": "19.0.13",
     "@types/chai": "^4.3.6",
@@ -33,6 +36,7 @@
     "dotenv": "^16.0.1",
     "ethers": "^5.7.2",
     "express": "^4.18.1",
+    "graphql-request": "^6.1.0",
     "keccak256": "^1.0.6",
     "merkletreejs": "^0.3.10",
     "moment": "^2.29.4"
