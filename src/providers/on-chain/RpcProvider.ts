@@ -6,11 +6,11 @@ import {
   Distributor__factory,
   Erc20__factory,
   Multicall__factory,
+  PoolInterface,
 } from '@angleprotocol/sdk';
 import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
 import { BigNumber, Overrides, providers, Wallet } from 'ethers';
 
-import { PoolInterface } from '../../types';
 import { batchMulticallCall, multicallContractCall } from '../../utils';
 import { ExponentialFetchParams } from '../ExponentialBackoffProvider';
 import OnChainProvider from './OnChainProvider';

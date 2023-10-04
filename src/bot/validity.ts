@@ -73,7 +73,7 @@ export async function validateHolders(
           try {
             poolName[pool] = await onChainProvider.fetchPoolName(pool, endTree?.rewards?.[k]?.amm);
           } catch (err) {
-            console.log('err fetching poolName', err);
+            console.log(`Error fetching poolName ${poolName[pool]} (${pool}):${endTree?.rewards?.[k]?.amm}`, err);
           }
         }
         let ratePerEpoch;
