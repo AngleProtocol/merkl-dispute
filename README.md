@@ -16,28 +16,19 @@ This mechanism can prevent a malicious or accidental update of the new reward da
 
 ## Pre-requisites
 
-You must provide some neccesary environment variables:
+You must provide some neccesary environment variables (see [.env.example](./.env.example)):
 ```env
-PORT: 5002
-ENV: 'prod'
+PORT= 5002
+ENV= 'prod'
 
 CHAINID= 1
-KEEPER_GITHUB_AUTH_TOKEN= ""
 DISPUTE_BOT_PRIVATE_KEY= ""
-DISCORD_TOKEN= ""
 PROVIDER_137= ""
 PROVIDER_10= ""
 PROVIDER_1= ""
 PROVIDER_42161= ""
 PROVIDER_1101= ""
 ```
-
-### As Angle Labs devs
-
-You must have access to the following email addresses :
-
-merkl.dispute.1@gmail.com
-merkl.dispute.2@gmail.com
 
 ## Run the bot
 
@@ -90,3 +81,9 @@ GET http://localhost:5002/
 GET http://localhost:5002/<chainId>/
 GET http://localhost:5002/<chainId>/<blockNumber>
 ```
+
+## Optional logging tools
+
+The bot supports Discord logging and gist creation for the diff tables, enable those features by providing env variables `DISCORD_TOKEN`, `DISCORD_LOG_CHANNEL`, `DISCORD_ALERT_CHANNEL` and `KEEPER_GITHUB_AUTH_TOKEN` respectively.
+
+![image](./docs/discord-logging.png)
