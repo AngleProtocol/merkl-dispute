@@ -18,7 +18,7 @@ spec:
         - name: CHAINID
           value: CHANGE_ME # spec.template.spec.containers.env[0].value
         - name: ENV
-          value: prod
+          value: dev
         - name: DISPUTE_BOT_PRIVATE_KEY
           valueFrom:
             secretKeyRef:
@@ -79,7 +79,7 @@ spec:
             port: '5002'
           timeoutSeconds: 240
       serviceAccountName: CHANGE_ME # spec.template.spec.serviceAccountName
-      timeoutSeconds: '300'
+      timeoutSeconds: '600'
   traffic:
   - latestRevision: true
     percent: 100

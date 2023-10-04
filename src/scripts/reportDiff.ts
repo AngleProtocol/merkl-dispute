@@ -13,7 +13,9 @@ const chainId = ChainId.POLYGON;
  *  main branch
  */
 const params: ReportDiffParams = {
-  MODE: 'LAST',
+  MODE: 'TIMESTAMP',
+  startTimestamp: 1693494010,
+  endTimestamp: 1695600000,
 };
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////

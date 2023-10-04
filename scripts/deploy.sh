@@ -1,5 +1,4 @@
 #!/bin/bash
-
 account=$1
 version=$2
 
