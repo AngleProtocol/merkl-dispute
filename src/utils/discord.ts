@@ -43,11 +43,13 @@ export async function sendDiscordNotification(params: {
       discordClient.login(process.env.DISCORD_TOKEN);
 
       const env = process.env.ENV;
+      const logChannel = process.env.DISCORD_LOG_CHANNEL ?? 'dispute-bot-logs';
+      const alertChannel = process.env.DISCORD_LOG_CHANNEL ?? 'dispute-bot';
 
       let channel: TextChannel;
 
       discordClient.on('ready', async () => {
-        channel = getChannel(discordClient, !params.isAlert || env !== 'prod' ? 'dispute-bot-logs' : 'dispute-bot');
+        channel = getChannel(discordClient, !params.isAlert || env !== 'prod' ? logChannel : alertChannel);
         if (!channel) {
           console.log(params.key, '❌ discord channel not found');
           return;
