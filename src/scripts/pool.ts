@@ -58,32 +58,32 @@ export const reportPool = async (
   console.table(diffRewards);
   console.table(rewardsOriginBreakdown);
 
-  const tokenName = Object.keys(rewardsTokenAmount)[1];
-  //   const breakdownUserClaimed = rewardsClaimed(
-  //     chainId,
-  //     pool,
-  //     rewardsTokenAmount[tokenName].tokenAddress,
-  //     rewardsTokenAmount[tokenName].tokenDecimal,
-  //     holders,
-  //     startEpoch * HOUR,
-  //     endEpoch * HOUR,
-  //     startAccumulatedRewards,
-  //     endAccumulatedRewards
-  //   );
-  //   console.table(breakdownUserClaimed);
-  Object.keys(rewardsTokenAmount).map((token, i) => {
-    if (i === 0) return;
-    const breakdownUserClaimed = rewardsClaimed(
-      chainId,
-      pool,
-      rewardsTokenAmount[token].tokenAddress,
-      rewardsTokenAmount[token].tokenDecimal,
-      holders,
-      startEpoch * HOUR,
-      endEpoch * HOUR,
-      startAccumulatedRewards,
-      endAccumulatedRewards
-    );
-    console.table(breakdownUserClaimed);
-  });
+  const tokenName = Object.keys(rewardsTokenAmount)[2];
+  const breakdownUserClaimed = rewardsClaimed(
+    chainId,
+    pool,
+    rewardsTokenAmount[tokenName].tokenAddress,
+    rewardsTokenAmount[tokenName].tokenDecimal,
+    holders,
+    startEpoch,
+    endEpoch,
+    startAccumulatedRewards,
+    endAccumulatedRewards
+  );
+  console.table(breakdownUserClaimed);
+  //   Object.keys(rewardsTokenAmount).map((token, i) => {
+  //     if (i === 0) return;
+  //     const breakdownUserClaimed = rewardsClaimed(
+  //       chainId,
+  //       pool,
+  //       rewardsTokenAmount[token].tokenAddress,
+  //       rewardsTokenAmount[token].tokenDecimal,
+  //       holders,
+  //       startEpoch,
+  //       endEpoch,
+  //       startAccumulatedRewards,
+  //       endAccumulatedRewards
+  //     );
+  //     console.table(breakdownUserClaimed);
+  //   });
 };

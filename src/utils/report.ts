@@ -632,8 +632,8 @@ export const rewardsClaimed = async (
   tokenAddress: string,
   tokenDecimals: number,
   holders: string[],
-  startTimestamp: number,
-  endTimestamp: number,
+  startEpoch: number,
+  endEpoch: number,
   startAccumulatedRewards: AggregatedRewardsType,
   endAccumulatedRewards: AggregatedRewardsType
 ) => {
@@ -647,6 +647,9 @@ export const rewardsClaimed = async (
   const calls: Multicall3.Call3Struct[] = [];
   const DistributorInterface = Distributor__factory.createInterface();
 
+  const startBlockNumber = await getBlockAfterTimestamp(chainId, startEpoch * HOUR);
+  const endBlockNumber = await getBlockAfterTimestamp(chainId, endEpoch * HOUR);
+
   // 1 - Check all on chain claimed rewards for the period
   holders.map((holder) =>
     calls.push({
@@ -655,16 +658,17 @@ export const rewardsClaimed = async (
       target: distributorAddress,
     })
   );
-
-  let result = await multicall.callStatic.aggregate3(calls, { blockTag: endTimestamp });
-
   const claimed = {} as { [holder: string]: number };
+
+  let result = await multicall.callStatic.aggregate3(calls, { blockTag: endBlockNumber });
   holders.map(
     (holder, i) =>
       (claimed[holder] = BN2Number(DistributorInterface.decodeFunctionResult('claimed', result[i]?.returnData)?.[0], tokenDecimals))
   );
 
-  result = await multicall.callStatic.aggregate3(calls, { blockTag: startTimestamp });
+  console.table(claimed);
+
+  result = await multicall.callStatic.aggregate3(calls, { blockTag: startBlockNumber });
   holders.map(
     (holder, i) =>
       (claimed[holder] -= BN2Number(DistributorInterface.decodeFunctionResult('claimed', result[i]?.returnData)?.[0], tokenDecimals))
@@ -724,17 +728,21 @@ export const rewardsClaimed = async (
     });
   });
 
+  console.table(breakdownUserClaimable);
+
   // 3 Compute proportionnaly what the users have claimed
   const breakdownUserClaimed = {} as {
     [holder: string]: { [breakdown: string]: number };
   };
-  holders.map((user) => {
+
+  Object.keys(breakdownUserClaimable).map((user) => {
     breakdownUserClaimed[user] = {};
     for (const origin of Object.keys(breakdownUserClaimable[user].totalClaimable)) {
       breakdownUserClaimed[user][origin] =
         (breakdownUserClaimable[user].totalClaimable[origin] / breakdownUserClaimable[user].specificClaimable[origin]) * claimed[user];
     }
   });
+  console.table(breakdownUserClaimed);
 
   return breakdownUserClaimed;
 };
