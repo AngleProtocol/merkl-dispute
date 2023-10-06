@@ -23,8 +23,8 @@ import console from 'console';
 import { GITHUB_URL, MULTICALL_ADDRESS } from '../constants';
 import { buildMerklTree, fetchPoolName, round } from '../helpers';
 import { httpProvider } from '../providers';
-import { batchMulticallCall, multicallContractCall, retryWithExponentialBackoff } from '../utils';
 import { MerklIndexType } from '../providers/merkl-roots/GithubRootsProvider';
+import { batchMulticallCall, multicallContractCall, retryWithExponentialBackoff } from '../utils';
 
 export type ReportDiffParams =
   | {
@@ -148,8 +148,8 @@ export const reportDiff = async (
 
   /** Roots reconciliations */
   const root = buildMerklTree(endTree.rewards).tree.getHexRoot();
-  console.log("computed end", root);
-  
+  console.log('computed end', root);
+
   if (root !== endTree.merklRoot) {
     error = true;
     reason = `End tree merkl root is not correct`;
@@ -157,7 +157,7 @@ export const reportDiff = async (
   }
 
   const startRoot = buildMerklTree(startTree.rewards).tree.getHexRoot();
-  console.log("computed start", startRoot);
+  console.log('computed start', startRoot);
   if (startRoot !== startTree.merklRoot) {
     error = true;
     reason = `Start tree merkl root is not correct`;
