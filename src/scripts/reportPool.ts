@@ -16,8 +16,8 @@ import moment from 'moment';
 
 // /** Uniswap like pool */
 const chainId = ChainId.MAINNET;
-const pool = '0x4D4c8F2f30e0224889ab578283A844e10B57e0F8';
-const ammType = AMMType.PancakeSwapV3;
+const pool = '0x8dB1b906d47dFc1D84A87fc49bd0522e285b98b9';
+const ammType = AMMType.UniswapV3;
 const startTimestamp = moment().subtract(5, 'day').unix();
 const endTimestamp = moment().subtract(1, 'day').unix();
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////

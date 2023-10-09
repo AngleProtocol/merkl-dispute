@@ -50,7 +50,7 @@ export const reportPool = async (
       .format('ddd DD MMM YYYY HH:00')} to ${moment.unix(endEpoch * HOUR).format('ddd DD MMM YYYY HH:00')} `
   );
 
-  const { distributions, distributionFiltered, rewardsTokenAmount } = await statsPoolRewardId(chainId, pool, startEpoch, endEpoch, prices);
+  const { distributionFiltered, rewardsTokenAmount } = await statsPoolRewardId(chainId, pool, startEpoch, endEpoch, prices);
   console.table(rewardsTokenAmount);
   console.table(distributionFiltered);
 
@@ -58,32 +58,20 @@ export const reportPool = async (
   console.table(diffRewards);
   console.table(rewardsOriginBreakdown);
 
-  const tokenName = Object.keys(rewardsTokenAmount)[2];
-  const breakdownUserClaimed = rewardsClaimed(
-    chainId,
-    pool,
-    rewardsTokenAmount[tokenName].tokenAddress,
-    rewardsTokenAmount[tokenName].tokenDecimal,
-    holders,
-    startEpoch,
-    endEpoch,
-    startAccumulatedRewards,
-    endAccumulatedRewards
-  );
-  console.table(breakdownUserClaimed);
-  //   Object.keys(rewardsTokenAmount).map((token, i) => {
-  //     if (i === 0) return;
-  //     const breakdownUserClaimed = rewardsClaimed(
-  //       chainId,
-  //       pool,
-  //       rewardsTokenAmount[token].tokenAddress,
-  //       rewardsTokenAmount[token].tokenDecimal,
-  //       holders,
-  //       startEpoch,
-  //       endEpoch,
-  //       startAccumulatedRewards,
-  //       endAccumulatedRewards
-  //     );
-  //     console.table(breakdownUserClaimed);
-  //   });
+  [...new Set(Object.keys(rewardsTokenAmount))].map(async (token, i) => {
+    if (i === 0) return;
+    const breakdownUserClaimed = await rewardsClaimed(
+      chainId,
+      pool,
+      rewardsTokenAmount[token].tokenAddress,
+      rewardsTokenAmount[token].tokenDecimal,
+      holders,
+      startEpoch,
+      endEpoch,
+      startAccumulatedRewards,
+      endAccumulatedRewards
+    );
+    console.log(`\nThe ${token} rewards where claimed for the specific pool during this period: \n`);
+    console.table(breakdownUserClaimed);
+  });
 };

@@ -658,6 +658,7 @@ export const rewardsClaimed = async (
       target: distributorAddress,
     })
   );
+
   const claimed = {} as { [holder: string]: number };
 
   let result = await multicall.callStatic.aggregate3(calls, { blockTag: endBlockNumber });
@@ -666,15 +667,11 @@ export const rewardsClaimed = async (
       (claimed[holder] = BN2Number(DistributorInterface.decodeFunctionResult('claimed', result[i]?.returnData)?.[0], tokenDecimals))
   );
 
-  console.table(claimed);
-
   result = await multicall.callStatic.aggregate3(calls, { blockTag: startBlockNumber });
   holders.map(
     (holder, i) =>
       (claimed[holder] -= BN2Number(DistributorInterface.decodeFunctionResult('claimed', result[i]?.returnData)?.[0], tokenDecimals))
   );
-
-  console.table(claimed);
 
   // 2 - Compute total claimable on the token for each users
   const breakdownUserClaimable = {} as {
@@ -706,12 +703,12 @@ export const rewardsClaimed = async (
         if (newAmount !== oldAmount) {
           if (!breakdownUserClaimable[user]) breakdownUserClaimable[user] = { totalClaimable: {}, specificClaimable: {} };
           const totalEarned = BN2Number(BigNumber.from(newAmount ?? 0).sub(oldAmount ?? 0), decimals);
-          if (!breakdownUserClaimable[user].totalClaimable['total']) breakdownUserClaimable[user].totalClaimable['total'] = 0;
-          breakdownUserClaimable[user].totalClaimable['total'] += totalEarned;
+          if (!breakdownUserClaimable[user].totalClaimable['Total']) breakdownUserClaimable[user].totalClaimable['Total'] = 0;
+          breakdownUserClaimable[user].totalClaimable['Total'] += totalEarned;
 
           if (pool.toLowerCase() === rewardPool.toLowerCase()) {
-            if (!breakdownUserClaimable[user].specificClaimable['total']) breakdownUserClaimable[user].specificClaimable['total'] = 0;
-            breakdownUserClaimable[user].specificClaimable['total'] += totalEarned;
+            if (!breakdownUserClaimable[user].specificClaimable['Total']) breakdownUserClaimable[user].specificClaimable['Total'] = 0;
+            breakdownUserClaimable[user].specificClaimable['Total'] += totalEarned;
           }
 
           for (const reason of Object.keys(newBreakdown)) {
@@ -728,21 +725,19 @@ export const rewardsClaimed = async (
     });
   });
 
-  console.table(breakdownUserClaimable);
-
   // 3 Compute proportionnaly what the users have claimed
   const breakdownUserClaimed = {} as {
-    [holder: string]: { [breakdown: string]: number };
+    [holder: string]: { [breakdown: string]: string };
   };
 
   Object.keys(breakdownUserClaimable).map((user) => {
     breakdownUserClaimed[user] = {};
     for (const origin of Object.keys(breakdownUserClaimable[user].totalClaimable)) {
+      const percentClaimed = breakdownUserClaimable[user].specificClaimable[origin] / breakdownUserClaimable[user].totalClaimable[origin];
       breakdownUserClaimed[user][origin] =
-        (breakdownUserClaimable[user].totalClaimable[origin] / breakdownUserClaimable[user].specificClaimable[origin]) * claimed[user];
+        breakdownUserClaimable[user].totalClaimable[origin] == 0 ? `${0}` : `${percentClaimed * claimed[user]} (${percentClaimed * 100} %)`;
     }
   });
-  console.table(breakdownUserClaimed);
 
   return breakdownUserClaimed;
 };
