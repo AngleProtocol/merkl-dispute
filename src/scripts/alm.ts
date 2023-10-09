@@ -11,7 +11,7 @@ import { HOUR } from '../constants';
 import { MerklIndexType } from '../providers/merkl-roots/GithubRootsProvider';
 import { AccumulatedRewards, UserStats } from '../types';
 import { linespace } from '../utils/merkl';
-import { aggregatedStats, almCheck, fetchReportData, fetchRewardJson, paramsCheck, poolName, statsUserPool } from '../utils/report';
+import { aggregatedStats, almCheck, fetchReportData, fetchRewardJson, poolName, statsUserPool, userParamsCheck } from '../utils/report';
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                  MAIN FUNCTION                                                  
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
@@ -137,7 +137,7 @@ export const reportPoolAlm = async (
   endTimestamp: number,
   pool: string
 ): Promise<void> => {
-  paramsCheck(almAddress, pool, startTimestamp, endTimestamp);
+  userParamsCheck(almAddress, pool, startTimestamp, endTimestamp);
   /** 1 - Fetch useful data */
   const { prices, merklIndex, merklAPIData } = await fetchReportData(chainId);
   almCheck(merklAPIData, pool, almAddress, almType);
@@ -176,7 +176,7 @@ export const reportHistoricalPoolAPRAlm = async (
   steps: number,
   pool?: string
 ): Promise<void> => {
-  paramsCheck(almAddress, pool, startTimestamp, endTimestamp);
+  userParamsCheck(almAddress, pool, startTimestamp, endTimestamp);
   /** 1 - Fetch useful data */
   const { prices, merklIndex, merklAPIData } = await fetchReportData(chainId);
   almCheck(merklAPIData, pool, almAddress, almType);
