@@ -626,6 +626,22 @@ export const rewardsBreakdownPool = async (
   return { diffRewards, rewardsOriginBreakdown, holders };
 };
 
+export const getReceiverToken = async (token: string, endAccumulatedRewards: AggregatedRewardsType) => {
+  const filteredEndAccumulatedRewards = Object.keys(endAccumulatedRewards.rewards)
+    .filter((rewardId) => endAccumulatedRewards.rewards[rewardId].token.toLowerCase() === token.toLowerCase())
+    .reduce((cur, key) => {
+      return Object.assign(cur, { [key]: endAccumulatedRewards.rewards[key] });
+    }, {} as AggregatedRewardsType['rewards']);
+
+  let holders = [];
+  Object.keys(filteredEndAccumulatedRewards).map((rewardId) => {
+    holders.push(...Object.keys(filteredEndAccumulatedRewards[rewardId].holders));
+  });
+  holders = [...new Set(holders)];
+
+  return holders;
+};
+
 export const rewardsClaimed = async (
   chainId: MerklSupportedChainIdsType,
   pool: string,
@@ -740,4 +756,103 @@ export const rewardsClaimed = async (
   });
 
   return breakdownUserClaimed;
+};
+
+export const rewardsUnclaimed = async (
+  chainId: MerklSupportedChainIdsType,
+  tokenAddress: string,
+  tokenDecimals: number,
+  holders: string[],
+  startEpoch: number,
+  endEpoch: number,
+  startAccumulatedRewards: AggregatedRewardsType,
+  endAccumulatedRewards: AggregatedRewardsType
+) => {
+  /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                  INTERFACES                                                    
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
+  const distributorAddress = registry(chainId)?.Merkl?.Distributor;
+
+  const provider = httpProvider(chainId);
+  const multicall = Multicall__factory.connect(MULTICALL_ADDRESS, provider);
+  const calls: Multicall3.Call3Struct[] = [];
+  const DistributorInterface = Distributor__factory.createInterface();
+
+  const startBlockNumber = await getBlockAfterTimestamp(chainId, startEpoch * HOUR);
+  const endBlockNumber = await getBlockAfterTimestamp(chainId, endEpoch * HOUR);
+
+  // 1 - Check all on chain claimed rewards for the period
+  holders.map((holder) =>
+    calls.push({
+      allowFailure: true,
+      callData: DistributorInterface.encodeFunctionData('claimed', [holder, tokenAddress]),
+      target: distributorAddress,
+    })
+  );
+
+  const claimed = {} as { [holder: string]: number };
+
+  let result = await multicall.callStatic.aggregate3(calls, { blockTag: endBlockNumber });
+  holders.map(
+    (holder, i) =>
+      (claimed[holder] = BN2Number(DistributorInterface.decodeFunctionResult('claimed', result[i]?.returnData)?.[0], tokenDecimals))
+  );
+
+  result = await multicall.callStatic.aggregate3(calls, { blockTag: startBlockNumber });
+  holders.map(
+    (holder, i) =>
+      (claimed[holder] -= BN2Number(DistributorInterface.decodeFunctionResult('claimed', result[i]?.returnData)?.[0], tokenDecimals))
+  );
+
+  // First filter them by token reward
+  const filteredStartAccumulatedRewards = Object.keys(startAccumulatedRewards.rewards)
+    .filter((rewardId) => startAccumulatedRewards.rewards[rewardId].token.toLowerCase() === tokenAddress.toLowerCase())
+    .reduce((cur, key) => {
+      return Object.assign(cur, { [key]: startAccumulatedRewards.rewards[key] });
+    }, {} as AggregatedRewardsType['rewards']);
+
+  const filteredEndAccumulatedRewards = Object.keys(endAccumulatedRewards.rewards)
+    .filter((rewardId) => endAccumulatedRewards.rewards[rewardId].token.toLowerCase() === tokenAddress.toLowerCase())
+    .reduce((cur, key) => {
+      return Object.assign(cur, { [key]: endAccumulatedRewards.rewards[key] });
+    }, {} as AggregatedRewardsType['rewards']);
+
+  const rewardsInfoClaim = {} as { [reason: string]: { claimable: number; claimed: number } };
+  if (!rewardsInfoClaim['Total'])
+    rewardsInfoClaim['Total'] = {
+      claimable: 0,
+      claimed: 0,
+    };
+  holders.map((holder) => {
+    rewardsInfoClaim['Total'].claimed += claimed[holder];
+  });
+  Object.keys(filteredEndAccumulatedRewards).map((rewardId) => {
+    const decimals = filteredEndAccumulatedRewards[rewardId].tokenDecimals;
+    Object.keys(filteredEndAccumulatedRewards[rewardId].holders).map((user) => {
+      if (holders.includes(user)) {
+        const newAmount = filteredEndAccumulatedRewards[rewardId]?.holders?.[user]?.amount;
+        const oldAmount = filteredStartAccumulatedRewards[rewardId]?.holders?.[user]?.amount;
+        const newBreakdown = filteredEndAccumulatedRewards[rewardId]?.holders?.[user]?.breakdown;
+        const oldBreakdown = filteredStartAccumulatedRewards[rewardId]?.holders?.[user]?.breakdown;
+
+        if (newAmount !== oldAmount) {
+          const totalEarned = BN2Number(BigNumber.from(newAmount ?? 0).sub(oldAmount ?? 0), decimals);
+          if (!rewardsInfoClaim['Total']) rewardsInfoClaim['Total'] = { claimable: 0, claimed: 0 };
+          rewardsInfoClaim['Total'].claimable += totalEarned;
+
+          for (const reason of Object.keys(newBreakdown)) {
+            const earned = Int256.from(BigNumber.from(newBreakdown?.[reason] ?? 0).sub(oldBreakdown?.[reason] ?? 0), decimals).toNumber();
+            if (!rewardsInfoClaim[reason])
+              rewardsInfoClaim[reason] = {
+                claimable: 0,
+                claimed: 0,
+              };
+            rewardsInfoClaim[reason].claimable += earned;
+          }
+        }
+      }
+    });
+  });
+
+  return rewardsInfoClaim;
 };

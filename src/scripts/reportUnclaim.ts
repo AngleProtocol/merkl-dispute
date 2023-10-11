@@ -1,29 +1,18 @@
-import { AMMType, ChainId } from '@angleprotocol/sdk';
+import { ChainId } from '@angleprotocol/sdk';
 import moment from 'moment';
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                     PARAMETERS                                                    
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-/** Algebra like pool */
-// const chainId = ChainId.ARBITRUM;
-// const alm = '0xD68B24270CfF87941a73E583d441724FD1F887a0';
-// const almType = ALMType.Gamma;
-// const startTimestamp = moment().subtract(5, 'day').unix();
-// const endTimestamp = moment().subtract(2, 'day').unix();
-// const nbrSteps = 2;
-// const pool = '0xB1026b8e7276e7AC75410F1fcbbe21796e8f7526';
-
-// /** Uniswap like pool */
 const chainId = ChainId.ARBITRUM;
-const pool = '0xc99be44383bc8d82357f5a1d9ae9976ee9d75bee';
-const ammType = AMMType.Camelot;
+const token = { address: '0x3CAaE25Ee616f2C8E13C74dA0813402eae3F496b', decimal: 18 };
 const startTimestamp = moment().subtract(80, 'day').unix();
 const endTimestamp = moment().subtract(1, 'day').unix();
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                               END OF PARAMETERS                                                
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////*/
 
-import { reportPool } from './pool';
+import { reportUnclaimed } from './unclaimed';
 
-reportPool(chainId, ammType, pool, startTimestamp, endTimestamp);
+reportUnclaimed(chainId, token, startTimestamp, endTimestamp);

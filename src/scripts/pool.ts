@@ -13,10 +13,12 @@ import { AccumulatedRewards } from '../types';
 import {
   fetchReportData,
   fetchRewardJson,
+  getReceiverToken,
   poolName,
   poolParamsCheck,
   rewardsBreakdownPool,
   rewardsClaimed,
+  rewardsUnclaimed,
   statsPoolRewardId,
 } from '../utils/report';
 
@@ -54,24 +56,37 @@ export const reportPool = async (
   console.table(rewardsTokenAmount);
   console.table(distributionFiltered);
 
-  const { diffRewards, rewardsOriginBreakdown, holders } = await rewardsBreakdownPool(pool, startAccumulatedRewards, endAccumulatedRewards);
-  console.table(diffRewards);
-  console.table(rewardsOriginBreakdown);
+  //   const { diffRewards, rewardsOriginBreakdown, holders } = await rewardsBreakdownPool(pool, startAccumulatedRewards, endAccumulatedRewards);
+  //   console.table(diffRewards);
+  //   console.table(rewardsOriginBreakdown);
 
-  [...new Set(Object.keys(rewardsTokenAmount))].map(async (token, i) => {
-    if (i === 0) return;
-    const breakdownUserClaimed = await rewardsClaimed(
-      chainId,
-      pool,
-      rewardsTokenAmount[token].tokenAddress,
-      rewardsTokenAmount[token].tokenDecimal,
-      holders,
-      startEpoch,
-      endEpoch,
-      startAccumulatedRewards,
-      endAccumulatedRewards
-    );
-    console.log(`\nThe ${token} rewards where claimed for the specific pool during this period: \n`);
-    console.table(breakdownUserClaimed);
-  });
+  //   await [...new Set(Object.keys(rewardsTokenAmount))].map(async (token, i) => {
+  //     if (i === 0) return;
+  //     const breakdownUserClaimed = await rewardsClaimed(
+  //       chainId,
+  //       pool,
+  //       rewardsTokenAmount[token].tokenAddress,
+  //       rewardsTokenAmount[token].tokenDecimal,
+  //       holders,
+  //       startEpoch,
+  //       endEpoch,
+  //       startAccumulatedRewards,
+  //       endAccumulatedRewards
+  //     );
+  //     console.log(`\nThe ${token} rewards where claimed for the specific pool during this period: \n`);
+  //     console.table(breakdownUserClaimed);
+  //   });
+
+  const holdersRewardToken = await getReceiverToken(rewardsTokenAmount['xGRAIL'].tokenAddress, endAccumulatedRewards);
+  const rewardsInfo = await rewardsUnclaimed(
+    chainId,
+    rewardsTokenAmount['xGRAIL'].tokenAddress,
+    rewardsTokenAmount['xGRAIL'].tokenDecimal,
+    holdersRewardToken,
+    startEpoch,
+    endEpoch,
+    startAccumulatedRewards,
+    endAccumulatedRewards
+  );
+  console.table(rewardsInfo);
 };
