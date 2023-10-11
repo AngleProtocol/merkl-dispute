@@ -13,6 +13,7 @@
     "test": "mocha --require ts-node/register tests/**/*.test.ts",
     "report:position:swap": "yarn ts-node src/scripts/positionAndSwaps.ts",
     "report:diff": "yarn ts-node src/scripts/reportDiff.ts",
+    "report:unclaim": "yarn ts-node src/scripts/reportUnclaim.ts",
     "report:user": "yarn ts-node src/scripts/reportUser.ts",
     "report:alm": "yarn ts-node src/scripts/reportAlm.ts",
     "report:pool": "yarn ts-node src/scripts/reportPool.ts",
