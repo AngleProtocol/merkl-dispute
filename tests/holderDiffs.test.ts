@@ -31,6 +31,7 @@ describe('Errors in the differences between two trees', async function () {
     expect(
       await new Promise(async function (resolve) {
         const result = (res: StepResult) => {
+          
           expect(res.err).to.equal(true);
           res.err && expect(res.res.code).to.equal(BotError.NegativeDiff);
           resolve(true);
@@ -62,13 +63,9 @@ describe('Errors in the differences between two trees', async function () {
 
     expect(
       await new Promise(async function (resolve) {
-        // If result triggered than an error occured
-        const result = (res: StepResult) => {
-          resolve(false);
-        };
 
-        await result(await checkHolderValidity(testContext, testReport));
-        resolve(true);
+        const report = await checkHolderValidity(testContext, testReport);
+        resolve(!report.err);
       })
     ).to.equal(true);
   });
