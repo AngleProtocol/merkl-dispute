@@ -118,7 +118,7 @@ export async function validateClaims(onChainProvider: OnChainProvider, holdersRe
   const alreadyClaimed: HolderClaims = await onChainProvider.fetchClaimed(details);
 
   const overclaimed: string[] = [];
-
+  
   // Sort details by distribution and format numbers
   const expandedDetails = await Promise.all(
     details
@@ -128,6 +128,7 @@ export async function validateClaims(onChainProvider: OnChainProvider, holdersRe
       .map(async (d) => {
         const alreadyClaimedValue = round(Int256.from(alreadyClaimed[d.holder][d.tokenAddress], d.decimals).toNumber(), 2);
         const totalCumulated = round(unclaimed[d.holder][d.symbol].toNumber(), 2);
+        
         if (totalCumulated < alreadyClaimedValue) {
           overclaimed.push(`${d.holder}: ${alreadyClaimedValue} / ${totalCumulated} ${d.symbol}`);
         }

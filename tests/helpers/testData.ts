@@ -80,7 +80,7 @@ export const createActiveDistribution = () => {
 export const createClaims = (amount: string) => {
   const claims: HolderClaims = {
     '0xcaca6fE7DCD4BbA6053640Bf883bCA19d6d0eB82': {
-      REWARDS: amount,
+      '0xbac10c87B134742D15dA0F8db7Ee252Ce7318534': amount,
     },
   };
 

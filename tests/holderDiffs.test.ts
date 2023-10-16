@@ -28,19 +28,10 @@ describe('Errors in the differences between two trees', async function () {
       merkleRootsProvider: new ManualMerkleRootsProvider(),
     };
 
-    expect(
-      await new Promise(async function (resolve) {
-        const result = (res: StepResult) => {
-          
-          expect(res.err).to.equal(true);
-          res.err && expect(res.res.code).to.equal(BotError.NegativeDiff);
-          resolve(true);
-        };
+    const report = await checkHolderValidity(testContext, testReport);
 
-        await result(await checkHolderValidity(testContext, testReport));
-        resolve(false);
-      })
-    ).to.equal(true);
+    expect(report.err).to.equal(true);
+    report.err && expect(report.res.code).to.equal(BotError.NegativeDiff);
   });
 
   it('Should not catch a negative diff if none', async function () {
@@ -61,12 +52,8 @@ describe('Errors in the differences between two trees', async function () {
       merkleRootsProvider: new ManualMerkleRootsProvider(),
     };
 
-    expect(
-      await new Promise(async function (resolve) {
+    const report = await checkHolderValidity(testContext, testReport);
 
-        const report = await checkHolderValidity(testContext, testReport);
-        resolve(!report.err);
-      })
-    ).to.equal(true);
+    expect(report.err).to.equal(false);
   });
 });
