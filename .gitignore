@@ -1,0 +1,14 @@
+node_modules
+yarn-error.lock
+build
+src/script/debug.ts
+.env
+.env.local
+.vscode
+.npmrc
+.DS_Store
+secrets*
+config
+staging-app-polygon.yaml
+report.txt
+

@@ -1,0 +1,85 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  generation: 4
+  labels:
+    cloud.googleapis.com/location: europe-west1
+  name: CHANGE_ME # metadata.name
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/maxScale: '2'
+        autoscaling.knative.dev/minScale: '0'
+    spec:
+      containerConcurrency: '1'
+      containers:
+      - env:
+        - name: CHAINID
+          value: CHANGE_ME # spec.template.spec.containers.env[0].value
+        - name: ENV
+          value: dev
+        - name: DISPUTE_BOT_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: DISPUTE_BOT_PRIVATE_KEY
+        - name: PROVIDER_1
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: PROVIDER_1
+        - name: PROVIDER_10
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: PROVIDER_10
+        - name: PROVIDER_137
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: PROVIDER_137
+        - name: PROVIDER_42161
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: PROVIDER_42161
+        - name: PROVIDER_1101
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: PROVIDER_1101
+        - name: PROVIDER_8453
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: PROVIDER_8453
+        - name: DISCORD_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: DISCORD_TOKEN
+        - name: KEEPER_GITHUB_AUTH_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: KEEPER_GITHUB_AUTH_TOKEN
+        image: CHANGE_ME # spec.template.spec.containers.image
+        ports:
+        - containerPort: '5002'
+          name: http1
+        resources:
+          limits:
+            cpu: '1'
+            memory: 1Gi
+        startupProbe:
+          failureThreshold: 1
+          periodSeconds: 240
+          tcpSocket:
+            port: '5002'
+          timeoutSeconds: 240
+      serviceAccountName: CHANGE_ME # spec.template.spec.serviceAccountName
+      timeoutSeconds: '600'
+  traffic:
+  - latestRevision: true
+    percent: 100
