@@ -1,7 +1,5 @@
-import { APIEmbedField, Client, EmbedBuilder, GatewayIntentBits, Partials, TextChannel } from 'discord.js';
-
-import { log } from './merkl';
 import { ChainId } from '@angleprotocol/sdk';
+import { APIEmbedField, Client, EmbedBuilder, GatewayIntentBits, Partials, TextChannel } from 'discord.js';
 
 const colorBySeverity = {
   info: 0x00bfff,

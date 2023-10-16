@@ -1,10 +1,9 @@
 import { ChainId } from '@angleprotocol/sdk';
 import { utils, Wallet } from 'ethers';
 
-import { BotError, MerklReport, Resolver, Result, Step, StepResult } from '../types/bot';
-import { DisputeContext } from './context';
+import { BotError, Result, Step } from '../types/bot';
 
-export const createSigner: Step = async (context, report) => {
+export const createSigner: Step = async (_, report) => {
   try {
     const privateKey = process.env.DISPUTE_BOT_PRIVATE_KEY;
 

@@ -1,8 +1,8 @@
-import { assert, expect } from 'chai';
+import { expect } from 'chai';
 import { describe, it } from 'node:test';
 
 import { DisputeContext } from '../src/bot/context';
-import { checkHolderValidity, checkOverclaimedRewards } from '../src/bot/runner';
+import { checkOverclaimedRewards } from '../src/bot/runner';
 import ConsoleLogger from '../src/helpers/logger/ConsoleLogger';
 import { BotError, MerklReport, Resolver, StepResult } from '../src/types/bot';
 import ManualChainProvider from './helpers/ManualChainProvider';
@@ -36,7 +36,7 @@ describe('Overclaim detections', async function () {
           resolve(false);
         };
 
-        await checkOverclaimedRewards(testContext, testReport, result as Resolver);
+        await result(await checkOverclaimedRewards(testContext, testReport));
         resolve(false);
       })
     ).to.equal(true);
@@ -68,7 +68,7 @@ describe('Overclaim detections', async function () {
           resolve(false);
         };
 
-        await checkOverclaimedRewards(testContext, testReport, result as Resolver);
+        await result(await checkOverclaimedRewards(testContext, testReport));
         resolve(false);
       })
     ).to.equal(true);

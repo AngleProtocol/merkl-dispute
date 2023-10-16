@@ -7,6 +7,6 @@ export const PoolInterface = (ammType: AMMAlgorithmType): Interface => {
   } else if (ammType === AMMAlgorithmType.UniswapV3) {
     return UniswapV3Pool__factory.createInterface();
   } else if (ammType === AMMAlgorithmType.BaseX) {
-    return 
+    return;
   } else throw new Error('Invalid AMM type');
 };

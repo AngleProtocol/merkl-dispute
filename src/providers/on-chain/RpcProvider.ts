@@ -11,41 +11,20 @@ import {
 import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
 import { BigNumber, Overrides, providers, Wallet } from 'ethers';
 
+import { HolderDetail } from '../../types/holders';
 import { batchMulticallCall, multicallContractCall } from '../../utils';
 import { ExponentialFetchParams } from '../ExponentialBackoffProvider';
 import OnChainProvider from './OnChainProvider';
-import { HolderDetail } from '../../types/holders';
-
-// type fragment =
-//   | 'disputeToken'
-//   | 'disputeAmount'
-//   | 'disputePeriod'
-//   | 'endOfDisputePeriod'
-//   | 'disputer'
-//   | 'tree'
-//   | 'lastTree'
-//   | 'getMerkleRoot';
-
-// const multicallFunctions: fragment[] = [
-//   'disputeToken',
-//   'disputeAmount',
-//   'disputePeriod',
-//   'endOfDisputePeriod',
-//   'disputer',
-//   'tree',
-//   'lastTree',
-//   'getMerkleRoot',
-// ];
 
 export default class RpcProvider extends OnChainProvider {
-  provider: providers.JsonRpcProvider;
+  provider: providers.StaticJsonRpcProvider;
   distributor: string;
   distributorCreator: string;
 
   constructor(url: string, distributor: string, distributorCreator: string, fetchParams?: ExponentialFetchParams) {
     super(fetchParams);
 
-    this.provider = new providers.JsonRpcProvider(url);
+    this.provider = new providers.StaticJsonRpcProvider(url);
     this.distributor = distributor;
     this.distributorCreator = distributorCreator;
   }
