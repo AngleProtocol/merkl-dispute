@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import { describe, it } from 'node:test';
 
 import { defaultContext, DisputeContext } from '../src/bot/context';
-import { checkUpOnMerkl } from '../src/bot/runner';
+import run, { runSteps } from '../src/bot/runner';
 import { BotError } from '../src/types/bot';
 
 type ProblematicBlock = {
@@ -15,7 +15,7 @@ type ProblematicBlock = {
 const tryAtBlock = async ({ chainId, blockNumber, errorCode }: ProblematicBlock) => {
   const testContext: DisputeContext = defaultContext(chainId, blockNumber);
   testContext.logger = undefined;
-  const result = await checkUpOnMerkl(testContext);
+  const result = await runSteps(testContext);
   const testForError = !!errorCode;
 
   console.log(`reason on ${NETWORK_LABELS[chainId]} at block ${blockNumber}:`, result.res.reason);

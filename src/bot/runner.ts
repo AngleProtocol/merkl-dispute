@@ -19,7 +19,7 @@ export const checkBlockTime: Step = async (context, report) => {
 
     return Result.Success({ ...report, blockNumber: block, startTime: timestamp });
   } catch (err) {
-    return Result.Error({ code: BotError.BlocktimeFetch, reason: 'No check', report });
+    return Result.Error({ code: BotError.BlocktimeFetch, reason: `Unable to get block: ${err}`, report });
   }
 };
 
@@ -32,7 +32,7 @@ export const checkOnChainParams: Step = async ({ onChainProvider, logger }, repo
 
     return Result.Success({ ...report, params });
   } catch (err) {
-    return Result.Error({ code: BotError.OnChainFetch, reason: 'No check', report });
+    return Result.Error({ code: BotError.OnChainFetch, reason: `Unable to get on-chain params: ${err}`, report });
   }
 };
 
@@ -46,7 +46,7 @@ export const checkDisputeWindow: Step = async (context, report) => {
     else if (endOfDisputePeriod <= startTime) return Result.Exit({ reason: 'Not in dispute period', report });
     return Result.Success(report);
   } catch (err) {
-    return Result.Error({ code: BotError.OnChainFetch, reason: 'No check', report });
+    return Result.Error({ code: BotError.OnChainFetch, reason: `Unable to check dispute status: ${err}`, report });
   }
 };
 
@@ -59,7 +59,7 @@ export const checkEpochs: Step = async ({ merkleRootsProvider }, report) => {
 
     return Result.Success({ ...report, startEpoch, endEpoch });
   } catch (err) {
-    return Result.Error({ code: BotError.EpochFetch, reason: 'No check', report });
+    return Result.Error({ code: BotError.EpochFetch, reason: `Unable to get epochs: ${err}`, report });
   }
 };
 
@@ -74,7 +74,7 @@ export const checkTrees: Step = async ({ merkleRootsProvider, logger }, report) 
 
     return Result.Success({ ...report, startTree, endTree });
   } catch (err) {
-    return Result.Error({ code: BotError.TreeFetch, reason: 'No check', report });
+    return Result.Error({ code: BotError.TreeFetch, reason: `Unable to get trees: ${err}`, report });
   }
 };
 
@@ -127,47 +127,20 @@ export const checkOverclaimedRewards: Step = async ({ onChainProvider }, report)
   }
 };
 
-export async function checkUpOnMerkl(context: DisputeContext): Promise<StepResult> {
-  return new Promise(async function (resolve: Resolver) {
-    let report: MerklReport = {};
-    let resolved = false;
-
-    const res = (a) => {
-      resolved = true;
-      resolve(a);
-    };
-
-    const handleStep = async (step) => {
-      if (resolved) return;
-
-      const result = await step();
-
-      if (result.exit) resolve(result);
-      else report = result.res.report;
-
-      resolved = result.exit;
-    };
-
-    const steps = [
-      checkBlockTime,
-      checkOnChainParams,
-      checkDisputeWindow,
-      checkEpochs,
-      checkTrees,
-      checkRoots,
-      checkHolderValidity,
-      checkOverclaimedRewards,
-    ];
-
-    for (let i = 0; i < steps.length; i++) {
-      await handleStep(steps[i]);
-    }
-
-    if (!resolved) resolve(Result.Exit({ reason: 'No problemo', report }));
-  });
-}
-
-export async function runSteps(context: DisputeContext, steps: Step[], report: MerklReport): Promise<StepResult> {
+export async function runSteps(
+  context: DisputeContext,
+  steps: Step[] = [
+    checkBlockTime,
+    checkOnChainParams,
+    checkDisputeWindow,
+    checkEpochs,
+    checkTrees,
+    checkRoots,
+    checkHolderValidity,
+    checkOverclaimedRewards,
+  ],
+  report: MerklReport = {}
+): Promise<StepResult> {
   return new Promise(async function (resolve: Resolver) {
     let resolved = false;
 
