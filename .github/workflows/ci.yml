@@ -22,19 +22,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Cache Node.js modules
-        uses: actions/cache@v2
-        with:
-          # path should point to the location of your node_modules directory
-          path: ~/.cache/yarn
-          key: ${{ runner.OS }}-node-${{ matrix.node-version }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.OS }}-node-${{ matrix.node-version }}-yarn-
+          node-version: 16
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
