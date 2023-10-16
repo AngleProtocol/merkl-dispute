@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { describe, it } from 'node:test';
 
 import { DisputeContext } from '../src/bot/context';
-import { checkHolderValidity, checkOverclaimedRewards } from '../src/bot/runner';
+import { checkOverclaimedRewards } from '../src/bot/runner';
 import ConsoleLogger from '../src/helpers/logger/ConsoleLogger';
 import { BotError, MerklReport, Resolver, StepResult } from '../src/types/bot';
 import ManualChainProvider from './helpers/ManualChainProvider';
@@ -31,7 +31,7 @@ describe('Overclaim detections', async function () {
 
     const holdersReport = await checkHolderValidity(testContext, testReport);
     const report = await checkOverclaimedRewards(testContext, holdersReport.res.report);
-
+    
     expect(report.err).to.equal(true);
     report.err && expect(report.res.code).to.equal(BotError.AlreadyClaimed);
   });

@@ -52,6 +52,7 @@ describe('Errors in the differences between two trees', async function () {
       merkleRootsProvider: new ManualMerkleRootsProvider(),
     };
 
+
     const report = await checkHolderValidity(testContext, testReport);
 
     expect(report.err).to.equal(false);
