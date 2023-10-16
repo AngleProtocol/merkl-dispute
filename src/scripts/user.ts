@@ -10,7 +10,7 @@ import moment from 'moment';
 
 import { HOUR } from '../constants';
 import { AccumulatedRewards } from '../types';
-import { fetchReportData, fetchRewardJson, paramsCheck, poolName, statsUserPool } from '../utils/report';
+import { fetchReportData, fetchRewardJson, poolName, statsUserPool, userParamsCheck } from '../utils/report';
 
 /*//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                  MAIN FUNCTION                                                  
@@ -24,7 +24,7 @@ export const reportUser = async (
   endTimestamp: number,
   pool?: string
 ): Promise<void> => {
-  paramsCheck(user, pool, startTimestamp, endTimestamp);
+  userParamsCheck(user, pool, startTimestamp, endTimestamp);
   /** 1 - Fetch useful data */
   const { prices, merklIndex, merklAPIData } = await fetchReportData(chainId);
 
