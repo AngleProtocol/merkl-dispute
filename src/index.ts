@@ -1,5 +1,4 @@
 import { Command } from 'commander';
-import { logger } from 'ethers';
 
 import { defaultContext } from './bot/context';
 import run from './bot/runner';

@@ -36,7 +36,7 @@ describe('Errors in the differences between two trees', async function () {
           resolve(true);
         };
 
-        await checkHolderValidity(testContext, testReport, result as Resolver);
+        await result(await checkHolderValidity(testContext, testReport));
         resolve(false);
       })
     ).to.equal(true);
@@ -67,8 +67,8 @@ describe('Errors in the differences between two trees', async function () {
           resolve(false);
         };
 
-        const res = await checkHolderValidity(testContext, testReport, result as Resolver);
-        if (res) resolve(true);
+        await result(await checkHolderValidity(testContext, testReport));
+        resolve(true);
       })
     ).to.equal(true);
   });

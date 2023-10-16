@@ -1,6 +1,7 @@
 import { ChainId } from '@angleprotocol/sdk';
 import axios from 'axios';
 
+// TODO Switch to SDK
 export const chainApiUrls = {
   [ChainId.ARBITRUM]: 'https://api.arbiscan.io',
   [ChainId.MAINNET]: 'https://api.etherscan.io',

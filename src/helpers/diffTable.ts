@@ -2,9 +2,8 @@ import { Octokit } from '@octokit/rest';
 import { Console } from 'console';
 import { Transform } from 'stream';
 
-import { MerklReport } from '../types/bot';
+import { DistributionChanges, HolderDetail } from '../types/holders';
 import { round } from '.';
-import { DistributionChange, DistributionChanges, HolderDetail } from '../types/holders';
 
 const octokit = new Octokit({ auth: process.env.KEEPER_GITHUB_AUTH_TOKEN });
 export async function createGist(description: string, content: string): Promise<string> {

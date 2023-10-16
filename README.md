@@ -9,14 +9,15 @@ If the data is incorrect or it is unable to fetch enough data to be able to make
 
 ## What is a dispute ?
 
-A dispute is a halt of the merkl root update on the contract, which allows the DAO to come in and resolve the conflict. 
+A dispute is a halt of the merkl root update on the contract, which allows the DAO to come in and resolve the conflict.
 This mechanism can prevent a malicious or accidental update of the new reward data which might be invalid.
 
 ![image](./docs/dispute-process.png)
 
 ## Pre-requisites
 
-You must provide some neccesary environment variables (see [.env.example](./.env.example)):
+You must provide some necessary environment variables (see [.env.example](./.env.example)):
+
 ```env
 PORT= 5002
 ENV= 'prod'
@@ -39,7 +40,9 @@ yarn install
 yarn build
 ```
 
+```bash
 yarn bot diff --chain 1 --from 1695734659 --to 1695821059 --gist
+```
 
 ### Every n seconds
 
@@ -74,10 +77,11 @@ Run the bot as an Express server to call a dispute check from an HTTP request:
 ```bash
 yarn bot serve
 ```
-`chain` and `blockNumber` parameters are optional, if not provided, the chain will be set bfrom the environement variable `CHAINID`, the blockNumber as the latest one.
+
+`chain` and `blockNumber` parameters are optional, if not provided, the chain will be set from the environement variable `CHAINID`, the blockNumber as the latest one.
 
 ```http
-GET http://localhost:5002/ 
+GET http://localhost:5002/
 GET http://localhost:5002/<chainId>/
 GET http://localhost:5002/<chainId>/<blockNumber>
 ```
