@@ -13,4 +13,3 @@ gcloud auth configure-docker europe-west1-docker.pkg.dev
 
 echo "Pushing to docker registry 1"
 docker push europe-west1-docker.pkg.dev/$account/registry/merkl-dispute:$version
-docker push europe-west1-docker.pkg.dev/merkl-dispute-2/registry/merkl-dispute:v0.0.2
