@@ -1,6 +1,7 @@
 import { AggregatedRewardsType, Int256 } from '@angleprotocol/sdk';
 import { BigNumber } from 'ethers';
 
+import { HOUR } from '../constants';
 import { round } from '../helpers';
 import OnChainProvider from '../providers/on-chain/OnChainProvider';
 import { DistributionChanges, HolderClaims, HolderDetail, HoldersReport, UnclaimedRewards } from '../types/holders';
@@ -32,7 +33,10 @@ export async function validateHolders(
   endTree: AggregatedRewardsType
 ): Promise<HoldersReport> {
   const holders = gatherHolders(startTree, endTree);
-  const activeDistributions = await onChainProvider.fetchActiveDistributions();
+  const activeDistributions = await onChainProvider.fetchActiveDistributionsBetween(
+    startTree.lastUpdateEpoch * HOUR,
+    endTree.lastUpdateEpoch * HOUR
+  );
 
   const poolName = {};
 
@@ -40,6 +44,7 @@ export async function validateHolders(
   const changePerDistrib: DistributionChanges = {};
   const unclaimed: UnclaimedRewards = {};
   const negativeDiffs: string[] = [];
+  const overDistributed: string[] = [];
 
   for (const holder of holders) {
     unclaimed[holder] = {};
@@ -110,7 +115,22 @@ export async function validateHolders(
     l.percent = (l?.diff / changePerDistrib[l?.distribution]?.diff) * 100;
   }
 
-  return { details, changePerDistrib, unclaimed, negativeDiffs };
+  for (const k of Object.keys(changePerDistrib)) {
+    const solidityDist = activeDistributions?.find((d) => d.base.rewardId === k);
+
+    // Either the distributed amount is less than what would be distributed since the distrib start and there is no dis in the start tree
+    // Either it's less than what would be distributed since the startTree update
+    if (
+      (!!startTree.rewards[k]?.lastUpdateEpoch &&
+        changePerDistrib[k].epoch > endTree.rewards[k].lastUpdateEpoch - startTree.rewards[k].lastUpdateEpoch) ||
+      (!startTree.rewards[k]?.lastUpdateEpoch &&
+        changePerDistrib[k].epoch > endTree.rewards[k].lastUpdateEpoch - solidityDist.base.epochStart / HOUR)
+    ) {
+      overDistributed.push(k);
+    }
+  }
+
+  return { details, changePerDistrib, unclaimed, negativeDiffs, overDistributed };
 }
 
 export async function validateClaims(onChainProvider: OnChainProvider, holdersReport: HoldersReport): Promise<HoldersReport> {
@@ -118,7 +138,7 @@ export async function validateClaims(onChainProvider: OnChainProvider, holdersRe
   const alreadyClaimed: HolderClaims = await onChainProvider.fetchClaimed(details);
 
   const overclaimed: string[] = [];
-  
+
   // Sort details by distribution and format numbers
   const expandedDetails = await Promise.all(
     details
@@ -128,7 +148,7 @@ export async function validateClaims(onChainProvider: OnChainProvider, holdersRe
       .map(async (d) => {
         const alreadyClaimedValue = round(Int256.from(alreadyClaimed[d.holder][d.tokenAddress], d.decimals).toNumber(), 2);
         const totalCumulated = round(unclaimed[d.holder][d.symbol].toNumber(), 2);
-        
+
         if (totalCumulated < alreadyClaimedValue) {
           overclaimed.push(`${d.holder}: ${alreadyClaimedValue} / ${totalCumulated} ${d.symbol}`);
         }

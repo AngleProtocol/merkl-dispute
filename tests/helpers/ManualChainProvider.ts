@@ -7,10 +7,12 @@ import { HolderClaims } from '../../src/types/holders';
 export default class ManualChainProvider extends OnChainProvider {
   claimedCall: () => HolderClaims;
   activeDistributionCall: () => ExtensiveDistributionParametersStructOutput[];
+  activeDistributionsBetweenCall: (start: number, end: number) => ExtensiveDistributionParametersStructOutput[];
   poolNameCall: () => string;
 
   constructor(
     activeDistributionCall: () => ExtensiveDistributionParametersStructOutput[],
+    activeDistributionsBetweenCall: () => ExtensiveDistributionParametersStructOutput[],
     claimedCall: () => HolderClaims,
     poolNameCall: () => string
   ) {
@@ -22,6 +24,10 @@ export default class ManualChainProvider extends OnChainProvider {
 
   override activeDistributions = async () => {
     return this?.activeDistributionCall();
+  };
+
+  override activeDistributionsBetween = async (start: number, end: number) => {
+    return this?.activeDistributionsBetweenCall(start, end);
   };
 
   override claimed = async () => {

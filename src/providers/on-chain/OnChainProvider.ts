@@ -28,6 +28,7 @@ export default abstract class OnChainProvider extends ExponentialBackoffProvider
   protected abstract onChainParams: () => Promise<OnChainParams>;
   protected abstract timestampAt: (blockNumber: number) => Promise<number>;
   protected abstract activeDistributions: () => Promise<ExtensiveDistributionParametersStructOutput[]>;
+  protected abstract activeDistributionsBetween: (start: number, end: number) => Promise<ExtensiveDistributionParametersStructOutput[]>;
   protected abstract poolName: (pool: string, amm: AMMType) => Promise<string>;
   protected abstract claimed: (holderDetails: HolderDetail[]) => Promise<HolderClaims>;
   protected abstract approve: (
@@ -71,6 +72,10 @@ export default abstract class OnChainProvider extends ExponentialBackoffProvider
 
   async fetchActiveDistributions(): Promise<ExtensiveDistributionParametersStructOutput[]> {
     return this.retryWithExponentialBackoff(this.activeDistributions, this.fetchParams);
+  }
+
+  async fetchActiveDistributionsBetween(start: number, end: number): Promise<ExtensiveDistributionParametersStructOutput[]> {
+    return this.retryWithExponentialBackoff(this.activeDistributionsBetween, this.fetchParams, start, end);
   }
 
   async fetchOnChainParams(): Promise<OnChainParams> {

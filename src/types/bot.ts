@@ -51,6 +51,7 @@ export enum BotError {
   TreeFetch,
   TreeRoot,
   NegativeDiff,
+  OverDistributed,
   AlreadyClaimed,
   KeeperCreate,
   KeeperApprove,

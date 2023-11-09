@@ -98,7 +98,7 @@ export const buildMerklTree = (
   /**
    * 3 - Build the tree
    */
-  const elements = [];
+  const leaves = [];
   for (const u of users) {
     for (const t of tokens) {
       let sum = BigNumber.from(0);
@@ -108,14 +108,15 @@ export const buildMerklTree = (
           sum = sum?.add(distribution?.holders[u]?.amount.toString() ?? 0);
         }
       }
-      const hash = ethers.utils.keccak256(
-        ethers.utils.defaultAbiCoder.encode(['address', 'address', 'uint256'], [utils.getAddress(u), t, sum])
-      );
-
-      elements.push(hash);
+      if (!!sum && sum.gt(0)) {
+        const hash = ethers.utils.keccak256(
+          ethers.utils.defaultAbiCoder.encode(['address', 'address', 'uint256'], [utils.getAddress(u), t, sum])
+        );
+        leaves.push(hash);
+      }
     }
   }
-  const tree = new MerkleTree(elements, keccak256, { hashLeaves: false, sortPairs: true, sortLeaves: false });
+  const tree = new MerkleTree(leaves, keccak256, { hashLeaves: false, sortPairs: true, sortLeaves: false });
 
   return {
     tokens,

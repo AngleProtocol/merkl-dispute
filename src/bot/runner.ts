@@ -102,8 +102,14 @@ export const checkHolderValidity: Step = async ({ onChainProvider }, report) => 
     const { startTree, endTree } = report;
     holdersReport = await validateHolders(onChainProvider, startTree, endTree);
     const negativeDiffs = holdersReport.negativeDiffs;
+    const overDistributed = holdersReport.overDistributed;
 
-    if (negativeDiffs.length > 0) throw negativeDiffs.join('\n');
+    if (negativeDiffs.length > 0) {
+      return Result.Error({ code: BotError.NegativeDiff, reason: negativeDiffs.join('\n'), report: { ...report, holdersReport } });
+    }
+    if (overDistributed.length > 0) {
+      return Result.Error({ code: BotError.OverDistributed, reason: overDistributed.join('\n'), report: { ...report, holdersReport } });
+    }
 
     return Result.Success({ ...report, holdersReport });
   } catch (reason) {
