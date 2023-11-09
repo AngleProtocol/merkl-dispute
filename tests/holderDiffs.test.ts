@@ -22,6 +22,7 @@ describe('Errors in the differences between two trees', async function () {
       logger: new ConsoleLogger(),
       onChainProvider: new ManualChainProvider(
         createActiveDistribution,
+        (start: number, end: number) => createActiveDistribution(),
         () => createClaims('0'),
         () => 'PESOS-STERLING'
       ),
@@ -46,13 +47,12 @@ describe('Errors in the differences between two trees', async function () {
       logger: new ConsoleLogger(),
       onChainProvider: new ManualChainProvider(
         createActiveDistribution,
+        (start: number, end: number) => createActiveDistribution(),
         () => createClaims('1000'),
         () => 'PESOS-STERLING'
       ),
       merkleRootsProvider: new ManualMerkleRootsProvider(),
     };
-
-
     const report = await checkHolderValidity(testContext, testReport);
 
     expect(report.err).to.equal(false);

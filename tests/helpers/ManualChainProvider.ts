@@ -12,12 +12,13 @@ export default class ManualChainProvider extends OnChainProvider {
 
   constructor(
     activeDistributionCall: () => ExtensiveDistributionParametersStructOutput[],
-    activeDistributionsBetweenCall: () => ExtensiveDistributionParametersStructOutput[],
+    activeDistributionsBetweenCall: (start: number, end: number) => ExtensiveDistributionParametersStructOutput[],
     claimedCall: () => HolderClaims,
     poolNameCall: () => string
   ) {
     super({ retries: 1, delay: 1, multiplier: 1 });
     this.activeDistributionCall = activeDistributionCall;
+    this.activeDistributionsBetweenCall = activeDistributionsBetweenCall;
     this.claimedCall = claimedCall;
     this.poolNameCall = poolNameCall;
   }

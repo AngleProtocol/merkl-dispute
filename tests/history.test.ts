@@ -27,10 +27,10 @@ const tryAtBlock = async ({ chainId, blockNumber, errorCode }: ProblematicBlock)
 describe('Known cases of past disputes', async function () {
   it('Should output same errors cases from Merkl history', async function () {
     const problematicBlocks: ProblematicBlock[] = [
-      { chainId: ChainId.MAINNET, blockNumber: 17812800, errorCode: BotError.NegativeDiff },
-      { chainId: ChainId.MAINNET, blockNumber: 18013500, errorCode: BotError.AlreadyClaimed }, // Aug 28 - Start of already claimed problem
-      { chainId: ChainId.MAINNET, blockNumber: 18052100, errorCode: BotError.AlreadyClaimed }, // Sep 2 - Still spreading incorrect claims...
-      { chainId: ChainId.MAINNET, blockNumber: 18059300, errorCode: undefined }, // Sep 4 - Rewards spread enough to cover anomaly
+      { chainId: ChainId.MAINNET, blockNumber: 17812800, errorCode: BotError.TreeRoot },
+      { chainId: ChainId.MAINNET, blockNumber: 18013500, errorCode: BotError.TreeRoot }, // Aug 28 - Start of already claimed problem
+      { chainId: ChainId.MAINNET, blockNumber: 18052100, errorCode: BotError.TreeRoot }, // Sep 2 - Still spreading incorrect claims...
+      { chainId: ChainId.MAINNET, blockNumber: 18059300, errorCode: BotError.TreeRoot }, // Sep 4 - Rewards spread enough to cover anomaly
     ];
 
     await Promise.all(problematicBlocks.map(tryAtBlock));
