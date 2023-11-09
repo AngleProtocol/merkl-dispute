@@ -33,4 +33,5 @@ export type HoldersReport = {
   unclaimed: UnclaimedRewards;
   negativeDiffs: string[];
   overclaimed?: string[];
+  overDistributed?: string[];
 };

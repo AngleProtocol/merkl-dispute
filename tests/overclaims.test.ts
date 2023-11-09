@@ -23,6 +23,7 @@ describe('Overclaim detections', async function () {
       logger: new ConsoleLogger(),
       onChainProvider: new ManualChainProvider(
         createActiveDistribution,
+        (start: number, end: number) => createActiveDistribution(),
         () => createClaims('1001000000000000000000'),
         () => 'PESOS-STERLING'
       ),
@@ -48,6 +49,7 @@ describe('Overclaim detections', async function () {
       logger: new ConsoleLogger(),
       onChainProvider: new ManualChainProvider(
         createActiveDistribution,
+        (start: number, end: number) => createActiveDistribution(),
         () => createClaims('1000000000000000000002'),
         () => 'PESOS-STERLING'
       ),

@@ -67,6 +67,12 @@ export default class RpcProvider extends OnChainProvider {
     return instance.getActiveDistributions({ blockTag: this.blockNumber });
   };
 
+  override activeDistributionsBetween = async (start: number, end: number) => {
+    const instance = DistributionCreator__factory.connect(this.distributorCreator, this.provider);
+
+    return instance.getDistributionsBetweenEpochs(start, end, { blockTag: this.blockNumber });
+  };
+
   override poolName = async (pool: string, amm: AMMType) => {
     const multicall = Multicall__factory.connect('0xcA11bde05977b3631167028862bE2a173976CA11', this.provider);
     const poolInterface = PoolInterface(AMMAlgorithmMapping[amm]);
