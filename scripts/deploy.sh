@@ -25,6 +25,6 @@ do
     export SERVICE_ACCOUNT=merkl-dispute-sa@$account.iam.gserviceaccount.com
     yq -i '.spec.template.spec.serviceAccountName= strenv(SERVICE_ACCOUNT)' ./cloudrun.yaml
 
-    gcloud run services replace ./cloudrun.yaml --platform managed --region europe-west1
+    gcloud run services replace ./cloudrun.yaml --platform managed --region europe-west1 --project $account
     rm ./cloudrun.yaml
 done
