@@ -1,14 +1,14 @@
 import {
+  AMM,
+  AMMAlgorithm,
   AMMAlgorithmMapping,
-  AMMAlgorithmType,
-  AMMType,
   DistributionCreator__factory,
   Distributor__factory,
   Erc20__factory,
   Multicall__factory,
   PoolInterface,
 } from '@angleprotocol/sdk';
-import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
+import { Multicall3 } from '@angleprotocol/sdk/dist/generated/Multicall';
 import { BigNumber, Overrides, providers, Wallet } from 'ethers';
 
 import { HolderDetail } from '../../types/holders';
@@ -64,16 +64,16 @@ export default class RpcProvider extends OnChainProvider {
   override activeDistributions = async () => {
     const instance = DistributionCreator__factory.connect(this.distributorCreator, this.provider);
 
-    return instance.getActiveDistributions({ blockTag: this.blockNumber });
+    return instance['getActiveDistributions()']({ blockTag: this.blockNumber });
   };
 
   override activeDistributionsBetween = async (start: number, end: number) => {
     const instance = DistributionCreator__factory.connect(this.distributorCreator, this.provider);
 
-    return instance.getDistributionsBetweenEpochs(start, end, { blockTag: this.blockNumber });
+    return instance['getDistributionsBetweenEpochs(uint32,uint32)'](start, end, { blockTag: this.blockNumber });
   };
 
-  override poolName = async (pool: string, amm: AMMType) => {
+  override poolName = async (pool: string, amm: AMM) => {
     const multicall = Multicall__factory.connect('0xcA11bde05977b3631167028862bE2a173976CA11', this.provider);
     const poolInterface = PoolInterface(AMMAlgorithmMapping[amm]);
     const erc20Interface = Erc20__factory.createInterface();
@@ -89,7 +89,7 @@ export default class RpcProvider extends OnChainProvider {
         target: pool,
         allowFailure: false,
       },
-      ...(AMMAlgorithmMapping[amm] === AMMAlgorithmType.UniswapV3
+      ...(AMMAlgorithmMapping[amm] === AMMAlgorithm.UniswapV3
         ? [
             {
               callData: poolInterface.encodeFunctionData('fee'),
@@ -104,7 +104,7 @@ export default class RpcProvider extends OnChainProvider {
     const token0 = poolInterface.decodeFunctionResult('token0', res[i++].returnData)[0];
     const token1 = poolInterface.decodeFunctionResult('token1', res[i++].returnData)[0];
     let fee;
-    if (AMMAlgorithmMapping[amm] === AMMAlgorithmType.UniswapV3) {
+    if (AMMAlgorithmMapping[amm] === AMMAlgorithm.UniswapV3) {
       fee = poolInterface.decodeFunctionResult('fee', res[i].returnData)[0];
     }
     calls = [
@@ -123,7 +123,7 @@ export default class RpcProvider extends OnChainProvider {
     const token0Symbol = erc20Interface.decodeFunctionResult('symbol', res[0].returnData)[0];
     const token1Symbol = erc20Interface.decodeFunctionResult('symbol', res[1].returnData)[0];
 
-    return `${AMMType[amm]} ${token0Symbol}-${token1Symbol}-${fee ?? ``}`;
+    return `${AMM[amm]} ${token0Symbol}-${token1Symbol}-${fee ?? ``}`;
   };
 
   override onChainParams = async () => {

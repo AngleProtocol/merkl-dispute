@@ -1,4 +1,4 @@
-import { AMMAlgorithmType } from '@angleprotocol/sdk';
+import { AMMAlgorithm } from '@angleprotocol/sdk';
 
 export declare type PositionType = {
   id: string;
@@ -10,14 +10,14 @@ export declare type PositionType = {
   liquidity: string;
 };
 
-export type SwapType<T extends AMMAlgorithmType> = {
+export type SwapType<T extends AMMAlgorithm> = {
   amount0: string;
   amount1: string;
   amountUSD: string;
   tick: string;
   timestamp: string;
   transaction: { blockNumber: string };
-} & (T extends AMMAlgorithmType.AlgebraV1_9 ? { price: string } : { sqrtPriceX96: string });
+} & (T extends AMMAlgorithm.AlgebraV1_9 ? { price: string } : { sqrtPriceX96: string });
 
 export type Price = {
   [token: string]: number;
