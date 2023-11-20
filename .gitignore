@@ -5,7 +5,6 @@ src/script/debug.ts
 .env
 .env.local
 .vscode
-.npmrc
 .DS_Store
 secrets*
 config
