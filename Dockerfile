@@ -1,5 +1,9 @@
 # Use an official Node.js runtime as the builder image
-FROM node:16-alpine
+FROM node:20-alpine
+
+ARG GITHUB_TOKEN
+
+ENV GITHUB_TOKEN $GITHUB_TOKEN
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -10,8 +14,12 @@ COPY package.json ./
 # Copy the yarn.lock file to the container
 COPY yarn.lock ./
 
+COPY .npmrc ./
+
 # Install the app dependencies
-RUN yarn install
+RUN echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> .npmrc
+RUN yarn install --frozen-lockfile && yarn cache clean
+RUN rm -f .npmrc
 
 # Copy the tsconfig.json to be able to compile the typescript
 COPY tsconfig.json ./

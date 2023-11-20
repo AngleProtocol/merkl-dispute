@@ -1,9 +1,10 @@
 #!/bin/bash
 account=$1
 version=$2
+token=$3
 
 echo "Building docker image"
-docker build -t merkl-dispute:latest --platform linux/amd64 .
+docker build --build-arg GITHUB_TOKEN=$token -t merkl-dispute:latest --platform linux/amd64 .
 
 docker tag merkl-dispute:latest europe-west1-docker.pkg.dev/$account/registry/merkl-dispute:$version
 
