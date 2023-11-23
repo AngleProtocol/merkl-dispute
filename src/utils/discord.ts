@@ -61,7 +61,7 @@ export async function sendDiscordNotification(params: {
           })
           .setColor(colorBySeverity[params.severity])
           .setTitle(`${params.title}`)
-          .setDescription(params.description ?? 'nodesc')
+          .setDescription(params.description?.slice(0, 1000) ?? 'nodesc')
           .addFields(params.fields)
           .setFooter(chainFooter[params.chain] ?? { text: `${params.chain}` });
 
