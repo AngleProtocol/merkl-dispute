@@ -1,6 +1,7 @@
+import { getAddress } from 'ethers/lib/utils';
 import moment from 'moment';
 
-import { NULL_ADDRESS } from '../constants';
+import { ALLOWED_OVER_CLAIM, NULL_ADDRESS } from '../constants';
 import { buildMerklTree } from '../helpers';
 import createDiffTable from '../helpers/diffTable';
 import { BotError, MerklReport, Resolver, Result, Step, StepResult } from '../types/bot';
@@ -125,7 +126,10 @@ export const checkOverclaimedRewards: Step = async ({ onChainProvider }, report)
     expandedHoldersReport = await validateClaims(onChainProvider, holdersReport);
     const overclaims = expandedHoldersReport.overclaimed;
 
-    if (overclaims.length > 0) throw overclaims.join('\n');
+    if (
+      overclaims?.filter((a) => !(ALLOWED_OVER_CLAIM?.includes(a?.toLowerCase()) || ALLOWED_OVER_CLAIM?.includes(getAddress(a)))).length > 0
+    )
+      throw overclaims.join('\n');
 
     return Result.Success({ ...report, holdersReport: expandedHoldersReport });
   } catch (reason) {

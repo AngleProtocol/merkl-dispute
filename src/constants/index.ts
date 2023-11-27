@@ -7,3 +7,9 @@ export const ANGLE_API = `https://api.angle.money/`;
 export const MAX_NUM_SUBCALLS = 50;
 export const HOUR = 3600;
 export const YEAR = 3600 * 24 * 365;
+
+export const ALLOWED_OVER_CLAIM = [
+  '0x7A42A8274f7b2687c7A583A388d5e56d2987A3f6',
+  '0x3f9763cE4F230368437f45CE81Be598c253Db338',
+  '0x2A6Be69cd729288006f831737D5032f15626d52c',
+];
