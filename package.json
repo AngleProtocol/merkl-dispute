@@ -20,7 +20,7 @@
     "publish-image": "chmod +x ./scripts/publish.sh && ./scripts/publish.sh"
   },
   "dependencies": {
-    "@angleprotocol/sdk": "0.4.10",
+    "@angleprotocol/sdk": "0.7.0",
     "@google-cloud/secret-manager": "^4.2.2",
     "@octokit/rest": "19.0.13",
     "@types/chai": "^4.3.6",
