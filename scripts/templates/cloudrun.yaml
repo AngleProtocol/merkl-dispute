@@ -18,7 +18,7 @@ spec:
         - name: CHAINID
           value: CHANGE_ME # spec.template.spec.containers.env[0].value
         - name: ENV
-          value: dev
+          value: prod
         - name: DISPUTE_BOT_PRIVATE_KEY
           valueFrom:
             secretKeyRef:
