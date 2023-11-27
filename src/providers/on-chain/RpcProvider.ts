@@ -174,6 +174,7 @@ export default class RpcProvider extends OnChainProvider {
     ];
 
     const result = await batchMulticallCall(multicallContractCall, multicall, { data: calls, blockNumber: this.blockNumber });
+
     let i = 0;
     return {
       disputeToken: distributor.decodeFunctionResult('disputeToken', result[i++])[0],

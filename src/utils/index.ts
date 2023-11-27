@@ -74,7 +74,8 @@ export async function multicallContractCall(
       },
       !!args.blockNumber ? args.blockNumber : null
     );
-  } catch {
+  } catch (e) {
+    console.error(e);
     throw new Error('❌ failed to decode multicall data');
   }
   return contract.interface.decodeFunctionResult('aggregate3', result)[0].map((r) => r?.returnData);

@@ -52,7 +52,6 @@ export default class ConsoleLogger extends Logger {
 
   override error = async (context, reason: string, code?: number, report?: MerklReport) => {
     const log = (...a) => console.log(chalk.red(...a));
-
     log('[CHECKS ERROR]:', reason);
   };
 

@@ -33,6 +33,7 @@ export const checkOnChainParams: Step = async ({ onChainProvider, logger }, repo
 
     return Result.Success({ ...report, params });
   } catch (err) {
+    console.error(err);
     return Result.Error({ code: BotError.OnChainFetch, reason: `Unable to get on-chain params: ${err}`, report });
   }
 };
@@ -127,7 +128,14 @@ export const checkOverclaimedRewards: Step = async ({ onChainProvider }, report)
     const overclaims = expandedHoldersReport.overclaimed;
 
     if (
-      overclaims?.filter((a) => !(ALLOWED_OVER_CLAIM?.includes(a?.toLowerCase()) || ALLOWED_OVER_CLAIM?.includes(getAddress(a)))).length > 0
+      overclaims?.filter((a) => {
+        try {
+          const add = a?.split(':')[0];
+          return !(ALLOWED_OVER_CLAIM?.includes(add?.toLowerCase()) || ALLOWED_OVER_CLAIM?.includes(getAddress(add)));
+        } catch {
+          return true;
+        }
+      }).length > 0
     )
       throw overclaims.join('\n');
 

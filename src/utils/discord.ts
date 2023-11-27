@@ -55,6 +55,11 @@ export async function sendDiscordNotification(params: {
           return;
         }
 
+        if (!!params.description) {
+          try {
+            params.description = params?.description?.slice(0, 1000);
+          } catch {}
+        }
         const exampleEmbed = new EmbedBuilder()
           .setAuthor({
             name: `Merkle Dispute Bot ${getEnv() !== 'prod' ? '[DEV]' : ''}`,
@@ -63,7 +68,7 @@ export async function sendDiscordNotification(params: {
           })
           .setColor(colorBySeverity[params.severity])
           .setTitle(`${params.title}`)
-          .setDescription(params.description?.slice(0, 1000) ?? 'nodesc')
+          .setDescription(params.description ?? 'nodesc')
           .addFields(params.fields)
           .setFooter(chainFooter[params.chain] ?? { text: `${params.chain}` });
 
