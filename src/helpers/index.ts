@@ -11,7 +11,7 @@ import { BigNumber, ethers, utils } from 'ethers';
 import keccak256 from 'keccak256';
 import MerkleTree from 'merkletreejs';
 
-import { MULTICALL_ADDRESS } from '../constants';
+import { MERKL_TREE_OPTIONS, MULTICALL_ADDRESS } from '../constants';
 import { httpProvider } from '../providers';
 import { PoolInterface } from '../types';
 
@@ -116,7 +116,7 @@ export const buildMerklTree = (
       }
     }
   }
-  const tree = new MerkleTree(leaves, keccak256, { hashLeaves: false, sortPairs: true, sortLeaves: false });
+  const tree = new MerkleTree(leaves, keccak256, MERKL_TREE_OPTIONS);
 
   return {
     tokens,
