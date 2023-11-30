@@ -62,7 +62,7 @@ export async function sendDiscordNotification(params: {
         }
         const exampleEmbed = new EmbedBuilder()
           .setAuthor({
-            name: `Merkle Dispute Bot ${getEnv() !== 'prod' ? '[DEV]' : !!getBotName() ?? ''}`,
+            name: `Merkle Dispute Bot ${getEnv() !== 'prod' ? '[DEV]' : getBotName() ?? ''}`,
             iconURL: 'https://merkl.angle.money/images/merkl-apple-touch-icon.png',
             url: 'https://github.com/AngleProtocol/merkl-dispute',
           })
