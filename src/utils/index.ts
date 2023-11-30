@@ -23,6 +23,10 @@ export function getChainId(): ChainId {
   return parseInt(value) as ChainId;
 }
 
+export function getBotName(): string | undefined {
+  return process.env['BOT_NAME'];
+}
+
 export async function retryWithExponentialBackoff<T>(fn: (...any) => Promise<T>, retries = 5, delay = 500, ...args): Promise<T> {
   try {
     const result = await fn(...args);

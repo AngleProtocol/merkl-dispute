@@ -1,7 +1,7 @@
 import { ChainId } from '@angleprotocol/sdk';
 import { APIEmbedField, Client, EmbedBuilder, GatewayIntentBits, Partials, TextChannel } from 'discord.js';
 
-import { getEnv } from '.';
+import { getBotName, getEnv } from '.';
 
 const colorBySeverity = {
   info: 0x00bfff,
@@ -62,7 +62,7 @@ export async function sendDiscordNotification(params: {
         }
         const exampleEmbed = new EmbedBuilder()
           .setAuthor({
-            name: `Merkle Dispute Bot ${getEnv() !== 'prod' ? '[DEV]' : ''}`,
+            name: `Merkle Dispute Bot ${getEnv() !== 'prod' ? '[DEV]' : !!getBotName() ?? ''}`,
             iconURL: 'https://merkl.angle.money/images/merkl-apple-touch-icon.png',
             url: 'https://github.com/AngleProtocol/merkl-dispute',
           })
