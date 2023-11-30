@@ -22,6 +22,10 @@ do
     export CHAIN_ID=${chainValues[$i]}
     yq -i '.spec.template.spec.containers[0].env[0].value= strenv(CHAIN_ID)' ./cloudrun.yaml
 
+    [[ $account = 'merkl-dispute-1' ]] && name="victor" || name="paul"
+    export BOT_NAME=$name
+    yq -i '.spec.template.spec.containers[0].env[2].value= strenv(BOT_NAME)' ./cloudrun.yaml
+
     export SERVICE_ACCOUNT=merkl-dispute-sa@$account.iam.gserviceaccount.com
     yq -i '.spec.template.spec.serviceAccountName= strenv(SERVICE_ACCOUNT)' ./cloudrun.yaml
 
