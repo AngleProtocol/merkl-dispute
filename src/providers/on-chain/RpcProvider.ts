@@ -70,7 +70,21 @@ export default class RpcProvider extends OnChainProvider {
   override activeDistributionsBetween = async (start: number, end: number) => {
     const instance = DistributionCreator__factory.connect(this.distributorCreator, this.provider);
 
-    return instance['getDistributionsBetweenEpochs(uint32,uint32)'](start, end, { blockTag: this.blockNumber });
+    let lastIndex = 0;
+    let distributions = [];
+
+    while (true) {
+      const call = await instance['getDistributionsBetweenEpochs(uint32,uint32,uint32,uint32)'](start, end, lastIndex, 50);
+      const rewards = call[0];
+      if (!!rewards) {
+        distributions = distributions.concat(call[0]);
+      }
+
+      if (lastIndex === call[1].toNumber()) break;
+      lastIndex = call[1].toNumber();
+    }
+
+    return distributions;
   };
 
   override poolName = async (pool: string, amm: AMM) => {
