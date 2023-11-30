@@ -4,7 +4,7 @@ import { BigNumber } from 'ethers';
 
 import { DisputeContext } from '../../bot/context';
 import { OnChainParams } from '../../providers/on-chain/OnChainProvider';
-import { MerklReport } from '../../types/bot';
+import { BotError, MerklReport } from '../../types/bot';
 import Logger from './Logger';
 
 export default class ConsoleLogger extends Logger {
@@ -52,7 +52,7 @@ export default class ConsoleLogger extends Logger {
 
   override error = async (context, reason: string, code?: number, report?: MerklReport) => {
     const log = (...a) => console.log(chalk.red(...a));
-    log('[CHECKS ERROR]:', reason);
+    log('[CHECKS ERROR]:', BotError[code], reason);
   };
 
   override success = async (context, reason: string, report?: MerklReport) => {

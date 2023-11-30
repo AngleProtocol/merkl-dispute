@@ -125,12 +125,23 @@ export async function validateHolders(
     // Either the distributed amount is less than what would be distributed since the distrib start and there is no dis in the start tree
     // Either it's less than what would be distributed since the startTree update
     if (
-      (!!startTree.rewards[k]?.lastUpdateEpoch &&
-        changePerDistrib[k].epoch > endTree.rewards[k].lastUpdateEpoch - startTree.rewards[k].lastUpdateEpoch) ||
-      (!startTree.rewards[k]?.lastUpdateEpoch &&
-        changePerDistrib[k].epoch > endTree.rewards[k].lastUpdateEpoch - solidityDist?.base?.epochStart / HOUR)
+      !!startTree.rewards[k]?.lastUpdateEpoch &&
+      changePerDistrib[k].epoch > (endTree.rewards[k].lastUpdateEpoch - startTree.rewards[k].lastUpdateEpoch) * 1.001 // 0.1% tolerance
     ) {
-      overDistributed.push(k);
+      overDistributed.push(
+        `Distrib ${k.slice(0, 10)} distributed. Theory ${
+          endTree.rewards[k].lastUpdateEpoch - startTree.rewards[k].lastUpdateEpoch
+        }, found ${changePerDistrib[k].epoch} `
+      );
+    } else if (
+      !startTree.rewards[k]?.lastUpdateEpoch &&
+      changePerDistrib[k].epoch > (endTree.rewards[k].lastUpdateEpoch - solidityDist?.base?.epochStart / HOUR) * 1.001 // 0.1% tolerance
+    ) {
+      overDistributed.push(
+        `Distrib ${k.slice(0, 10)} distributed. Theory ${
+          endTree.rewards[k].lastUpdateEpoch - solidityDist?.base?.epochStart / HOUR
+        }, found ${changePerDistrib[k].epoch} `
+      );
     }
   }
 
