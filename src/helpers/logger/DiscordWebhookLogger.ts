@@ -62,6 +62,7 @@ export default class DiscordWebhookLogger extends Logger {
     errorTitles[BotError.TreeFetch] = '🔴 Merkle tree data unavailable';
     errorTitles[BotError.NegativeDiff] = '🚸 Negative diff detected';
     errorTitles[BotError.AlreadyClaimed] = '🚸 Already claimed detected';
+    errorTitles[BotError.AlertDelay] = '🚸 Last update too far ago';
 
     try {
       await sendDiscordNotification({

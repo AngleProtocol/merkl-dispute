@@ -37,6 +37,10 @@ export async function validateHolders(
     startTree.lastUpdateEpoch * HOUR,
     endTree.lastUpdateEpoch * HOUR
   );
+  const activeDistributionsObject = {};
+  for (const dist of activeDistributions) {
+    activeDistributionsObject[dist.base.rewardId] = dist;
+  }
 
   const poolName = {};
 
@@ -83,7 +87,7 @@ export async function validateHolders(
         }
         let ratePerEpoch;
         try {
-          const solidityDist = activeDistributions?.find((d) => d.base.rewardId === k);
+          const solidityDist = activeDistributionsObject[k];
           ratePerEpoch = Int256.from(solidityDist?.base?.amount ?? 0, decimals)?.toNumber() / solidityDist?.base?.numEpoch;
         } catch {
           ratePerEpoch = 1;
@@ -116,17 +120,28 @@ export async function validateHolders(
   }
 
   for (const k of Object.keys(changePerDistrib)) {
-    const solidityDist = activeDistributions?.find((d) => d.base.rewardId === k);
+    const solidityDist = activeDistributionsObject[k];
 
     // Either the distributed amount is less than what would be distributed since the distrib start and there is no dis in the start tree
     // Either it's less than what would be distributed since the startTree update
     if (
-      (!!startTree.rewards[k]?.lastUpdateEpoch &&
-        changePerDistrib[k].epoch > endTree.rewards[k].lastUpdateEpoch - startTree.rewards[k].lastUpdateEpoch) ||
-      (!startTree.rewards[k]?.lastUpdateEpoch &&
-        changePerDistrib[k].epoch > endTree.rewards[k].lastUpdateEpoch - solidityDist.base.epochStart / HOUR)
+      !!startTree.rewards[k]?.lastUpdateEpoch &&
+      changePerDistrib[k].epoch > (endTree.rewards[k].lastUpdateEpoch - startTree.rewards[k].lastUpdateEpoch) * 1.001 // 0.1% tolerance
     ) {
-      overDistributed.push(k);
+      overDistributed.push(
+        `Distrib ${k.slice(0, 10)} distributed. Theory ${
+          endTree.rewards[k].lastUpdateEpoch - startTree.rewards[k].lastUpdateEpoch
+        }, found ${changePerDistrib[k].epoch} `
+      );
+    } else if (
+      !startTree.rewards[k]?.lastUpdateEpoch &&
+      changePerDistrib[k].epoch > (endTree.rewards[k].lastUpdateEpoch - solidityDist?.base?.epochStart / HOUR) * 1.001 // 0.1% tolerance
+    ) {
+      overDistributed.push(
+        `Distrib ${k.slice(0, 10)} distributed. Theory ${
+          endTree.rewards[k].lastUpdateEpoch - solidityDist?.base?.epochStart / HOUR
+        }, found ${changePerDistrib[k].epoch} `
+      );
     }
   }
 

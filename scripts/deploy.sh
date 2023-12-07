@@ -2,8 +2,8 @@
 account=$1
 version=$2
 
-chainKeys=("polygon" "ethereum" "optimism" "arbitrum" "zkevm" "base")
-chainValues=(137 1 10 42161 1101 8453)
+chainKeys=("polygon" "ethereum" "optimism" "arbitrum" "zkevm" "base" "thundercore" "core")
+chainValues=(137 1 10 42161 1101 8453 108 1116)
 
 for ((i=0; i<${#chainKeys[@]}; i++))
 do
@@ -21,6 +21,10 @@ do
 
     export CHAIN_ID=${chainValues[$i]}
     yq -i '.spec.template.spec.containers[0].env[0].value= strenv(CHAIN_ID)' ./cloudrun.yaml
+
+    [[ $account = 'merkl-dispute-1' ]] && name="Chapron" || name="Pierluigi"
+    export BOT_NAME=$name
+    yq -i '.spec.template.spec.containers[0].env[2].value= strenv(BOT_NAME)' ./cloudrun.yaml
 
     export SERVICE_ACCOUNT=merkl-dispute-sa@$account.iam.gserviceaccount.com
     yq -i '.spec.template.spec.serviceAccountName= strenv(SERVICE_ACCOUNT)' ./cloudrun.yaml

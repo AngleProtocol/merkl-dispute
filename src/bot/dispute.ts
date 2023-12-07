@@ -48,7 +48,6 @@ export const approveDisputeStake: Step = async ({ onChainProvider, chainId }, re
 
 export const disputeTree: Step = async ({ onChainProvider, chainId }, report) => {
   try {
-    const { disputeToken, disputeAmount } = report?.params;
     const { signer } = report?.disputeReport;
 
     const txnOverrides =
@@ -59,7 +58,7 @@ export const disputeTree: Step = async ({ onChainProvider, chainId }, report) =>
           }
         : {};
 
-    const disputeReceipt = await onChainProvider.sendApproveTxn(signer, disputeToken, disputeAmount, txnOverrides);
+    const disputeReceipt = await onChainProvider.sendDisputeTxn(signer, 'Dispute detected', txnOverrides);
 
     return Result.Success({ ...report, disputeReport: { ...report.disputeReport, disputeReceipt } });
   } catch (err) {

@@ -1,9 +1,9 @@
-import { AggregatedRewardsType, AMMType } from '@angleprotocol/sdk';
+import { AggregatedRewardsType, AMM } from '@angleprotocol/sdk';
 import {
   DistributionParametersStructOutput,
   ExtensiveDistributionParametersStructOutput,
   UniswapTokenDataStructOutput,
-} from '@angleprotocol/sdk/dist/constants/types/DistributionCreator';
+} from '@angleprotocol/sdk/dist/generated/DistributionCreator';
 import { BigNumber } from 'ethers';
 
 import { HolderClaims } from '../../src/types/holders';
@@ -12,7 +12,7 @@ export const createTree = (amount: string) => {
   const defaultTree: AggregatedRewardsType = {
     rewards: {
       pesos: {
-        amm: AMMType.UniswapV3,
+        amm: AMM.UniswapV3,
         ammAlgo: 'UniswapV3',
         boostedAddress: '0xbac10c87B134742D15dA0F8db7Ee252Ce7318534',
         boostedReward: 1,

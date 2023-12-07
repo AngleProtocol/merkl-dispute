@@ -6,5 +6,8 @@ read version
 echo "Please enter the account to deploy to: (merkl-dispute-1 or merkl-dispute-2)"
 read account
 
-sh scripts/publish.sh $account $version
+echo "Please enter Github token to download the SDK"
+read token
+
+sh scripts/publish.sh $account $version $token
 bash scripts/deploy.sh $account $version

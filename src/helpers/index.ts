@@ -1,8 +1,8 @@
 import {
   AggregatedRewardsType,
+  AMM,
+  AMMAlgorithm,
   AMMAlgorithmMapping,
-  AMMAlgorithmType,
-  AMMType,
   Erc20__factory,
   Multicall__factory,
   UnderlyingTreeType,
@@ -11,11 +11,11 @@ import { BigNumber, ethers, utils } from 'ethers';
 import keccak256 from 'keccak256';
 import MerkleTree from 'merkletreejs';
 
-import { MULTICALL_ADDRESS } from '../constants';
+import { MERKL_TREE_OPTIONS, MULTICALL_ADDRESS } from '../constants';
 import { httpProvider } from '../providers';
 import { PoolInterface } from '../types';
 
-export const fetchPoolName = async (chainId: number, pool: string, amm: AMMType) => {
+export const fetchPoolName = async (chainId: number, pool: string, amm: AMM) => {
   const provider = httpProvider(chainId);
   const multicall = Multicall__factory.connect(MULTICALL_ADDRESS, provider);
   const poolInterface = PoolInterface(AMMAlgorithmMapping[amm]);
@@ -32,7 +32,7 @@ export const fetchPoolName = async (chainId: number, pool: string, amm: AMMType)
       target: pool,
       allowFailure: false,
     },
-    ...(AMMAlgorithmMapping[amm] === AMMAlgorithmType.UniswapV3
+    ...(AMMAlgorithmMapping[amm] === AMMAlgorithm.UniswapV3
       ? [
           {
             callData: poolInterface.encodeFunctionData('fee'),
@@ -47,7 +47,7 @@ export const fetchPoolName = async (chainId: number, pool: string, amm: AMMType)
   const token0 = poolInterface.decodeFunctionResult('token0', res[i++].returnData)[0];
   const token1 = poolInterface.decodeFunctionResult('token1', res[i++].returnData)[0];
   let fee;
-  if (AMMAlgorithmMapping[amm] === AMMAlgorithmType.UniswapV3) {
+  if (AMMAlgorithmMapping[amm] === AMMAlgorithm.UniswapV3) {
     fee = poolInterface.decodeFunctionResult('fee', res[i].returnData)[0];
   }
   calls = [
@@ -66,7 +66,7 @@ export const fetchPoolName = async (chainId: number, pool: string, amm: AMMType)
   const token0Symbol = erc20Interface.decodeFunctionResult('symbol', res[0].returnData)[0];
   const token1Symbol = erc20Interface.decodeFunctionResult('symbol', res[1].returnData)[0];
 
-  return `${AMMType[amm]} ${token0Symbol}-${token1Symbol}-${fee ?? ``}`;
+  return `${AMM[amm]} ${token0Symbol}-${token1Symbol}-${fee ?? ``}`;
 };
 
 export const round = (n: number, dec: number) => Math.round(n * 10 ** dec) / 10 ** dec;
@@ -116,7 +116,7 @@ export const buildMerklTree = (
       }
     }
   }
-  const tree = new MerkleTree(leaves, keccak256, { hashLeaves: false, sortPairs: true, sortLeaves: false });
+  const tree = new MerkleTree(leaves, keccak256, MERKL_TREE_OPTIONS);
 
   return {
     tokens,

@@ -1,7 +1,7 @@
 import 'dotenv/config';
 
 import { ChainId, EnvType, Multicall, withRetry } from '@angleprotocol/sdk';
-import { Multicall3 } from '@angleprotocol/sdk/dist/constants/types/Multicall';
+import { Multicall3 } from '@angleprotocol/sdk/dist/generated/Multicall';
 import { BytesLike, constants } from 'ethers';
 
 import { MAX_NUM_SUBCALLS } from '../constants';
@@ -21,6 +21,10 @@ export function getChainId(): ChainId {
     throw new Error(`❌ Missing environment variable CHAINID`);
   }
   return parseInt(value) as ChainId;
+}
+
+export function getBotName(): string | undefined {
+  return process.env['BOT_NAME'];
 }
 
 export async function retryWithExponentialBackoff<T>(fn: (...any) => Promise<T>, retries = 5, delay = 500, ...args): Promise<T> {
@@ -74,7 +78,8 @@ export async function multicallContractCall(
       },
       !!args.blockNumber ? args.blockNumber : null
     );
-  } catch {
+  } catch (e) {
+    console.error(e);
     throw new Error('❌ failed to decode multicall data');
   }
   return contract.interface.decodeFunctionResult('aggregate3', result)[0].map((r) => r?.returnData);

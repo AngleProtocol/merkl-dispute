@@ -1,4 +1,4 @@
-import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/constants/types/DistributionCreator';
+import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/generated/DistributionCreator';
 import { BigNumber, ContractReceipt } from 'ethers';
 
 import OnChainProvider, { OnChainParams } from '../../src/providers/on-chain/OnChainProvider';

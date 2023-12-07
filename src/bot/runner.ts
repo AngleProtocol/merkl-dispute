@@ -1,6 +1,9 @@
+import { HOUR } from '@angleprotocol/sdk';
+import { getAddress } from 'ethers/lib/utils';
 import moment from 'moment';
 
-import { NULL_ADDRESS } from '../constants';
+import { ALLOWED_OVER_CLAIM, NULL_ADDRESS } from '../constants';
+import { ALERTING_DELAY } from '../constants/alertingDelay';
 import { buildMerklTree } from '../helpers';
 import createDiffTable from '../helpers/diffTable';
 import { BotError, MerklReport, Resolver, Result, Step, StepResult } from '../types/bot';
@@ -32,6 +35,7 @@ export const checkOnChainParams: Step = async ({ onChainProvider, logger }, repo
 
     return Result.Success({ ...report, params });
   } catch (err) {
+    console.error(err);
     return Result.Error({ code: BotError.OnChainFetch, reason: `Unable to get on-chain params: ${err}`, report });
   }
 };
@@ -43,7 +47,17 @@ export const checkDisputeWindow: Step = async (context, report) => {
 
     if (!!disputer && disputer !== NULL_ADDRESS) return Result.Exit({ reason: 'Already disputed', report });
     else if (disputeToken === NULL_ADDRESS) return Result.Exit({ reason: 'No dispute token set', report });
-    else if (endOfDisputePeriod <= startTime) return Result.Exit({ reason: 'Not in dispute period', report });
+    else if (endOfDisputePeriod <= startTime) {
+      // Check delay since last dispute period and eventually send an alert
+      if (endOfDisputePeriod + ALERTING_DELAY[context.chainId] * HOUR <= startTime) {
+        await context.logger.error(
+          context,
+          `Last update was ${((startTime - endOfDisputePeriod) / HOUR)?.toFixed(2)} hours ago`,
+          BotError.AlertDelay
+        );
+      }
+      return Result.Exit({ reason: 'Not in dispute period', report });
+    }
     return Result.Success(report);
   } catch (err) {
     return Result.Error({ code: BotError.OnChainFetch, reason: `Unable to check dispute status: ${err}`, report });
@@ -125,7 +139,17 @@ export const checkOverclaimedRewards: Step = async ({ onChainProvider }, report)
     expandedHoldersReport = await validateClaims(onChainProvider, holdersReport);
     const overclaims = expandedHoldersReport.overclaimed;
 
-    if (overclaims.length > 0) throw overclaims.join('\n');
+    if (
+      overclaims?.filter((a) => {
+        try {
+          const add = a?.split(':')[0];
+          return !(ALLOWED_OVER_CLAIM?.includes(add?.toLowerCase()) || ALLOWED_OVER_CLAIM?.includes(getAddress(add)));
+        } catch {
+          return true;
+        }
+      }).length > 0
+    )
+      throw overclaims.join('\n');
 
     return Result.Success({ ...report, holdersReport: expandedHoldersReport });
   } catch (reason) {

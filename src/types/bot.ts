@@ -56,6 +56,7 @@ export enum BotError {
   KeeperCreate,
   KeeperApprove,
   KeeperDispute,
+  AlertDelay,
 }
 
 export type Exit<T> = { err: false; exit: true; res: T };
