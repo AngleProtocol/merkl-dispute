@@ -2,8 +2,8 @@
 account=$1
 version=$2
 
-chainKeys=("polygon" "ethereum" "optimism" "arbitrum" "zkevm" "base" "thundercore" "core")
-chainValues=(137 1 10 42161 1101 8453 108 1116)
+chainKeys=("polygon" "ethereum" "optimism" "arbitrum" "zkevm" "base" "gnosis" "thundercore" "core")
+chainValues=(137 1 10 42161 1101 8453 100 108 1116)
 
 for ((i=0; i<${#chainKeys[@]}; i++))
 do
