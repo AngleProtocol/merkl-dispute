@@ -169,8 +169,8 @@ export async function validateClaims(onChainProvider: OnChainProvider, holdersRe
         }
         return {
           ...d,
-          diff: round(d.diff, 2),
-          percent: round(d.percent, 2),
+          diff: round(d.diff, 4),
+          percent: round(d.percent, 4),
           averageBoost: round(d.diffAverageBoost, 2),
           distribution: d.distribution.slice(0, 5),
           totalCumulated,
