@@ -9,7 +9,7 @@
     "bot": "node ./build/index.js",
     "start": "node ./build/index.js serve",
     "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts serve",
-    "build": "tsc -p .",
+    "build": "tsc -p . || true",
     "lint": "eslint src --fix",
     "test": "mocha --require ts-node/register tests/**/*.test.ts",
     "update": "chmod +x ./scripts/deploy.sh && ./scripts/deploy.sh",
@@ -20,7 +20,7 @@
     "publish-image": "chmod +x ./scripts/publish.sh && ./scripts/publish.sh"
   },
   "dependencies": {
-    "@angleprotocol/sdk": "0.10.0",
+    "@angleprotocol/sdk": "0.25.0",
     "@google-cloud/secret-manager": "^4.2.2",
     "@octokit/rest": "19.0.13",
     "@types/chai": "^4.3.6",

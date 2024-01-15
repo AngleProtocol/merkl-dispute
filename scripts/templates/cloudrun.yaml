@@ -56,6 +56,11 @@ spec:
                 secretKeyRef:
                   key: latest
                   name: PROVIDER_8453
+            - name: PROVIDER_100
+              valueFrom:
+                secretKeyRef:
+                  key: latest
+                  name: PROVIDER_100
             - name: DISCORD_TOKEN
               valueFrom:
                 secretKeyRef:

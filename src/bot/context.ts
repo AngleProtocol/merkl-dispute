@@ -8,6 +8,7 @@ import GithubRootsProvider from '../providers/merkl-roots/GithubRootsProvider';
 import MerkleRootsProvider from '../providers/merkl-roots/MerkleRootsProvider';
 import OnChainProvider from '../providers/on-chain/OnChainProvider';
 import RpcProvider from '../providers/on-chain/RpcProvider';
+import GoogleRootsProvider from '../providers/merkl-roots/GoogleRootsProvider';
 
 export interface DisputeContext {
   chainId: ChainId;
@@ -39,7 +40,7 @@ export const defaultContext = (chainId: number, blockNumber?: number): DisputeCo
     chainId,
     blockNumber,
     onChainProvider,
-    merkleRootsProvider: new GithubRootsProvider('https://raw.githubusercontent.com/AngleProtocol/merkl-rewards/main/', chainId),
+    merkleRootsProvider: new GoogleRootsProvider('https://storage.googleapis.com/merkl-production-rewards', chainId),
     logger: new Loggers(loggers),
     uploadDiffTable: true,
   };
