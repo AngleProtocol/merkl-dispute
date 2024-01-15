@@ -77,8 +77,8 @@ spec:
               name: http1
           resources:
             limits:
-              cpu: '1'
-              memory: 1Gi
+              cpu: '2'
+              memory: 4Gi
           startupProbe:
             failureThreshold: 1
             periodSeconds: 240
