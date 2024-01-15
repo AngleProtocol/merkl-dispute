@@ -6,7 +6,7 @@ import MerkleRootsProvider from './MerkleRootsProvider';
 
 export type MerklIndexType = { [merklRoot: string]: number };
 
-export default class GithubRootsProvider extends MerkleRootsProvider {
+export default class GoogleRootsProvider extends MerkleRootsProvider {
   url: string;
   merklIndex: MerklIndexType;
   chainId: number;
