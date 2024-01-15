@@ -86,7 +86,7 @@ spec:
               port: '5002'
             timeoutSeconds: 240
       serviceAccountName: CHANGE_ME # spec.template.spec.serviceAccountName
-      timeoutSeconds: '600'
+      timeoutSeconds: '1500'
   traffic:
     - latestRevision: true
       percent: 100
