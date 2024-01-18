@@ -34,8 +34,10 @@ export const approveDisputeStake: Step = async ({ onChainProvider, chainId }, re
           }
         : {};
 
-    const approveReceipt = await onChainProvider.sendApproveTxn(signer, disputeToken, disputeAmount, txnOverrides);
-
+    let approveReceipt;
+    if (chainId !== ChainId.POLYGON) {
+      approveReceipt = await onChainProvider.sendApproveTxn(signer, disputeToken, disputeAmount, txnOverrides);
+    }
     return Result.Success({ ...report, disputeReport: { ...report.disputeReport, approveReceipt } });
   } catch (err) {
     return Result.Error({
@@ -49,7 +51,6 @@ export const approveDisputeStake: Step = async ({ onChainProvider, chainId }, re
 export const disputeTree: Step = async ({ onChainProvider, chainId }, report) => {
   try {
     const { signer } = report?.disputeReport;
-
     const txnOverrides =
       chainId === ChainId.POLYGON
         ? {
@@ -58,8 +59,10 @@ export const disputeTree: Step = async ({ onChainProvider, chainId }, report) =>
           }
         : {};
 
-    const disputeReceipt = await onChainProvider.sendDisputeTxn(signer, 'Dispute detected', txnOverrides);
-
+    let disputeReceipt;
+    if (chainId !== ChainId.POLYGON) {
+      disputeReceipt = await onChainProvider.sendDisputeTxn(signer, 'Dispute detected', txnOverrides);
+    }
     return Result.Success({ ...report, disputeReport: { ...report.disputeReport, disputeReceipt } });
   } catch (err) {
     return Result.Error({

@@ -5,10 +5,10 @@ import DiscordWebhookLogger from '../helpers/logger/DiscordWebhookLogger';
 import Logger from '../helpers/logger/Logger';
 import Loggers from '../helpers/logger/Loggers';
 import GithubRootsProvider from '../providers/merkl-roots/GithubRootsProvider';
+import GoogleRootsProvider from '../providers/merkl-roots/GoogleRootsProvider';
 import MerkleRootsProvider from '../providers/merkl-roots/MerkleRootsProvider';
 import OnChainProvider from '../providers/on-chain/OnChainProvider';
 import RpcProvider from '../providers/on-chain/RpcProvider';
-import GoogleRootsProvider from '../providers/merkl-roots/GoogleRootsProvider';
 
 export interface DisputeContext {
   chainId: ChainId;
@@ -40,7 +40,7 @@ export const defaultContext = (chainId: number, blockNumber?: number): DisputeCo
     chainId,
     blockNumber,
     onChainProvider,
-    merkleRootsProvider: new GoogleRootsProvider('https://storage.googleapis.com/merkl-production-rewards', chainId),
+    merkleRootsProvider: new GithubRootsProvider('https://raw.githubusercontent.com/AngleProtocol/merkl-rewards/main/', chainId),
     logger: new Loggers(loggers),
     uploadDiffTable: true,
   };
