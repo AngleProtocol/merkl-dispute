@@ -4,6 +4,9 @@ import { ContractReceipt, Wallet } from 'ethers';
 import { DisputeContext } from '../bot/context';
 import { OnChainParams } from '../providers/on-chain/OnChainProvider';
 import { HoldersReport } from './holders';
+import Base from 'merkletreejs/dist/Base';
+import { BaseTree } from '../providers/tree';
+import { DiffCampaigns, DiffRecipients } from '.';
 
 export type StepError = {
   code: BotError;
@@ -32,15 +35,17 @@ export type MerklReport = {
   blockNumber?: number;
   startEpoch?: number;
   startRoot?: string;
-  startTree?: AggregatedRewardsType;
+  startTree?: BaseTree;
   endEpoch?: number;
   endRoot?: string;
-  endTree?: AggregatedRewardsType;
+  endTree?: BaseTree;
   params?: OnChainParams;
   chainId?: ChainId;
   holdersReport?: HoldersReport;
   disputeReport?: DisputeReport;
   diffTableUrl?: string;
+  diffCampaigns?: DiffCampaigns;
+  diffRecipients?: DiffRecipients;
 };
 
 export enum BotError {

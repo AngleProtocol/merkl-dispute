@@ -13,7 +13,6 @@ import RpcProvider from '../providers/on-chain/RpcProvider';
 export interface DisputeContext {
   chainId: ChainId;
   onChainProvider: OnChainProvider;
-  merkleRootsProvider: MerkleRootsProvider;
   blockNumber?: number;
   logger?: Logger;
   uploadDiffTable?: boolean;
@@ -40,7 +39,6 @@ export const defaultContext = (chainId: number, blockNumber?: number): DisputeCo
     chainId,
     blockNumber,
     onChainProvider,
-    merkleRootsProvider: new GithubRootsProvider('https://raw.githubusercontent.com/AngleProtocol/merkl-rewards/main/', chainId),
     logger: new Loggers(loggers),
     uploadDiffTable: true,
   };

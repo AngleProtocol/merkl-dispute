@@ -50,4 +50,26 @@ export type UserStats = Partial<{
   inducedAPR: number;
 }>;
 
+export type DiffCampaigns = {
+  campaignId: string;
+  solidityIndex: number;
+  token: string;
+  diff: string;
+  total: string;
+  remainer: string;
+  ['% done']: string;
+  ['% time done']: string;
+  ['recipients/reasons']: number;
+}[]
+
+export type DiffRecipients = {
+  campaignId: string;
+  recipient: string;
+  reason: string;
+  diff: string;
+  total: string;
+  token: string;
+  percentage: string;
+}[]
+
 export * from './interfaces';

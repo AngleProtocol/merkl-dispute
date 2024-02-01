@@ -1,4 +1,4 @@
-import { HOUR } from '@angleprotocol/sdk';
+import { HOUR, MerklChainId } from '@angleprotocol/sdk';
 import { getAddress } from 'ethers/lib/utils';
 import moment from 'moment';
 
@@ -11,16 +11,19 @@ import { HoldersReport } from '../types/holders';
 import { DisputeContext } from './context';
 import { approveDisputeStake, createSigner, disputeTree } from './dispute';
 import { validateClaims, validateHolders } from './validity';
+import { BaseTree, ExpandedLeaf } from '../providers/tree';
+import { fetchCampaigns, fetchLeaves } from '../utils/merklAPI';
+import { gtStrings } from '../utils/addString';
 
 export const checkBlockTime: Step = async (context, report) => {
   try {
-    const { onChainProvider, blockNumber, logger } = context;
+    const { onChainProvider, blockNumber, logger, chainId } = context;
     const timestamp = !!blockNumber ? await onChainProvider.fetchTimestampAt(blockNumber) : moment().unix();
     const block = blockNumber ?? (await onChainProvider.mountLastBlock());
 
     logger?.context(context, timestamp);
 
-    return Result.Success({ ...report, blockNumber: block, startTime: timestamp });
+    return Result.Success({ ...report, blockNumber: block, startTime: timestamp, chainId });
   } catch (err) {
     return Result.Error({ code: BotError.BlocktimeFetch, reason: `Unable to get block: ${err}`, report });
   }
@@ -33,7 +36,7 @@ export const checkOnChainParams: Step = async ({ onChainProvider, logger }, repo
 
     logger?.onChainParams(params, report.startTime);
 
-    return Result.Success({ ...report, params });
+    return Result.Success({ ...report, params});
   } catch (err) {
     console.error(err);
     return Result.Error({ code: BotError.OnChainFetch, reason: `Unable to get on-chain params: ${err}`, report });
@@ -64,29 +67,20 @@ export const checkDisputeWindow: Step = async (context, report) => {
   }
 };
 
-export const checkEpochs: Step = async ({ merkleRootsProvider }, report) => {
+export const checkTrees: Step = async ({ logger }, report) => {
   try {
-    const { startRoot, endRoot } = report.params;
+    const { params, chainId } = report;
 
-    const startEpoch = await merkleRootsProvider.fetchEpochFor(startRoot);
-    const endEpoch = await merkleRootsProvider.fetchEpochFor(endRoot);
+    const startRoot = params.startRoot;
+    const endRoot = params.endRoot;
+    
+    const startLeaves = await fetchLeaves(chainId, startRoot);
+    const startTree = new BaseTree(startLeaves, chainId as MerklChainId);
 
-    return Result.Success({ ...report, startEpoch, endEpoch });
-  } catch (err) {
-    return Result.Error({ code: BotError.EpochFetch, reason: `Unable to get epochs: ${err}`, report });
-  }
-};
+    const endLeaves = await fetchLeaves(chainId, endRoot);
+    const endTree = new BaseTree(endLeaves, chainId as MerklChainId);
 
-export const checkTrees: Step = async ({ merkleRootsProvider, logger }, report) => {
-  try {
-    const { startEpoch, endEpoch } = report;
-
-    const startTree = await merkleRootsProvider.fetchTreeFor(startEpoch);
-    const endTree = await merkleRootsProvider.fetchTreeFor(endEpoch);
-
-    logger?.trees(startEpoch, startTree, endEpoch, endTree);
-
-    return Result.Success({ ...report, startTree, endTree });
+    return Result.Success({ ...report, startTree, endTree, startRoot, endRoot });
   } catch (err) {
     return Result.Error({ code: BotError.TreeFetch, reason: `Unable to get trees: ${err}`, report });
   }
@@ -94,68 +88,96 @@ export const checkTrees: Step = async ({ merkleRootsProvider, logger }, report) 
 
 export const checkRoots: Step = async ({ logger }, report) => {
   try {
-    const { startTree, endTree } = report;
+    const { startTree, endTree, startRoot, endRoot } = report;
 
-    const startRoot = buildMerklTree(startTree.rewards).tree.getHexRoot();
-    const endRoot = buildMerklTree(endTree.rewards).tree.getHexRoot();
+    const computedStartRoot = startTree.merklRoot();
+    const computedEndRoot = endTree.merklRoot();
+    logger?.computedRoots(computedStartRoot, computedEndRoot);
 
-    logger?.computedRoots(startRoot, endRoot);
-
-    if (startRoot !== startTree.merklRoot) throw 'Start merkle root is not correct';
-    if (endRoot !== endTree.merklRoot) throw 'End merkle root is not correct';
+    if (startRoot !== computedStartRoot) throw 'Start merkle root is not correct';
+    if (endRoot !== computedEndRoot) throw 'End merkle root is not correct';
     else return Result.Success({ ...report, startRoot, endRoot });
   } catch (reason) {
     return Result.Error({ code: BotError.TreeRoot, reason, report });
   }
 };
 
-export const checkHolderValidity: Step = async ({ onChainProvider }, report) => {
-  let holdersReport: HoldersReport;
+export const checkOverDistribution: Step = async ({ onChainProvider }, report) => {
+  const { chainId, startTree, endTree } = report;
 
   try {
-    const { startTree, endTree } = report;
-    holdersReport = await validateHolders(onChainProvider, startTree, endTree);
-    const negativeDiffs = holdersReport.negativeDiffs;
-    const overDistributed = holdersReport.overDistributed;
+    const campaigns = await fetchCampaigns(chainId);
+  
+    const { diffCampaigns, diffRecipients, negativeDiffs } = BaseTree.computeDiff(startTree, endTree, campaigns);
 
     if (negativeDiffs.length > 0) {
-      return Result.Error({ code: BotError.NegativeDiff, reason: negativeDiffs.join('\n'), report: { ...report, holdersReport } });
+      return Result.Error({ code: BotError.NegativeDiff, reason: negativeDiffs.join('\n'), report: { ...report, diffCampaigns, diffRecipients } });
+    }
+
+    const overDistributed = [];
+    for (const diffCampaign of diffCampaigns) {
+      if (gtStrings(diffCampaign.total, campaigns[diffCampaign.campaignId].amount)) {
+        overDistributed.push(
+          `${diffCampaign.campaignId} - Distributed (${diffCampaign.total}) > Total (${campaigns[diffCampaign.campaignId].amount})`);
+      }
     }
     if (overDistributed.length > 0) {
-      return Result.Error({ code: BotError.OverDistributed, reason: overDistributed.join('\n'), report: { ...report, holdersReport } });
+      return Result.Error({ code: BotError.OverDistributed, reason: overDistributed.join('\n'), report: { ...report, diffCampaigns, diffRecipients } });
     }
 
-    return Result.Success({ ...report, holdersReport });
+    return Result.Success({ ...report, diffCampaigns, diffRecipients });
   } catch (reason) {
-    return Result.Error({ code: BotError.NegativeDiff, reason, report: { ...report, holdersReport } });
+    return Result.Error({ code: BotError.NegativeDiff, reason, report: { ...report } });
   }
 };
 
-export const checkOverclaimedRewards: Step = async ({ onChainProvider }, report) => {
-  let expandedHoldersReport: HoldersReport;
+// export const checkHolderValidity: Step = async ({ onChainProvider }, report) => {
+//   let holdersReport: HoldersReport;
 
-  try {
-    const { holdersReport } = report;
-    expandedHoldersReport = await validateClaims(onChainProvider, holdersReport);
-    const overclaims = expandedHoldersReport.overclaimed;
+//   try {
+//     const { startTree, endTree } = report;
+//     holdersReport = await validateHolders(onChainProvider, startTree, endTree);
+//     const negativeDiffs = holdersReport.negativeDiffs;
+//     const overDistributed = holdersReport.overDistributed;
 
-    if (
-      overclaims?.filter((a) => {
-        try {
-          const add = a?.split(':')[0];
-          return !(ALLOWED_OVER_CLAIM?.includes(add?.toLowerCase()) || ALLOWED_OVER_CLAIM?.includes(getAddress(add)));
-        } catch {
-          return true;
-        }
-      }).length > 0
-    )
-      throw overclaims.join('\n');
+//     if (negativeDiffs.length > 0) {
+//       return Result.Error({ code: BotError.NegativeDiff, reason: negativeDiffs.join('\n'), report: { ...report, holdersReport } });
+//     }
+//     if (overDistributed.length > 0) {
+//       return Result.Error({ code: BotError.OverDistributed, reason: overDistributed.join('\n'), report: { ...report, holdersReport } });
+//     }
 
-    return Result.Success({ ...report, holdersReport: expandedHoldersReport });
-  } catch (reason) {
-    return Result.Error({ code: BotError.AlreadyClaimed, reason, report: { ...report, holdersReport: expandedHoldersReport } });
-  }
-};
+//     return Result.Success({ ...report, holdersReport });
+//   } catch (reason) {
+//     return Result.Error({ code: BotError.NegativeDiff, reason, report: { ...report, holdersReport } });
+//   }
+// };
+
+// export const checkOverclaimedRewards: Step = async ({ onChainProvider }, report) => {
+//   let expandedHoldersReport: HoldersReport;
+
+//   try {
+//     const { holdersReport } = report;
+//     expandedHoldersReport = await validateClaims(onChainProvider, holdersReport);
+//     const overclaims = expandedHoldersReport.overclaimed;
+
+//     if (
+//       overclaims?.filter((a) => {
+//         try {
+//           const add = a?.split(':')[0];
+//           return !(ALLOWED_OVER_CLAIM?.includes(add?.toLowerCase()) || ALLOWED_OVER_CLAIM?.includes(getAddress(add)));
+//         } catch {
+//           return true;
+//         }
+//       }).length > 0
+//     )
+//       throw overclaims.join('\n');
+
+//     return Result.Success({ ...report, holdersReport: expandedHoldersReport });
+//   } catch (reason) {
+//     return Result.Error({ code: BotError.AlreadyClaimed, reason, report: { ...report, holdersReport: expandedHoldersReport } });
+//   }
+// };
 
 export async function runSteps(
   context: DisputeContext,
@@ -163,11 +185,9 @@ export async function runSteps(
     checkBlockTime,
     checkOnChainParams,
     checkDisputeWindow,
-    checkEpochs,
     checkTrees,
     checkRoots,
-    checkHolderValidity,
-    checkOverclaimedRewards,
+    checkOverDistribution,
   ],
   report: MerklReport = {}
 ): Promise<StepResult> {
@@ -199,24 +219,22 @@ export default async function run(context: DisputeContext) {
       checkBlockTime,
       checkOnChainParams,
       checkDisputeWindow,
-      checkEpochs,
       checkTrees,
       checkRoots,
-      checkHolderValidity,
-      checkOverclaimedRewards,
+      checkOverDistribution,
     ],
     report
   );
 
-  const holdersReport = checkUpResult?.res?.report?.holdersReport;
+  // const recipientReport = checkUpResult?.res?.report?.diffRecipients;
 
-  if (holdersReport) {
-    checkUpResult.res.report.diffTableUrl = await createDiffTable(
-      holdersReport.details,
-      holdersReport.changePerDistrib,
-      !context.uploadDiffTable
-    );
-  }
+  // if (recipientReport) {
+  //   checkUpResult.res.report.diffTableUrl = await createDiffTable(
+  //     holdersReport.details,
+  //     holdersReport.changePerDistrib,
+  //     !context.uploadDiffTable
+  //   );
+  // }
 
   if (!checkUpResult.err) {
     await logger?.success(context, checkUpResult.res.reason, checkUpResult.res.report);

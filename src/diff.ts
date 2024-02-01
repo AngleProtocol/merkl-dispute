@@ -8,7 +8,7 @@ import ConsoleLogger from './helpers/logger/ConsoleLogger';
 import blockFromTimestamp from './providers/blockNumberFromTimestamp';
 
 export default async function (context: DisputeContext, fromTimeStamp: number, toTimeStamp: number) {
-  const { merkleRootsProvider, onChainProvider } = context;
+  const { onChainProvider } = context;
   const logger = new ConsoleLogger();
 
   const fromDate = moment.unix(fromTimeStamp);
@@ -21,20 +21,21 @@ export default async function (context: DisputeContext, fromTimeStamp: number, t
 
   onChainProvider.setBlock(endBlock);
 
-  const startEpoch = await merkleRootsProvider.epochFromTimestamp(fromTimeStamp);
-  const endEpoch = await merkleRootsProvider.epochFromTimestamp(toTimeStamp);
-  const startTree = await merkleRootsProvider.fetchTreeFor(startEpoch);
-  const endTree = await merkleRootsProvider.fetchTreeFor(endEpoch);
+  // TODO - update this job to use the new logic (need to get the roots from the API)
+  // const startEpoch = await merkleRootsProvider.epochFromTimestamp(fromTimeStamp);
+  // const endEpoch = await merkleRootsProvider.epochFromTimestamp(toTimeStamp);
+  // const startTree = await merkleRootsProvider.fetchTreeFor(startEpoch);
+  // const endTree = await merkleRootsProvider.fetchTreeFor(endEpoch);
 
-  logger.trees(startEpoch, startTree, endEpoch, endTree);
+  // logger.trees(startEpoch, startTree, endEpoch, endTree);
 
-  const endRoot = buildMerklTree(endTree.rewards).tree.getHexRoot();
-  const startRoot = buildMerklTree(startTree.rewards).tree.getHexRoot();
+  // const endRoot = buildMerklTree(endTree.rewards).tree.getHexRoot();
+  // const startRoot = buildMerklTree(startTree.rewards).tree.getHexRoot();
 
-  logger.computedRoots(startRoot, endRoot);
+  // logger.computedRoots(startRoot, endRoot);
 
-  const holdersReport = await validateClaims(onChainProvider, await validateHolders(onChainProvider, startTree, endTree));
+  // const holdersReport = await validateClaims(onChainProvider, await validateHolders(onChainProvider, startTree, endTree));
 
-  const res = await createDiffTable(holdersReport.details, holdersReport.changePerDistrib, !context.uploadDiffTable);
-  context.uploadDiffTable && console.log('output:', res);
+  // const res = await createDiffTable(holdersReport.details, holdersReport.changePerDistrib, !context.uploadDiffTable);
+  // context.uploadDiffTable && console.log('output:', res);
 }
