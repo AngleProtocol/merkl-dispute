@@ -1,18 +1,17 @@
-import { BASE_9, Campaign, CampaignParameters, Erc20__factory, MerklChainId } from '@angleprotocol/sdk';
+import { BASE_9, Campaign, CampaignParameters, Erc20__factory, Int256, MerklChainId } from '@angleprotocol/sdk';
 import { BigNumber, utils } from 'ethers';
 import keccak256 from 'keccak256';
 import MerkleTree from 'merkletreejs';
 
 import { MERKL_TREE_OPTIONS } from '../../constants';
+import { DiffCampaigns, DiffRecipients } from '../../types';
 import { addStrings, gtStrings, subStrings } from '../../utils/addString';
 import { displayString } from '../../utils/displayString';
 import { getSolidityIndex } from '../../utils/indexing';
+import { log } from '../../utils/logger';
 import { overridenConsole, overridenConsoleRead } from '../../utils/overridenConsole';
 import { provider } from '../../utils/providers';
-import { sliceCampaignId } from '../../utils/sliceCampaignId';
 import { ExpandedLeaf } from './ExpandedLeaf';
-import { log } from '../../utils/logger';
-import { DiffCampaigns, DiffRecipients } from '../../types';
 
 export class BaseTree {
   public chainId: MerklChainId;
@@ -278,11 +277,13 @@ export class BaseTree {
     oldTree: BaseTree,
     newTree: BaseTree,
     campaigns: { [campaignId: string]: CampaignParameters<Campaign> }
-  ): { 
+  ): {
     diffCampaigns: DiffCampaigns;
     diffRecipients: DiffRecipients;
-    negativeDiffs: ExpandedLeaf[]
-} {
+    negativeDiffs: ExpandedLeaf[];
+  } {
+    oldTree.sort();
+
     // Add campaigns data so we can log epochs, format numbers, etc
     const diffLeaves: ExpandedLeaf[] = [];
 
@@ -297,16 +298,18 @@ export class BaseTree {
     }
 
     const statsPerCampaign: {
-      [campaignId: string]: { 
+      [campaignId: string]: {
         total: string;
         diff: string;
         'recipients/reasons': number;
-        lastProcessedTimestamp: number 
-        oldLastProcessedTimestamp: number
+        lastProcessedTimestamp: number;
+        oldLastProcessedTimestamp: number;
       };
     } = {};
 
     const negativeDiffs: ExpandedLeaf[] = [];
+
+    newTree.sort();
 
     for (const campaignId of newCampaignIds) {
       const campaignInfo = newTree.campaignInfo(campaignId);
@@ -314,12 +317,18 @@ export class BaseTree {
       // TODO @BaptistG
       // @dev Compute the total amount per campaign to display it
       // Compare to campaign data to check there is no over distribution
-      statsPerCampaign[campaignId] = { diff: '0', total: campaignInfo.totalAmount, 'recipients/reasons': 0, lastProcessedTimestamp: 0, oldLastProcessedTimestamp: 0 };
-      
+      statsPerCampaign[campaignId] = {
+        diff: '0',
+        total: campaignInfo.totalAmount,
+        'recipients/reasons': 0,
+        lastProcessedTimestamp: 0,
+        oldLastProcessedTimestamp: 0,
+      };
+
       let index = campaignInfo.firstIndex;
       while (index <= campaignInfo.lastIndex) {
         const newLeaf = newTree.data[index];
-        oldTree.sort();
+
         const oldIndex = oldTree.findIndex(newLeaf.campaignId, newLeaf.recipient, newLeaf.reason);
 
         const diffLeaf = !oldIndex.found ? newLeaf : newLeaf.sub(oldTree.data[oldIndex.index]);
@@ -340,33 +349,33 @@ export class BaseTree {
     diffTree.sort();
 
     const diffCampaigns = Object.keys(statsPerCampaign)
-        ?.filter((c) => statsPerCampaign[c].diff !== '0')
-        .map((campaignId) => {
-          const decimalsRewardToken = campaigns[campaignId].campaignParameters.decimalsRewardToken;
-          return {
-            campaignId: sliceCampaignId(campaignId),
-            solidityIndex: getSolidityIndex(campaigns[campaignId].index),
-            token: campaigns[campaignId].campaignParameters.symbolRewardToken,
-            diff: displayString(statsPerCampaign[campaignId].diff, decimalsRewardToken),
-            total: displayString(statsPerCampaign[campaignId].total, decimalsRewardToken),
-            remainer: displayString(subStrings(campaigns[campaignId].amount, statsPerCampaign[campaignId].total), decimalsRewardToken),
-            ['% done']: (
-              BigNumber.from(statsPerCampaign[campaignId].total).mul(BASE_9).div(campaigns[campaignId].amount).toNumber() / 1e7
-            ).toFixed(6),
-            ['% time done']: (
-              ((statsPerCampaign[campaignId].lastProcessedTimestamp - campaigns[campaignId].startTimestamp) /
-                (campaigns[campaignId].endTimestamp - campaigns[campaignId].startTimestamp)) *
-              100
-            ).toFixed(6),
-            ['recipients/reasons']: statsPerCampaign[campaignId]['recipients/reasons'],
-          };
-        })
-    
+      ?.filter((c) => statsPerCampaign[c].diff !== '0')
+      .map((campaignId) => {
+        const decimalsRewardToken = campaigns[campaignId].campaignParameters.decimalsRewardToken;
+        return {
+          campaignId: campaignId,
+          solidityIndex: getSolidityIndex(campaigns[campaignId].index),
+          token: campaigns[campaignId].campaignParameters.symbolRewardToken,
+          diff: displayString(statsPerCampaign[campaignId].diff, decimalsRewardToken),
+          total: Int256.from(statsPerCampaign[campaignId].total, decimalsRewardToken).raw.toString(),
+          remainer: displayString(subStrings(campaigns[campaignId].amount, statsPerCampaign[campaignId].total), decimalsRewardToken),
+          ['% done']: (
+            BigNumber.from(statsPerCampaign[campaignId].total).mul(BASE_9).div(campaigns[campaignId].amount).toNumber() / 1e7
+          ).toFixed(6),
+          ['% time done']: (
+            ((statsPerCampaign[campaignId].lastProcessedTimestamp - campaigns[campaignId].startTimestamp) /
+              (campaigns[campaignId].endTimestamp - campaigns[campaignId].startTimestamp)) *
+            100
+          ).toFixed(6),
+          ['recipients/reasons']: statsPerCampaign[campaignId]['recipients/reasons'],
+        };
+      });
+
     const diffRecipients = diffTree.data
       .filter((d) => d.amount !== '0')
       .map((x) => {
         return {
-          campaignId: sliceCampaignId(x.campaignId),
+          campaignId: x.campaignId,
           recipient: x.recipient,
           reason: x.reason,
           diff: displayString(x.amount, campaigns[x.campaignId].campaignParameters.decimalsRewardToken),
@@ -377,92 +386,12 @@ export class BaseTree {
           token: campaigns[x.campaignId].campaignParameters.symbolRewardToken,
           percentage: ((parseFloat(x.amount) * 100) / parseFloat(statsPerCampaign[x.campaignId].diff)).toFixed(6),
         };
-      })
-        
+      });
+
     return {
       diffCampaigns,
       diffRecipients,
-      negativeDiffs
-    }
-
-
-
-    // overridenConsole.log('Stats per Campaign:\n');
-    // overridenConsole.table(
-    //   Object.keys(statsPerCampaign)
-    //     ?.filter((c) => statsPerCampaign[c].diff !== '0')
-    //     .map((campaignId) => {
-    //       const decimalsRewardToken = campaigns[campaignId].campaignParameters.decimalsRewardToken;
-    //       return {
-    //         campaignId: sliceCampaignId(campaignId),
-    //         solidityIndex: getSolidityIndex(campaigns[campaignId].index),
-    //         token: campaigns[campaignId].campaignParameters.symbolRewardToken,
-    //         diff: displayString(statsPerCampaign[campaignId].diff, decimalsRewardToken),
-    //         total: displayString(statsPerCampaign[campaignId].total, decimalsRewardToken),
-    //         remainer: displayString(subStrings(campaigns[campaignId].amount, statsPerCampaign[campaignId].total), decimalsRewardToken),
-    //         ['% done']: (
-    //           BigNumber.from(statsPerCampaign[campaignId].total).mul(BASE_9).div(campaigns[campaignId].amount).toNumber() / 1e7
-    //         ).toFixed(6),
-    //         ['% time done']: (
-    //           ((statsPerCampaign[campaignId].lastProcessedTimestamp - campaigns[campaignId].startTimestamp) /
-    //             (campaigns[campaignId].endTimestamp - campaigns[campaignId].startTimestamp)) *
-    //           100
-    //         ).toFixed(6),
-    //         ['recipients/reasons']: statsPerCampaign[campaignId]['recipients/reasons'],
-    //       };
-    //     })
-    // );
-
-    // overridenConsole.log('\n\nStats per Recipient:\n');
-    // overridenConsole.table(
-    //   diffTree.data
-    //     .filter((d) => d.amount !== '0')
-    //     .map((x) => {
-    //       return {
-    //         campaignId: sliceCampaignId(x.campaignId),
-    //         recipient: x.recipient,
-    //         reason: x.reason,
-    //         diff: displayString(x.amount, campaigns[x.campaignId].campaignParameters.decimalsRewardToken),
-    //         total: displayString(
-    //           newTree.data[newTree.findIndex(x.campaignId, x.recipient, x.reason).index].amount,
-    //           campaigns[x.campaignId].campaignParameters.decimalsRewardToken
-    //         ),
-    //         token: campaigns[x.campaignId].campaignParameters.symbolRewardToken,
-    //         percentage: ((parseFloat(x.amount) * 100) / parseFloat(statsPerCampaign[x.campaignId].diff)).toFixed(6),
-    //       };
-    //     })
-    // );
-    // return (overridenConsoleRead.read() || '').toString();
-  }
-
-  public generateReport(): string {
-    const statsPerCampaign: { [campaignId: string]: { total: string } } = {};
-    for (const campaignId of this.campaignIds()) {
-      const campaignInfo = this.campaignInfo(campaignId);
-
-      statsPerCampaign[campaignId] = { total: campaignInfo.totalAmount };
-    }
-
-    overridenConsole.log('Stats per Campaign:\n');
-    overridenConsole.table(
-      Object.keys(statsPerCampaign).map((campaignId) => {
-        return {
-          campaignId,
-          total: statsPerCampaign[campaignId].total,
-        };
-      })
-    );
-    overridenConsole.log('\n\nStats per Recipient:\n');
-    overridenConsole.table(
-      this.data.map((x) => {
-        return {
-          campaignId: x.campaignId,
-          recipient: x.recipient,
-          reason: x.reason,
-          amount: x.amount,
-        };
-      })
-    );
-    return (overridenConsoleRead.read() || '').toString();
+      negativeDiffs,
+    };
   }
 }

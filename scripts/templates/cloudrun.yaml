@@ -21,6 +21,8 @@ spec:
               value: prod
             - name: BOT_NAME
               value: CHANGE_ME # spec.template.spec.containers.env[2].value
+            - name: MERKL_API_URL
+              value: 'https://api.angle.money/v3'
             - name: DISPUTE_BOT_PRIVATE_KEY
               valueFrom:
                 secretKeyRef:

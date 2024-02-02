@@ -19,12 +19,14 @@ export default class ConsoleLogger extends Logger {
       )
     );
   };
+
   override onChainParams = (params: OnChainParams, timestamp?: number) => {
     const endDate = new Date(params.endOfDisputePeriod * 1000);
     const log = (...a) => console.log(chalk.blue(...a));
 
     console.groupCollapsed(chalk.blue(`On-chain data:`));
-
+    log('old root:', params.startRoot);
+    log('new root:', params.endRoot);
     log('token address:', params.disputeToken);
     log('token amount:', BigNumber.from(params.disputeAmount).toString());
     log('dispute period:', params.disputePeriod, 'hour(s)');
@@ -33,6 +35,7 @@ export default class ConsoleLogger extends Logger {
 
     console.groupEnd();
   };
+
   override trees = (startEpoch: number, startTree: AggregatedRewardsType, endEpoch: number, endTree: AggregatedRewardsType) => {
     const log = (...a) => console.log(chalk.green(...a));
 
@@ -43,6 +46,7 @@ export default class ConsoleLogger extends Logger {
     log('endRoot:', endTree.merklRoot);
     console.groupEnd();
   };
+
   override computedRoots = (start: string, end: string) => {
     console.group('Computed roots:');
     console.log('startRoot:', start);

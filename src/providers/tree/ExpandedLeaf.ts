@@ -1,5 +1,6 @@
 import { BigNumber } from 'ethers';
 import { getAddress } from 'ethers/lib/utils';
+
 import { log } from '../../utils/logger';
 
 export class ExpandedLeaf {
@@ -45,6 +46,7 @@ export class ExpandedLeaf {
   }
 
   public gt(b: ExpandedLeaf): boolean {
+    if (this.campaignId > b.campaignId) return true;
     if (this.campaignId < b.campaignId) return false;
     if (this.recipient > b.recipient) return true;
     if (this.recipient < b.recipient) return false;

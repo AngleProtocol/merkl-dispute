@@ -150,7 +150,7 @@ export async function validateHolders(
 
 export async function validateClaims(onChainProvider: OnChainProvider, holdersReport: HoldersReport): Promise<HoldersReport> {
   const { details, unclaimed } = holdersReport;
-  const alreadyClaimed: HolderClaims = await onChainProvider.fetchClaimed(details);
+  // const alreadyClaimed: HolderClaims = await onChainProvider.fetchClaimed(details);
 
   const overclaimed: string[] = [];
 
@@ -161,12 +161,12 @@ export async function validateClaims(onChainProvider: OnChainProvider, holdersRe
         a.poolName > b.poolName ? 1 : b.poolName > a.poolName ? -1 : a.percent > b.percent ? -1 : b.percent > a.percent ? 1 : 0
       )
       .map(async (d) => {
-        const alreadyClaimedValue = round(Int256.from(alreadyClaimed[d.holder][d.tokenAddress], d.decimals).toNumber(), 2);
+        // const alreadyClaimedValue = round(Int256.from(alreadyClaimed[d.holder][d.tokenAddress], d.decimals).toNumber(), 2);
         const totalCumulated = round(unclaimed[d.holder][d.symbol].toNumber(), 2);
 
-        if (totalCumulated < alreadyClaimedValue) {
-          overclaimed.push(`${d.holder}: ${alreadyClaimedValue} / ${totalCumulated} ${d.symbol}`);
-        }
+        // if (totalCumulated < alreadyClaimedValue) {
+        //   overclaimed.push(`${d.holder}: ${alreadyClaimedValue} / ${totalCumulated} ${d.symbol}`);
+        // }
         return {
           ...d,
           diff: round(d.diff, 4),
@@ -174,8 +174,8 @@ export async function validateClaims(onChainProvider: OnChainProvider, holdersRe
           averageBoost: round(d.diffAverageBoost, 2),
           distribution: d.distribution.slice(0, 5),
           totalCumulated,
-          alreadyClaimed: alreadyClaimedValue,
-          issueSpotted: totalCumulated < alreadyClaimedValue,
+          // alreadyClaimed: alreadyClaimedValue,
+          // issueSpotted: totalCumulated < alreadyClaimedValue,
         };
       })
   );

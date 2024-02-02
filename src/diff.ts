@@ -1,11 +1,13 @@
+import { MerklChainId } from '@angleprotocol/sdk';
+import axios from 'axios';
 import moment from 'moment';
 
 import { DisputeContext } from './bot/context';
-import { validateClaims, validateHolders } from './bot/validity';
-import { buildMerklTree } from './helpers';
-import createDiffTable from './helpers/diffTable';
+import { MERKL_API_URL } from './constants';
 import ConsoleLogger from './helpers/logger/ConsoleLogger';
 import blockFromTimestamp from './providers/blockNumberFromTimestamp';
+import { BaseTree } from './providers/tree';
+import { fetchCampaigns, fetchLeaves } from './utils/merklAPI';
 
 export default async function (context: DisputeContext, fromTimeStamp: number, toTimeStamp: number) {
   const { onChainProvider } = context;
@@ -20,22 +22,27 @@ export default async function (context: DisputeContext, fromTimeStamp: number, t
   console.log(`Using block ${endBlock} as onchain reference`);
 
   onChainProvider.setBlock(endBlock);
+  const startRootData = (await axios.get(`${MERKL_API_URL}/rootForTimestamp?chainId=${context.chainId}&timestamp=${fromTimeStamp}`)).data;
+  const endRootData = (await axios.get(`${MERKL_API_URL}/rootForTimestamp?chainId=${context.chainId}&timestamp=${toTimeStamp}`)).data;
 
-  // TODO - update this job to use the new logic (need to get the roots from the API)
-  // const startEpoch = await merkleRootsProvider.epochFromTimestamp(fromTimeStamp);
-  // const endEpoch = await merkleRootsProvider.epochFromTimestamp(toTimeStamp);
-  // const startTree = await merkleRootsProvider.fetchTreeFor(startEpoch);
-  // const endTree = await merkleRootsProvider.fetchTreeFor(endEpoch);
+  const startLeaves = await fetchLeaves(context.chainId, startRootData.root);
+  const startTree = new BaseTree(startLeaves, context.chainId as MerklChainId);
+
+  const endLeaves = await fetchLeaves(context.chainId, endRootData.root);
+  const endTree = new BaseTree(endLeaves, context.chainId as MerklChainId);
 
   // logger.trees(startEpoch, startTree, endEpoch, endTree);
 
-  // const endRoot = buildMerklTree(endTree.rewards).tree.getHexRoot();
-  // const startRoot = buildMerklTree(startTree.rewards).tree.getHexRoot();
+  const endRoot = startTree.merklRoot();
+  const startRoot = endTree.merklRoot();
 
-  // logger.computedRoots(startRoot, endRoot);
+  logger.computedRoots(startRoot, endRoot);
 
-  // const holdersReport = await validateClaims(onChainProvider, await validateHolders(onChainProvider, startTree, endTree));
+  const campaigns = await fetchCampaigns(context.chainId);
 
-  // const res = await createDiffTable(holdersReport.details, holdersReport.changePerDistrib, !context.uploadDiffTable);
-  // context.uploadDiffTable && console.log('output:', res);
+  const { diffCampaigns, diffRecipients, negativeDiffs } = BaseTree.computeDiff(startTree, endTree, campaigns);
+
+  console.log('diffCampaigns:', diffCampaigns);
+  console.log('diffRecipients:', diffRecipients);
+  console.log('negativeDiffs:', negativeDiffs);
 }
