@@ -1,7 +1,6 @@
 import { Campaign, CampaignParameters } from "@angleprotocol/sdk";
 import axios from "axios";
-
-const MERKL_API_URL = "https://api-staging.angle.money/v3";
+import { MERKL_API_URL } from "../constants";
 
 // TODO add retries
 export async function fetchLeaves(chainId: number, root: string): Promise<any> {
@@ -16,4 +15,4 @@ export async function fetchCampaigns(chainId: number): Promise<{ [campaignId: st
         campaigns[campaign.campaignId] = campaign as CampaignParameters<Campaign>;
     }
     return campaigns;
-  }
+}

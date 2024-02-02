@@ -14,3 +14,5 @@ export const ALLOWED_OVER_CLAIM = [
   '0x3f9763cE4F230368437f45CE81Be598c253Db338',
   '0x2A6Be69cd729288006f831737D5032f15626d52c',
 ];
+
+export const MERKL_API_URL = process.env.MERKL_API_URL ? process.env.MERKL_API_URL : "https://api-staging.angle.money/v3";
