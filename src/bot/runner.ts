@@ -6,14 +6,14 @@ import { ALLOWED_OVER_CLAIM, NULL_ADDRESS } from '../constants';
 import { ALERTING_DELAY } from '../constants/alertingDelay';
 import { buildMerklTree } from '../helpers';
 import createDiffTable from '../helpers/diffTable';
+import { BaseTree, ExpandedLeaf } from '../providers/tree';
 import { BotError, MerklReport, Resolver, Result, Step, StepResult } from '../types/bot';
 import { HoldersReport } from '../types/holders';
+import { gtStrings } from '../utils/addString';
+import { fetchCampaigns, fetchLeaves } from '../utils/merklAPI';
 import { DisputeContext } from './context';
 import { approveDisputeStake, createSigner, disputeTree } from './dispute';
 import { validateClaims, validateHolders } from './validity';
-import { BaseTree, ExpandedLeaf } from '../providers/tree';
-import { fetchCampaigns, fetchLeaves } from '../utils/merklAPI';
-import { gtStrings } from '../utils/addString';
 
 export const checkBlockTime: Step = async (context, report) => {
   try {
@@ -36,7 +36,7 @@ export const checkOnChainParams: Step = async ({ onChainProvider, logger }, repo
 
     logger?.onChainParams(params, report.startTime);
 
-    return Result.Success({ ...report, params});
+    return Result.Success({ ...report, params });
   } catch (err) {
     console.error(err);
     return Result.Error({ code: BotError.OnChainFetch, reason: `Unable to get on-chain params: ${err}`, report });
@@ -73,12 +73,16 @@ export const checkTrees: Step = async ({ logger }, report) => {
 
     const startRoot = params.startRoot;
     const endRoot = params.endRoot;
-    
+
     const startLeaves = await fetchLeaves(chainId, startRoot);
     const startTree = new BaseTree(startLeaves, chainId as MerklChainId);
 
+    startTree.buildMerklTree();
+
     const endLeaves = await fetchLeaves(chainId, endRoot);
     const endTree = new BaseTree(endLeaves, chainId as MerklChainId);
+
+    endTree.buildMerklTree();
 
     return Result.Success({ ...report, startTree, endTree, startRoot, endRoot });
   } catch (err) {
@@ -107,26 +111,36 @@ export const checkOverDistribution: Step = async ({ onChainProvider }, report) =
 
   try {
     const campaigns = await fetchCampaigns(chainId);
-  
+
     const { diffCampaigns, diffRecipients, negativeDiffs } = BaseTree.computeDiff(startTree, endTree, campaigns);
 
     if (negativeDiffs.length > 0) {
-      return Result.Error({ code: BotError.NegativeDiff, reason: negativeDiffs.join('\n'), report: { ...report, diffCampaigns, diffRecipients } });
+      return Result.Error({
+        code: BotError.NegativeDiff,
+        reason: negativeDiffs.join('\n'),
+        report: { ...report, diffCampaigns, diffRecipients },
+      });
     }
 
     const overDistributed = [];
     for (const diffCampaign of diffCampaigns) {
       if (gtStrings(diffCampaign.total, campaigns[diffCampaign.campaignId].amount)) {
         overDistributed.push(
-          `${diffCampaign.campaignId} - Distributed (${diffCampaign.total}) > Total (${campaigns[diffCampaign.campaignId].amount})`);
+          `${diffCampaign.campaignId} - Distributed (${diffCampaign.total}) > Total (${campaigns[diffCampaign.campaignId].amount})`
+        );
       }
     }
     if (overDistributed.length > 0) {
-      return Result.Error({ code: BotError.OverDistributed, reason: overDistributed.join('\n'), report: { ...report, diffCampaigns, diffRecipients } });
+      return Result.Error({
+        code: BotError.OverDistributed,
+        reason: overDistributed.join('\n'),
+        report: { ...report, diffCampaigns, diffRecipients },
+      });
     }
 
     return Result.Success({ ...report, diffCampaigns, diffRecipients });
   } catch (reason) {
+    console.log(reason);
     return Result.Error({ code: BotError.NegativeDiff, reason, report: { ...report } });
   }
 };
@@ -181,14 +195,7 @@ export const checkOverDistribution: Step = async ({ onChainProvider }, report) =
 
 export async function runSteps(
   context: DisputeContext,
-  steps: Step[] = [
-    checkBlockTime,
-    checkOnChainParams,
-    checkDisputeWindow,
-    checkTrees,
-    checkRoots,
-    checkOverDistribution,
-  ],
+  steps: Step[] = [checkBlockTime, checkOnChainParams, checkDisputeWindow, checkTrees, checkRoots, checkOverDistribution],
   report: MerklReport = {}
 ): Promise<StepResult> {
   return new Promise(async function (resolve: Resolver) {
@@ -215,14 +222,7 @@ export default async function run(context: DisputeContext) {
 
   const checkUpResult = await runSteps(
     context,
-    [
-      checkBlockTime,
-      checkOnChainParams,
-      checkDisputeWindow,
-      checkTrees,
-      checkRoots,
-      checkOverDistribution,
-    ],
+    [checkBlockTime, checkOnChainParams, checkDisputeWindow, checkTrees, checkRoots, checkOverDistribution],
     report
   );
 
