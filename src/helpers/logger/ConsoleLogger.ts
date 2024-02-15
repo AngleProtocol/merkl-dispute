@@ -19,12 +19,14 @@ export default class ConsoleLogger extends Logger {
       )
     );
   };
+
   override onChainParams = (params: OnChainParams, timestamp?: number) => {
     const endDate = new Date(params.endOfDisputePeriod * 1000);
     const log = (...a) => console.log(chalk.blue(...a));
 
     console.groupCollapsed(chalk.blue(`On-chain data:`));
-
+    log('old root:', params.startRoot);
+    log('new root:', params.endRoot);
     log('token address:', params.disputeToken);
     log('token amount:', BigNumber.from(params.disputeAmount).toString());
     log('dispute period:', params.disputePeriod, 'hour(s)');

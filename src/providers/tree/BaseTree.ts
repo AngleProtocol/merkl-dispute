@@ -282,6 +282,8 @@ export class BaseTree {
     diffRecipients: DiffRecipients;
     negativeDiffs: ExpandedLeaf[];
   } {
+    oldTree.sort();
+
     // Add campaigns data so we can log epochs, format numbers, etc
     const diffLeaves: ExpandedLeaf[] = [];
 
@@ -308,6 +310,7 @@ export class BaseTree {
     const negativeDiffs: ExpandedLeaf[] = [];
 
     newTree.sort();
+
     for (const campaignId of newCampaignIds) {
       const campaignInfo = newTree.campaignInfo(campaignId);
 
@@ -325,7 +328,7 @@ export class BaseTree {
       let index = campaignInfo.firstIndex;
       while (index <= campaignInfo.lastIndex) {
         const newLeaf = newTree.data[index];
-        oldTree.sort();
+
         const oldIndex = oldTree.findIndex(newLeaf.campaignId, newLeaf.recipient, newLeaf.reason);
 
         const diffLeaf = !oldIndex.found ? newLeaf : newLeaf.sub(oldTree.data[oldIndex.index]);

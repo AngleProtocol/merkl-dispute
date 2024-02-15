@@ -4,9 +4,6 @@ import ConsoleLogger from '../helpers/logger/ConsoleLogger';
 import DiscordWebhookLogger from '../helpers/logger/DiscordWebhookLogger';
 import Logger from '../helpers/logger/Logger';
 import Loggers from '../helpers/logger/Loggers';
-import GithubRootsProvider from '../providers/merkl-roots/GithubRootsProvider';
-import GoogleRootsProvider from '../providers/merkl-roots/GoogleRootsProvider';
-import MerkleRootsProvider from '../providers/merkl-roots/MerkleRootsProvider';
 import OnChainProvider from '../providers/on-chain/OnChainProvider';
 import RpcProvider from '../providers/on-chain/RpcProvider';
 

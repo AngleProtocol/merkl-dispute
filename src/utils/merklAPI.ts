@@ -5,7 +5,8 @@ import { MERKL_API_URL } from '../constants';
 
 // TODO add retries
 export async function fetchLeaves(chainId: number, root: string): Promise<any> {
-  const response = await axios.get(`${MERKL_API_URL}/exports/leaves?chainId=${chainId}&root=${root}`);
+  const response = await axios.get(`https://storage.googleapis.com/merkl-production-rewards-v2/${chainId}/${root}.json`);
+
   return response.data;
 }
 

@@ -75,7 +75,6 @@ export const buildMerklTree = (
   underylingTreeData: UnderlyingTreeType
 ): {
   tree: MerkleTree;
-  tokens: string[];
 } => {
   /**
    * 1 - Build the global list of users

@@ -3,14 +3,10 @@ import axios from 'axios';
 import moment from 'moment';
 
 import { DisputeContext } from './bot/context';
-import { validateClaims, validateHolders } from './bot/validity';
 import { MERKL_API_URL } from './constants';
-import { buildMerklTree } from './helpers';
-import createDiffTable from './helpers/diffTable';
 import ConsoleLogger from './helpers/logger/ConsoleLogger';
 import blockFromTimestamp from './providers/blockNumberFromTimestamp';
 import { BaseTree } from './providers/tree';
-import { gtStrings } from './utils/addString';
 import { fetchCampaigns, fetchLeaves } from './utils/merklAPI';
 
 export default async function (context: DisputeContext, fromTimeStamp: number, toTimeStamp: number) {
