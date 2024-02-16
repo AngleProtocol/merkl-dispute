@@ -1,17 +1,6 @@
-import {
-  AggregatedRewardsType,
-  AMM,
-  AMMAlgorithm,
-  AMMAlgorithmMapping,
-  Erc20__factory,
-  Multicall__factory,
-  UnderlyingTreeType,
-} from '@angleprotocol/sdk';
-import { BigNumber, ethers, utils } from 'ethers';
-import keccak256 from 'keccak256';
-import MerkleTree from 'merkletreejs';
+import { AMM, AMMAlgorithm, AMMAlgorithmMapping, Erc20__factory, Multicall__factory } from '@angleprotocol/sdk';
 
-import { MERKL_TREE_OPTIONS, MULTICALL_ADDRESS } from '../constants';
+import { MULTICALL_ADDRESS } from '../constants';
 import { httpProvider } from '../providers';
 import { PoolInterface } from '../types';
 
@@ -70,65 +59,3 @@ export const fetchPoolName = async (chainId: number, pool: string, amm: AMM) => 
 };
 
 export const round = (n: number, dec: number) => Math.round(n * 10 ** dec) / 10 ** dec;
-
-export const buildMerklTree = (
-  underylingTreeData: UnderlyingTreeType
-): {
-  tree: MerkleTree;
-} => {
-  /**
-   * 1 - Build the global list of users
-   */
-  const users: string[] = [];
-  for (const id of Object.keys(underylingTreeData)) {
-    const rewardUsers = Object.keys(underylingTreeData[id].holders);
-    for (const r of rewardUsers) {
-      if (!users.includes(r)) {
-        users.push(r);
-      }
-    }
-  }
-
-  /**
-   * 2 - Build the global list of tokens
-   */
-  const tokens: string[] = tokensFromTree(underylingTreeData);
-
-  /**
-   * 3 - Build the tree
-   */
-  const leaves = [];
-  for (const u of users) {
-    for (const t of tokens) {
-      let sum = BigNumber.from(0);
-      for (const id of Object.keys(underylingTreeData)) {
-        const distribution = underylingTreeData[id];
-        if (distribution.token === t) {
-          sum = sum?.add(distribution?.holders[u]?.amount.toString() ?? 0);
-        }
-      }
-      if (!!sum && sum.gt(0)) {
-        const hash = ethers.utils.keccak256(
-          ethers.utils.defaultAbiCoder.encode(['address', 'address', 'uint256'], [utils.getAddress(u), t, sum])
-        );
-        leaves.push(hash);
-      }
-    }
-  }
-  const tree = new MerkleTree(leaves, keccak256, MERKL_TREE_OPTIONS);
-
-  return {
-    tokens,
-    tree,
-  };
-};
-
-export const tokensFromTree = (json: AggregatedRewardsType['rewards']): string[] => {
-  const tokens: string[] = [];
-  for (const id of Object.keys(json)) {
-    if (!tokens.includes(json[id].token)) {
-      tokens.push(json[id].token);
-    }
-  }
-  return tokens;
-};

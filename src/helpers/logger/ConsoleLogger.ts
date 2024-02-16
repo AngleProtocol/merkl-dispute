@@ -35,6 +35,7 @@ export default class ConsoleLogger extends Logger {
 
     console.groupEnd();
   };
+
   override trees = (startEpoch: number, startTree: AggregatedRewardsType, endEpoch: number, endTree: AggregatedRewardsType) => {
     const log = (...a) => console.log(chalk.green(...a));
 
@@ -45,6 +46,7 @@ export default class ConsoleLogger extends Logger {
     log('endRoot:', endTree.merklRoot);
     console.groupEnd();
   };
+
   override computedRoots = (start: string, end: string) => {
     console.group('Computed roots:');
     console.log('startRoot:', start);
