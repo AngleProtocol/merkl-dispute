@@ -1,19 +1,14 @@
 import { HOUR, MerklChainId } from '@angleprotocol/sdk';
-import { getAddress } from 'ethers/lib/utils';
 import moment from 'moment';
 
-import { ALLOWED_OVER_CLAIM, NULL_ADDRESS } from '../constants';
+import { NULL_ADDRESS } from '../constants';
 import { ALERTING_DELAY } from '../constants/alertingDelay';
-import { buildMerklTree } from '../helpers';
-import createDiffTable from '../helpers/diffTable';
-import { BaseTree, ExpandedLeaf } from '../providers/tree';
+import { BaseTree } from '../providers/tree';
 import { BotError, MerklReport, Resolver, Result, Step, StepResult } from '../types/bot';
-import { HoldersReport } from '../types/holders';
 import { gtStrings } from '../utils/addString';
 import { fetchCampaigns, fetchLeaves } from '../utils/merklAPI';
 import { DisputeContext } from './context';
 import { approveDisputeStake, createSigner, disputeTree } from './dispute';
-import { validateClaims, validateHolders } from './validity';
 
 export const checkBlockTime: Step = async (context, report) => {
   try {
@@ -106,7 +101,7 @@ export const checkRoots: Step = async ({ logger }, report) => {
   }
 };
 
-export const checkOverDistribution: Step = async ({ onChainProvider }, report) => {
+export const checkOverDistribution: Step = async ({}, report) => {
   const { chainId, startTree, endTree } = report;
 
   try {
@@ -212,7 +207,12 @@ export async function runSteps(
 
     for (let i = 0; i < steps.length && !resolved; i++) await handleStep(steps[i]);
 
-    resolve(Result.Exit({ reason: 'No problemo', report }));
+    resolve(
+      Result.Exit({
+        reason: `No problem detected. Report at https://storage.cloud.google.com/merkl-production-reports/${context.chainId}/${report.endRoot}.html`,
+        report,
+      })
+    );
   });
 }
 
