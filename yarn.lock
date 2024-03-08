@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@aashutoshrathi/word-wrap/-/word-wrap-1.2.6.tgz#bd9154aec9983f77b3a034ecaa015c2e4201f6cf"
   integrity sha512-1Yjs2SvM8TflER/OD3cOjhWWOZb58A2t7wpE2S9XfBYTiIl+XFhQG2bjy4Pu1I+EAlCNUzRDYDdFwFYUKvXcIA==
 
-"@angleprotocol/sdk@0.26.14":
-  version "0.26.14"
-  resolved "https://npm.pkg.github.com/download/@angleprotocol/sdk/0.26.14/06a1915797f3351011bf510ea3847aafb0183f06#06a1915797f3351011bf510ea3847aafb0183f06"
-  integrity sha512-amfvdAj6JM7RA0egpkZ3HhVF+7pJA68Z4UARGFwdRpBu6fQXd+JSHYGE0PqquxU5ujyp4+JdRHeOtdg6RVJ23Q==
+"@angleprotocol/sdk@^0.34.11":
+  version "0.34.11"
+  resolved "https://npm.pkg.github.com/download/@angleprotocol/sdk/0.34.11/4bb431205519c44e1998df87bf54380e2173e12b#4bb431205519c44e1998df87bf54380e2173e12b"
+  integrity sha512-5fuoDMfAn6EvpwI9H/WJloO7A8WHAVOCd6CR6sXOXEsgIXlv8AnUj91Uop3/BD6hbl1RpiRV7kNcHQvOtxRmyA==
   dependencies:
     "@apollo/client" "^3.7.17"
     "@typechain/ethers-v5" "^10.0.0"
