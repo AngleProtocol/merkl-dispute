@@ -57,8 +57,7 @@ yarn bot watch --chain <chainId> --time <timeIntervalInSeconds>
 You can also run the bot once to try to dispute the latest block or check the bot against a previous block:
 
 ```bash
-yarn bot run --chain <chainId>
-yarn bot run --chain <chainId> --block <blockNumber>
+yarn bot:hot run -c 81457
 ```
 
 ### Compare two points in time
