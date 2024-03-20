@@ -73,6 +73,31 @@ spec:
                 secretKeyRef:
                   key: latest
                   name: KEEPER_GITHUB_AUTH_TOKEN
+            - name: PROVIDER_169
+              valueFrom:
+                secretKeyRef:
+                  key: latest
+                  name: PROVIDER_169
+            - name: PROVIDER_5000
+              valueFrom:
+                secretKeyRef:
+                  key: latest
+                  name: PROVIDER_5000
+            - name: PROVIDER_13371
+              valueFrom:
+                secretKeyRef:
+                  key: latest
+                  name: PROVIDER_13371
+            - name: PROVIDER_8147
+              valueFrom:
+                secretKeyRef:
+                  key: latest
+                  name: PROVIDER_81457
+            - name: PROVIDER_34443
+              valueFrom:
+                secretKeyRef:
+                  key: latest
+                  name: PROVIDER_34443
           image: CHANGE_ME # spec.template.spec.containers.image
           ports:
             - containerPort: '5002'

@@ -1,5 +1,5 @@
 import { AMM } from '@angleprotocol/sdk';
-import { ExtensiveDistributionParametersStructOutput } from '@angleprotocol/sdk/dist/generated/DistributionCreator';
+import { DistributionParametersStructOutput } from '@angleprotocol/sdk/dist/generated/DistributionCreator';
 import { BigNumber, ContractReceipt, Overrides, Wallet } from 'ethers';
 
 import { HolderClaims, HolderDetail } from '../../types/holders';
@@ -27,8 +27,8 @@ export default abstract class OnChainProvider extends ExponentialBackoffProvider
 
   protected abstract onChainParams: () => Promise<OnChainParams>;
   protected abstract timestampAt: (blockNumber: number) => Promise<number>;
-  protected abstract activeDistributions: () => Promise<ExtensiveDistributionParametersStructOutput[]>;
-  protected abstract activeDistributionsBetween: (start: number, end: number) => Promise<ExtensiveDistributionParametersStructOutput[]>;
+  protected abstract activeDistributions: () => Promise<DistributionParametersStructOutput[]>;
+  protected abstract activeDistributionsBetween: (start: number, end: number) => Promise<DistributionParametersStructOutput[]>;
   protected abstract poolName: (pool: string, amm: AMM) => Promise<string>;
   protected abstract claimed: (holderDetails: HolderDetail[]) => Promise<HolderClaims>;
   protected abstract approve: (
@@ -70,11 +70,11 @@ export default abstract class OnChainProvider extends ExponentialBackoffProvider
     return this.retryWithExponentialBackoff(this.approval, this.fetchParams, address, token);
   }
 
-  async fetchActiveDistributions(): Promise<ExtensiveDistributionParametersStructOutput[]> {
+  async fetchActiveDistributions(): Promise<DistributionParametersStructOutput[]> {
     return this.retryWithExponentialBackoff(this.activeDistributions, this.fetchParams);
   }
 
-  async fetchActiveDistributionsBetween(start: number, end: number): Promise<ExtensiveDistributionParametersStructOutput[]> {
+  async fetchActiveDistributionsBetween(start: number, end: number): Promise<DistributionParametersStructOutput[]> {
     return this.retryWithExponentialBackoff(this.activeDistributionsBetween, this.fetchParams, start, end);
   }
 
