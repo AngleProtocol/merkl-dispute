@@ -1,6 +1,5 @@
 export const TVL_THRESHOLD = 10;
 export const BATCH_NUMBER = 1_000;
-export const MULTICALL_ADDRESS = '0xcA11bde05977b3631167028862bE2a173976CA11';
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 export const GITHUB_URL = `https://raw.githubusercontent.com/AngleProtocol/merkl-rewards/main/`; // TODO switch to public gcloud buckets
 export const ANGLE_API = `https://api.angle.money/`;

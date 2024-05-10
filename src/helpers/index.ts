@@ -1,12 +1,11 @@
-import { AMM, AMMAlgorithm, AMMAlgorithmMapping, Erc20__factory, Multicall__factory } from '@angleprotocol/sdk';
+import { AMM, AMMAlgorithm, AMMAlgorithmMapping, Erc20__factory, MULTICALL_ADDRESS, Multicall__factory } from '@angleprotocol/sdk';
 
-import { MULTICALL_ADDRESS } from '../constants';
 import { httpProvider } from '../providers';
 import { PoolInterface } from '../types';
 
 export const fetchPoolName = async (chainId: number, pool: string, amm: AMM) => {
   const provider = httpProvider(chainId);
-  const multicall = Multicall__factory.connect(MULTICALL_ADDRESS, provider);
+  const multicall = Multicall__factory.connect(MULTICALL_ADDRESS(chainId), provider);
   const poolInterface = PoolInterface(AMMAlgorithmMapping[amm]);
   const erc20Interface = Erc20__factory.createInterface();
 
