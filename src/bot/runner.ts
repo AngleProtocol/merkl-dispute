@@ -43,19 +43,20 @@ export const checkDisputeWindow: Step = async (context, report) => {
     const { startTime } = report;
     const { disputer, disputeToken, endOfDisputePeriod } = report?.params;
 
-    if (!!disputer && disputer !== NULL_ADDRESS) return Result.Exit({ reason: 'Already disputed', report });
-    else if (disputeToken === NULL_ADDRESS) return Result.Exit({ reason: 'No dispute token set', report });
-    else if (endOfDisputePeriod <= startTime) {
-      // Check delay since last dispute period and eventually send an alert
-      if (endOfDisputePeriod + ALERTING_DELAY[context.chainId] * HOUR <= startTime) {
-        await context.logger.error(
-          context,
-          `Last update was ${((startTime - endOfDisputePeriod) / HOUR)?.toFixed(2)} hours ago`,
-          BotError.AlertDelay
-        );
-      }
-      return Result.Exit({ reason: 'Not in dispute period', report });
-    }
+    // if (!!disputer && disputer !== NULL_ADDRESS) return Result.Exit({ reason: 'Already disputed', report });
+    // else
+    // if (disputeToken === NULL_ADDRESS) return Result.Exit({ reason: 'No dispute token set', report });
+    // else if (endOfDisputePeriod <= startTime) {
+    //   // Check delay since last dispute period and eventually send an alert
+    //   if (endOfDisputePeriod + ALERTING_DELAY[context.chainId] * HOUR <= startTime) {
+    //     await context.logger.error(
+    //       context,
+    //       `Last update was ${((startTime - endOfDisputePeriod) / HOUR)?.toFixed(2)} hours ago`,
+    //       BotError.AlertDelay
+    //     );
+    //   }
+    //   return Result.Exit({ reason: 'Not in dispute period', report });
+    // }
     return Result.Success(report);
   } catch (err) {
     return Result.Error({ code: BotError.OnChainFetch, reason: `Unable to check dispute status: ${err}`, report });
