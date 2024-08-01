@@ -1,15 +1,13 @@
-import { HOUR, MerklChainId } from '@angleprotocol/sdk';
-import moment from 'moment';
-
-import { NULL_ADDRESS } from '../constants';
-import { ALERTING_DELAY } from '../constants/alertingDelay';
-import { BaseTree } from '../providers/tree';
-import { BotError, MerklReport, Resolver, Result, Step, StepResult } from '../types/bot';
-import { gtStrings } from '../utils/addString';
-import { fetchCampaigns, fetchLeaves } from '../utils/merklAPI';
-import { DisputeContext } from './context';
-import { approveDisputeStake, createSigner, disputeTree } from './dispute';
-
+import { Distributor__factory, type MerklChainId, YEAR, registry } from "@angleprotocol/sdk";
+import moment from "moment";
+import { BaseTree } from "../providers/tree";
+import { BotError, type MerklReport, type Resolver, Result, type Step, type StepResult } from "../types/bot";
+import { gtStrings } from "../utils/addString";
+import { sendDiscordNotification } from "../utils/discord";
+import { fetchCampaigns, fetchLeaves } from "../utils/merklAPI";
+import { providers } from "../utils/providers";
+import type { DisputeContext } from "./context";
+import { approveDisputeStake, createSigner, disputeTree } from "./dispute";
 export const checkBlockTime: Step = async (context, report) => {
   try {
     const { onChainProvider, blockNumber, logger, chainId } = context;
@@ -40,8 +38,8 @@ export const checkOnChainParams: Step = async ({ onChainProvider, logger }, repo
 
 export const checkDisputeWindow: Step = async (context, report) => {
   try {
-    const { startTime } = report;
-    const { disputer, disputeToken, endOfDisputePeriod } = report?.params;
+    // const { startTime } = report;
+    // const { disputer, disputeToken, endOfDisputePeriod } = report?.params;
 
     // if (!!disputer && disputer !== NULL_ADDRESS) return Result.Exit({ reason: 'Already disputed', report });
     // else
@@ -94,15 +92,15 @@ export const checkRoots: Step = async ({ logger }, report) => {
     const computedEndRoot = endTree.merklRoot();
     logger?.computedRoots(computedStartRoot, computedEndRoot);
 
-    if (startRoot !== computedStartRoot) throw 'Start merkle root is not correct';
-    if (endRoot !== computedEndRoot) throw 'End merkle root is not correct';
-    else return Result.Success({ ...report, startRoot, endRoot });
+    if (startRoot !== computedStartRoot) throw "Start merkle root is not correct";
+    if (endRoot !== computedEndRoot) throw "End merkle root is not correct";
+    return Result.Success({ ...report, startRoot, endRoot });
   } catch (reason) {
     return Result.Error({ code: BotError.TreeRoot, reason, report });
   }
 };
 
-export const checkOverDistribution: Step = async ({}, report) => {
+export const checkOverDistribution: Step = async (_, report) => {
   const { chainId, startTree, endTree } = report;
 
   try {
@@ -110,12 +108,49 @@ export const checkOverDistribution: Step = async ({}, report) => {
 
     const { diffCampaigns, diffRecipients, negativeDiffs } = BaseTree.computeDiff(startTree, endTree, campaigns);
 
+    // if we are in the time period of unclaimed job
+    //  -> test unclaimed
+    //  -> test successful => discord notif
+    //  -> test unsuccessful => throw
+    // if not we throw
     if (negativeDiffs.length > 0) {
-      return Result.Error({
-        code: BotError.NegativeDiff,
-        reason: negativeDiffs.join('\n'),
-        report: { ...report, diffCampaigns, diffRecipients },
-      });
+      const d = new Date();
+      const now = Number(process.env.TIMESTAMP) ? Number(process.env.TIMESTAMP) : Math.round(d.getTime() / 1000);
+      const threshold = now - YEAR;
+      // Getting the current merkl root
+      const distributorAddress = registry(chainId)?.Merkl?.Distributor;
+
+      for (const leaf of negativeDiffs) {
+        if (leaf.lastProcessedTimestamp > threshold) {
+          return Result.Error({
+            code: BotError.NegativeDiff,
+            reason: negativeDiffs.join("\n"),
+            report: { ...report, diffCampaigns, diffRecipients },
+          });
+        }
+
+        const amountClaimed: number = await Distributor__factory.connect(
+          distributorAddress,
+          providers[chainId]
+        ).claimed(leaf.recipient, leaf.rewardToken)[0];
+
+        if (amountClaimed === 0) {
+          await sendDiscordNotification({
+            title: "Unclaimed Dispute",
+            severity: "warning", // success
+            description: "Detected unclaimed for this dispute", // need to add more information
+            fields: [],
+            key: "unclaimed",
+            isAlert: false,
+          });
+        } else {
+          return Result.Error({
+            code: BotError.NegativeDiff,
+            reason: negativeDiffs.join("\n"),
+            report: { ...report, diffCampaigns, diffRecipients },
+          });
+        }
+      }
     }
 
     const overDistributed = [];
@@ -129,7 +164,7 @@ export const checkOverDistribution: Step = async ({}, report) => {
     if (overDistributed.length > 0) {
       return Result.Error({
         code: BotError.OverDistributed,
-        reason: overDistributed.join('\n'),
+        reason: overDistributed.join("\n"),
         report: { ...report, diffCampaigns, diffRecipients },
       });
     }
@@ -191,10 +226,17 @@ export const checkOverDistribution: Step = async ({}, report) => {
 
 export async function runSteps(
   context: DisputeContext,
-  steps: Step[] = [checkBlockTime, checkOnChainParams, checkDisputeWindow, checkTrees, checkRoots, checkOverDistribution],
+  steps: Step[] = [
+    checkBlockTime,
+    checkOnChainParams,
+    checkDisputeWindow,
+    checkTrees,
+    checkRoots,
+    checkOverDistribution,
+  ],
   report: MerklReport = {}
 ): Promise<StepResult> {
-  return new Promise(async function (resolve: Resolver) {
+  return new Promise(async (resolve: Resolver) => {
     let resolved = false;
 
     const handleStep = async (step: Step) => {
@@ -244,7 +286,11 @@ export default async function run(context: DisputeContext) {
 
   await logger?.error(context, checkUpResult.res.reason, checkUpResult.res.code, checkUpResult.res.report);
 
-  const disputeResult = await runSteps(context, [createSigner, approveDisputeStake, disputeTree], checkUpResult.res.report);
+  const disputeResult = await runSteps(
+    context,
+    [createSigner, approveDisputeStake, disputeTree],
+    checkUpResult.res.report
+  );
 
   if (!disputeResult.err) {
     await logger?.disputeSuccess(context, disputeResult.res.reason, disputeResult.res.report);

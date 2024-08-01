@@ -1,17 +1,23 @@
-import { BASE_9, Campaign, CampaignParameters, Erc20__factory, Int256, MerklChainId } from '@angleprotocol/sdk';
-import { BigNumber, utils } from 'ethers';
-import keccak256 from 'keccak256';
-import MerkleTree from 'merkletreejs';
+import {
+  BASE_9,
+  type Campaign,
+  type CampaignParameters,
+  Erc20__factory,
+  Int256,
+  type MerklChainId,
+} from "@angleprotocol/sdk";
+import { BigNumber, utils } from "ethers";
+import keccak256 from "keccak256";
+import MerkleTree from "merkletreejs";
 
-import { MERKL_TREE_OPTIONS } from '../../constants';
-import { DiffCampaigns, DiffRecipients } from '../../types';
-import { addStrings, gtStrings, subStrings } from '../../utils/addString';
-import { displayString } from '../../utils/displayString';
-import { getSolidityIndex } from '../../utils/indexing';
-import { log } from '../../utils/logger';
-import { overridenConsole, overridenConsoleRead } from '../../utils/overridenConsole';
-import { provider } from '../../utils/providers';
-import { ExpandedLeaf } from './ExpandedLeaf';
+import { MERKL_TREE_OPTIONS } from "../../constants";
+import type { DiffCampaigns, DiffRecipients } from "../../types";
+import { addStrings, gtStrings, subStrings } from "../../utils/addString";
+import { displayString } from "../../utils/displayString";
+import { getSolidityIndex } from "../../utils/indexing";
+import { log } from "../../utils/logger";
+import { provider } from "../../utils/providers";
+import { ExpandedLeaf } from "./ExpandedLeaf";
 
 export class BaseTree {
   public chainId: MerklChainId;
@@ -20,7 +26,7 @@ export class BaseTree {
   public idToAmount: { [id: string]: { amount: BigNumber; leafIndex: number } };
 
   constructor(data: any, chainId: MerklChainId) {
-    this.data = data.map((x) => new ExpandedLeaf(x));
+    this.data = data.map(x => new ExpandedLeaf(x));
     this.chainId = chainId;
   }
 
@@ -31,7 +37,7 @@ export class BaseTree {
   public sort() {
     this.data.sort((a, b) => {
       if (a.gte(b)) return 1;
-      else return -1;
+      return -1;
     });
   }
 
@@ -43,7 +49,7 @@ export class BaseTree {
   }
 
   public totalAmount(): string {
-    return this.data.reduce((acc, point) => addStrings(acc, point.amount), '0');
+    return this.data.reduce((acc, point) => addStrings(acc, point.amount), "0");
   }
 
   public campaignIds() {
@@ -63,8 +69,12 @@ export class BaseTree {
     return this.tree.getHexProof(
       utils.keccak256(
         utils.defaultAbiCoder.encode(
-          ['address', 'address', 'uint256'],
-          [utils.getAddress(user), utils.getAddress(token), this.idToAmount[`${utils.getAddress(user)}-${utils.getAddress(token)}`].amount]
+          ["address", "address", "uint256"],
+          [
+            utils.getAddress(user),
+            utils.getAddress(token),
+            this.idToAmount[`${utils.getAddress(user)}-${utils.getAddress(token)}`].amount,
+          ]
         )
       ),
       this.idToAmount[`${utils.getAddress(user)}-${utils.getAddress(token)}`].leafIndex
@@ -86,10 +96,13 @@ export class BaseTree {
     }
 
     const leaves: { hashedLeaf: string; rawLeaf: string }[] = Object.keys(idToAMount)
-      .filter((id) => idToAMount[id].amount.gt(0))
-      .map((id) => {
-        const [recipient, token] = id.split('-');
-        const rawLeaf = utils.defaultAbiCoder.encode(['address', 'address', 'uint256'], [recipient, token, idToAMount[id].amount]);
+      .filter(id => idToAMount[id].amount.gt(0))
+      .map(id => {
+        const [recipient, token] = id.split("-");
+        const rawLeaf = utils.defaultAbiCoder.encode(
+          ["address", "address", "uint256"],
+          [recipient, token, idToAMount[id].amount]
+        );
         return { rawLeaf, hashedLeaf: utils.keccak256(rawLeaf) };
       });
 
@@ -98,16 +111,16 @@ export class BaseTree {
     // Sort leaves
     leaves.sort((a, b) => {
       if (a.hashedLeaf > b.hashedLeaf) return 1;
-      else return -1;
+      return -1;
     });
 
     // Store leaf index in idToAmount
     leaves.forEach((leaf, index) => {
-      const [recipient, token] = utils.defaultAbiCoder.decode(['address', 'address', 'uint256'], leaf.rawLeaf);
+      const [recipient, token] = utils.defaultAbiCoder.decode(["address", "address", "uint256"], leaf.rawLeaf);
       idToAMount[`${recipient}-${token}`].leafIndex = index;
     });
     this.tree = new MerkleTree(
-      leaves.map((l) => l.hashedLeaf),
+      leaves.map(l => l.hashedLeaf),
       keccak256,
       MERKL_TREE_OPTIONS
     );
@@ -120,7 +133,7 @@ export class BaseTree {
     let index = 1;
     while (index < this.data.length - 1) {
       if (!this.data[index - 1].lt(this.data[index])) {
-        log.error('checkIsSorted', `tree isn't sorted anymore`);
+        log.error("checkIsSorted", `tree isn't sorted anymore`);
       }
       index++;
     }
@@ -143,7 +156,11 @@ export class BaseTree {
     while (left <= right) {
       const mid = Math.floor((left + right) / 2);
       // Check if the middle element starts with the target string
-      if (this.data[mid].campaignId === campaignId && this.data[mid].recipient === recipient && this.data[mid].reason === reason) {
+      if (
+        this.data[mid].campaignId === campaignId &&
+        this.data[mid].recipient === recipient &&
+        this.data[mid].reason === reason
+      ) {
         firstIndex = mid;
         // Move to the left half to find the first occurrence
         right = mid - 1;
@@ -163,7 +180,11 @@ export class BaseTree {
       const mid = Math.floor((left + right) / 2);
 
       // Check if the middle element starts with the target string
-      if (this.data[mid].campaignId === campaignId && this.data[mid].recipient === recipient && this.data[mid].reason === reason) {
+      if (
+        this.data[mid].campaignId === campaignId &&
+        this.data[mid].recipient === recipient &&
+        this.data[mid].reason === reason
+      ) {
         lastIndex = mid;
         // Move to the right half to find the last occurrence
         left = mid + 1;
@@ -175,7 +196,7 @@ export class BaseTree {
     }
 
     if (firstIndex !== lastIndex) {
-      log.error('findIndex', `found multiple occurrences of ${campaignId} ${recipient} ${reason} in the tree`);
+      log.error("findIndex", `found multiple occurrences of ${campaignId} ${recipient} ${reason} in the tree`);
     }
 
     if (firstIndex === -1) {
@@ -200,7 +221,7 @@ export class BaseTree {
 
     for (const leaf of this.data) {
       const rewardToken = leaf.rewardToken;
-      if (!amountsPerToken[rewardToken]) amountsPerToken[rewardToken] = '0';
+      if (!amountsPerToken[rewardToken]) amountsPerToken[rewardToken] = "0";
       const sum = addStrings(amountsPerToken[rewardToken], leaf.amount);
       amountsPerToken[rewardToken] = sum;
     }
@@ -256,17 +277,17 @@ export class BaseTree {
     }
     /** Campaign doesn't exist */
     if (firstIndex === -1 || lastIndex === -1) {
-      return { firstIndex: -1, lastIndex: -1, lastUpdateEpoch: 0, totalAmount: '0' };
+      return { firstIndex: -1, lastIndex: -1, lastUpdateEpoch: 0, totalAmount: "0" };
     }
 
     let lastUpdateEpoch = 0;
-    let totalAmount = '0';
+    let totalAmount = "0";
     for (const point of this.data.slice(firstIndex, lastIndex + 1)) {
       if (point.lastProcessedTimestamp > lastUpdateEpoch) {
         lastUpdateEpoch = point.lastProcessedTimestamp;
       }
       if (point.campaignId !== campaignId) {
-        log.error('campaignInfo', `Invalid ${campaignId} sorting`);
+        log.error("campaignInfo", `Invalid ${campaignId} sorting`);
       }
       totalAmount = addStrings(totalAmount, point.amount);
     }
@@ -293,7 +314,8 @@ export class BaseTree {
     /** Check all oldCampaignTypes are still present */
     for (const oldCampaignId of oldCampaignIds) {
       if (!newCampaignIds.includes(oldCampaignId)) {
-        log.error('computeDiff', `old tree campaign ${oldCampaignId} not found in new tree`);
+        // not disputing, needs to dispute otherwise the latter is weird
+        log.error("computeDiff", `old tree campaign ${oldCampaignId} not found in new tree`);
       }
     }
 
@@ -301,7 +323,7 @@ export class BaseTree {
       [campaignId: string]: {
         total: string;
         diff: string;
-        'recipients/reasons': number;
+        "recipients/reasons": number;
         lastProcessedTimestamp: number;
         oldLastProcessedTimestamp: number;
       };
@@ -313,14 +335,15 @@ export class BaseTree {
 
     for (const campaignId of newCampaignIds) {
       const campaignInfo = newTree.campaignInfo(campaignId);
+      const oldCampaignInfo = oldTree.campaignInfo(campaignId);
 
       // TODO @BaptistG
       // @dev Compute the total amount per campaign to display it
       // Compare to campaign data to check there is no over distribution
       statsPerCampaign[campaignId] = {
-        diff: '0',
+        diff: "0",
         total: campaignInfo.totalAmount,
-        'recipients/reasons': 0,
+        "recipients/reasons": 0,
         lastProcessedTimestamp: 0,
         oldLastProcessedTimestamp: 0,
       };
@@ -328,20 +351,42 @@ export class BaseTree {
       let index = campaignInfo.firstIndex;
       while (index <= campaignInfo.lastIndex) {
         const newLeaf = newTree.data[index];
-
         const oldIndex = oldTree.findIndex(newLeaf.campaignId, newLeaf.recipient, newLeaf.reason);
 
         const diffLeaf = !oldIndex.found ? newLeaf : newLeaf.sub(oldTree.data[oldIndex.index]);
         statsPerCampaign[campaignId].diff = addStrings(statsPerCampaign[campaignId].diff, diffLeaf.amount);
-        statsPerCampaign[campaignId]['recipients/reasons'] += 1;
+        statsPerCampaign[campaignId]["recipients/reasons"] += 1;
         statsPerCampaign[campaignId].lastProcessedTimestamp = newLeaf.lastProcessedTimestamp;
 
-        if (gtStrings('0', diffLeaf.amount)) {
+        // Case to take into account
+        // check if leaf last processed timestamp < now - YEAR and connect tot he contract check not claimed  then it's okay
+        if (gtStrings("0", diffLeaf.amount)) {
           negativeDiffs.push(diffLeaf);
         }
 
         diffLeaves.push(diffLeaf);
         index++;
+      }
+
+      /** Inverse search for negative amounts */
+      index = oldCampaignInfo.firstIndex;
+      if (oldCampaignInfo.lastIndex !== -1) {
+        while (index <= oldCampaignInfo.lastIndex) {
+          const oldLeaf = oldTree.data[index];
+          const newIndex = newTree.findIndex(oldLeaf.campaignId, oldLeaf.recipient, oldLeaf.reason);
+
+          if (!newIndex.found) {
+            const diffLeaf = !newIndex.found
+              ? oldLeaf.invert()
+              : oldLeaf.invert().sub(newTree.data[newIndex.index].invert());
+            statsPerCampaign[campaignId].diff = addStrings(statsPerCampaign[campaignId].diff, diffLeaf.amount);
+            statsPerCampaign[campaignId]["recipients/reasons"] += 1;
+
+            diffLeaves.push(diffLeaf);
+            negativeDiffs.push(diffLeaf);
+          }
+          index++;
+        }
       }
     }
 
@@ -349,8 +394,8 @@ export class BaseTree {
     diffTree.sort();
 
     const diffCampaigns = Object.keys(statsPerCampaign)
-      ?.filter((c) => statsPerCampaign[c].diff !== '0')
-      .map((campaignId) => {
+      ?.filter(c => statsPerCampaign[c].diff !== "0")
+      .map(campaignId => {
         const decimalsRewardToken = campaigns[campaignId].campaignParameters.decimalsRewardToken;
         return {
           campaignId: campaignId,
@@ -358,22 +403,28 @@ export class BaseTree {
           token: campaigns[campaignId].campaignParameters.symbolRewardToken,
           diff: displayString(statsPerCampaign[campaignId].diff, decimalsRewardToken),
           total: Int256.from(statsPerCampaign[campaignId].total, decimalsRewardToken).raw.toString(),
-          remainer: displayString(subStrings(campaigns[campaignId].amount, statsPerCampaign[campaignId].total), decimalsRewardToken),
-          ['% done']: (
-            BigNumber.from(statsPerCampaign[campaignId].total).mul(BASE_9).div(campaigns[campaignId].amount).toNumber() / 1e7
+          remainer: displayString(
+            subStrings(campaigns[campaignId].amount, statsPerCampaign[campaignId].total),
+            decimalsRewardToken
+          ),
+          ["% done"]: (
+            BigNumber.from(statsPerCampaign[campaignId].total)
+              .mul(BASE_9)
+              .div(campaigns[campaignId].amount)
+              .toNumber() / 1e7
           ).toFixed(6),
-          ['% time done']: (
+          ["% time done"]: (
             ((statsPerCampaign[campaignId].lastProcessedTimestamp - campaigns[campaignId].startTimestamp) /
               (campaigns[campaignId].endTimestamp - campaigns[campaignId].startTimestamp)) *
             100
           ).toFixed(6),
-          ['recipients/reasons']: statsPerCampaign[campaignId]['recipients/reasons'],
+          ["recipients/reasons"]: statsPerCampaign[campaignId]["recipients/reasons"],
         };
       });
 
     const diffRecipients = diffTree.data
-      .filter((d) => d.amount !== '0')
-      .map((x) => {
+      .filter(d => d.amount !== "0")
+      .map(x => {
         return {
           campaignId: x.campaignId,
           recipient: x.recipient,
@@ -384,7 +435,10 @@ export class BaseTree {
             campaigns[x.campaignId].campaignParameters.decimalsRewardToken
           ),
           token: campaigns[x.campaignId].campaignParameters.symbolRewardToken,
-          percentage: ((parseFloat(x.amount) * 100) / parseFloat(statsPerCampaign[x.campaignId].diff)).toFixed(6),
+          percentage: (
+            (Number.parseFloat(x.amount) * 100) /
+            Number.parseFloat(statsPerCampaign[x.campaignId].diff)
+          ).toFixed(6),
         };
       });
 
