@@ -84,4 +84,8 @@ export class ExpandedLeaf {
   public sub(b: ExpandedLeaf): ExpandedLeaf {
     return new ExpandedLeaf({ ...this, amount: BigNumber.from(this.amount).sub(b.amount).toString() });
   }
+
+  public invert(): ExpandedLeaf {
+    return new ExpandedLeaf({ ...this, amount: BigNumber.from(this.amount).mul(-1).toString() });
+  }
 }
