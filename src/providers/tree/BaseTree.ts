@@ -1,15 +1,14 @@
-import { BASE_9, Campaign, CampaignParameters, Erc20__factory, Int256, MerklChainId } from '@angleprotocol/sdk';
+import { BASE_9, type Campaign, type CampaignParameters, Erc20__factory, Int256, type MerklChainId } from '@angleprotocol/sdk';
 import { BigNumber, utils } from 'ethers';
 import keccak256 from 'keccak256';
 import MerkleTree from 'merkletreejs';
 
 import { MERKL_TREE_OPTIONS } from '../../constants';
-import { DiffCampaigns, DiffRecipients } from '../../types';
+import type { DiffCampaigns, DiffRecipients } from '../../types';
 import { addStrings, gtStrings, subStrings } from '../../utils/addString';
 import { displayString } from '../../utils/displayString';
 import { getSolidityIndex } from '../../utils/indexing';
 import { log } from '../../utils/logger';
-import { overridenConsole, overridenConsoleRead } from '../../utils/overridenConsole';
 import { provider } from '../../utils/providers';
 import { ExpandedLeaf } from './ExpandedLeaf';
 
@@ -31,7 +30,7 @@ export class BaseTree {
   public sort() {
     this.data.sort((a, b) => {
       if (a.gte(b)) return 1;
-      else return -1;
+      return -1;
     });
   }
 
@@ -98,7 +97,7 @@ export class BaseTree {
     // Sort leaves
     leaves.sort((a, b) => {
       if (a.hashedLeaf > b.hashedLeaf) return 1;
-      else return -1;
+      return -1;
     });
 
     // Store leaf index in idToAmount
@@ -293,6 +292,7 @@ export class BaseTree {
     /** Check all oldCampaignTypes are still present */
     for (const oldCampaignId of oldCampaignIds) {
       if (!newCampaignIds.includes(oldCampaignId)) {
+        // not disputing, needs to dispute otherwise the latter is weird
         log.error('computeDiff', `old tree campaign ${oldCampaignId} not found in new tree`);
       }
     }
@@ -313,6 +313,7 @@ export class BaseTree {
 
     for (const campaignId of newCampaignIds) {
       const campaignInfo = newTree.campaignInfo(campaignId);
+      const oldCampaignInfo = oldTree.campaignInfo(campaignId);
 
       // TODO @BaptistG
       // @dev Compute the total amount per campaign to display it
@@ -328,7 +329,6 @@ export class BaseTree {
       let index = campaignInfo.firstIndex;
       while (index <= campaignInfo.lastIndex) {
         const newLeaf = newTree.data[index];
-
         const oldIndex = oldTree.findIndex(newLeaf.campaignId, newLeaf.recipient, newLeaf.reason);
 
         const diffLeaf = !oldIndex.found ? newLeaf : newLeaf.sub(oldTree.data[oldIndex.index]);
@@ -336,12 +336,33 @@ export class BaseTree {
         statsPerCampaign[campaignId]['recipients/reasons'] += 1;
         statsPerCampaign[campaignId].lastProcessedTimestamp = newLeaf.lastProcessedTimestamp;
 
+        // Case to take into account
+        // check if leaf last processed timestamp < now - YEAR and connect tot he contract check not claimed  then it's okay
         if (gtStrings('0', diffLeaf.amount)) {
           negativeDiffs.push(diffLeaf);
         }
 
         diffLeaves.push(diffLeaf);
         index++;
+      }
+
+      /** Inverse search for negative amounts */
+      index = oldCampaignInfo.firstIndex;
+      if (oldCampaignInfo.lastIndex !== -1) {
+        while (index <= oldCampaignInfo.lastIndex) {
+          const oldLeaf = oldTree.data[index];
+          const newIndex = newTree.findIndex(oldLeaf.campaignId, oldLeaf.recipient, oldLeaf.reason);
+
+          if (!newIndex.found) {
+            const diffLeaf = !newIndex.found ? oldLeaf.invert() : oldLeaf.invert().sub(newTree.data[newIndex.index].invert());
+            statsPerCampaign[campaignId].diff = addStrings(statsPerCampaign[campaignId].diff, diffLeaf.amount);
+            statsPerCampaign[campaignId]['recipients/reasons'] += 1;
+
+            diffLeaves.push(diffLeaf);
+            negativeDiffs.push(diffLeaf);
+          }
+          index++;
+        }
       }
     }
 
@@ -384,7 +405,7 @@ export class BaseTree {
             campaigns[x.campaignId].campaignParameters.decimalsRewardToken
           ),
           token: campaigns[x.campaignId].campaignParameters.symbolRewardToken,
-          percentage: ((parseFloat(x.amount) * 100) / parseFloat(statsPerCampaign[x.campaignId].diff)).toFixed(6),
+          percentage: ((Number.parseFloat(x.amount) * 100) / Number.parseFloat(statsPerCampaign[x.campaignId].diff)).toFixed(6),
         };
       });
 

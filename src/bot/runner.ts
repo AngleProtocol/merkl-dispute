@@ -110,6 +110,11 @@ export const checkOverDistribution: Step = async ({}, report) => {
 
     const { diffCampaigns, diffRecipients, negativeDiffs } = BaseTree.computeDiff(startTree, endTree, campaigns);
 
+    // if we are in the time period of unclaimed job
+    //  -> test unclaimed
+    //  -> test successful => discord notif
+    //  -> test unsuccessful => throw
+    // if not we throw
     if (negativeDiffs.length > 0) {
       return Result.Error({
         code: BotError.NegativeDiff,
