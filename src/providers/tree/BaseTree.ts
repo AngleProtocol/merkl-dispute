@@ -1,4 +1,4 @@
-import { BASE_9, type Campaign, type CampaignParameters, Erc20__factory, Int256, type MerklChainId } from '@angleprotocol/sdk';
+import { type Campaign, type CampaignParameters, type MerklChainId, BASE_9, Erc20__factory, Int256 } from '@angleprotocol/sdk';
 import { BigNumber, utils } from 'ethers';
 import keccak256 from 'keccak256';
 import MerkleTree from 'merkletreejs';

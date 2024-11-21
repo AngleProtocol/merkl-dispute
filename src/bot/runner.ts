@@ -6,6 +6,7 @@ import { ALERTING_DELAY } from '../constants/alertingDelay';
 import { BaseTree } from '../providers/tree';
 import { BotError, MerklReport, Resolver, Result, Step, StepResult } from '../types/bot';
 import { gtStrings } from '../utils/addString';
+import { wasReallocated } from '../utils/leafDiff';
 import { fetchCampaigns, fetchLeaves } from '../utils/merklAPI';
 import { DisputeContext } from './context';
 import { approveDisputeStake, createSigner, disputeTree } from './dispute';
@@ -116,11 +117,16 @@ export const checkOverDistribution: Step = async ({}, report) => {
     //  -> test unsuccessful => throw
     // if not we throw
     if (negativeDiffs.length > 0) {
-      return Result.Error({
-        code: BotError.NegativeDiff,
-        reason: negativeDiffs.join('\n'),
-        report: { ...report, diffCampaigns, diffRecipients },
-      });
+      const allReallocated = (await Promise.all(negativeDiffs.map(async (leaf) => await wasReallocated(chainId, leaf)))).reduce(
+        (a, b) => a && b
+      );
+      if (!allReallocated) {
+        return Result.Error({
+          code: BotError.NegativeDiff,
+          reason: negativeDiffs.join('\n'),
+          report: { ...report, diffCampaigns, diffRecipients },
+        });
+      }
     }
 
     const overDistributed = [];
